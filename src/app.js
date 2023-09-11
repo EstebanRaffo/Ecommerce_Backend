@@ -1,6 +1,6 @@
 import express from "express";
-import { productsRouter } from "./routes/products.routes";
-import { cartsService } from "./services/services";
+import { productsRouter } from "./routes/products.routes.js";
+import { cartsRouter } from "./routes/carts.routes.js";
 
 
 const port = 8080;
@@ -12,4 +12,4 @@ app.use(express.urlencoded({extended:true}));
 app.listen(port, ()=>console.log("Servidor escuchando en el puerto: ", port));
 
 app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsService);
+app.use("/api/carts", cartsRouter);

@@ -37,13 +37,13 @@ export default class ProductManager{
         }
     }
 
-    isValidProductData(title, description, price, code, stock, category){
-        return title && description && typeof(price) === "number" && category && code && typeof(stock) === "number"
+    isValidProductData(title, description, price, code, stock, category, status){
+        return title && description && typeof(price) === "number" && category && code && typeof(stock) === "number" && status
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, category, status = true){
+    async addProduct(title, description, price, thumbnails, code, stock, category, status){
         try{
-            if(!this.isValidProductData(title, description, price, code, stock, category)){
+            if(!this.isValidProductData(title, description, price, code, stock, category, status)){
                 return console.error("Hay datos obligatorios no informados")
             }else{
                 if(await this.isInProducts(code)){
@@ -57,7 +57,7 @@ export default class ProductManager{
                     }else{
                         newId = products[products.length - 1].id + 1
                     }
-                    const new_product = {id: newId, title, description, price, thumbnail, code, stock, category, status};
+                    const new_product = {id: newId, title, description, price, thumbnails, code, stock, category, status};
                     await this.saveProduct(new_product)    
                 }
             }
@@ -103,25 +103,26 @@ export default class ProductManager{
     async updateProduct(id, new_product_info){
         try{
             if(this.fileExist()){
-                const product = await this.getProductById(id);
-                for(key in new_product_info){
-                    if(product.hasOwnProperty(key)){
-                        const productsString = await fs.promises.readFile(this.filePath, "utf-8");
-                        const productsJSON = JSON.parse(productsString);
-                        const productsJsonUpdated = productsJSON.map((product) => {
-                            if(product.id === id){
-                                product[key] = new_product_info[key];
-                                return product;
-                            }else{ 
-                                return product;
+                const fields = Object.keys(new_product_info);
+                const productsString = await fs.promises.readFile(this.filePath, "utf-8");
+                const productsJSON = JSON.parse(productsString);
+                const productsJsonUpdated = productsJSON.map((product) => {
+                    if(product.id === id){
+                        fields.forEach(async field => {
+                            console.log("product.hasOwnProperty(field): ", product.hasOwnProperty(field))
+                            if(product.hasOwnProperty(field)){
+                                product[field] = new_product_info[field];    
                             }
-                        })
-                        await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
+                            else{
+                                throw new Error("El producto no tiene el dato especificado");
+                            }
+                        });
+                        return product;
+                    }else{ 
+                        return product;
                     }
-                    else{
-                        throw new Error("El producto no tiene el dato especificado");
-                    }
-                }
+                })
+                await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
             }else{
                 throw new Error("No es posible actualizar el producto. Archivo inexistente.")
             }
@@ -132,9 +133,9 @@ export default class ProductManager{
     }
 
     async productExists(id){
-        const products = await this.getProducts()
+        const products = await this.getProducts();
         if(products){
-            return products.some(product => product.id === id)
+            return products.some(product => product.id === id);
         }
         else{
             return false
@@ -144,9 +145,9 @@ export default class ProductManager{
     async deleteProduct(id){
         try{
             if(this.fileExist()){
-                const productsString = await fs.promises.readFile(this.filePath, "utf-8");
-                const productsJSON = JSON.parse(productsString);
                 if(await this.productExists(id)){
+                    const productsString = await fs.promises.readFile(this.filePath, "utf-8");
+                    const productsJSON = JSON.parse(productsString);
                     const productsJsonUpdated = productsJSON.filter(product => product.id !== id);
                     await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
                     console.log(`El producto Id: ${id} ha sido eliminado`)

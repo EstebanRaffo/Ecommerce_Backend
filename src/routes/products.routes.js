@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { productsService } from "../services/services";
+import { productsService } from "../services/services.js";
 
 const router = Router();
 
@@ -37,10 +37,10 @@ router.get("/:pid", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    const {title, description, price, thumbnail, code, stock, category} = req.body;
+    const {title, description, price, thumbnails, code, stock, category, status} = req.body;
     try{
-        await productsService.addProduct(title, description, price, thumbnail, code, stock, category);
-        res.status(200).json({message: "nuevo producto agregado"});
+        await productsService.addProduct(title, description, price, thumbnails, code, stock, category, status);
+        res.status(200).json({message: "nuevo producto agregado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});
     }
@@ -49,9 +49,10 @@ router.post("/", async (req, res) => {
 router.put("/:pid", async (req, res) => {
     const id = parseInt(req.params.pid);
     const new_product_info = req.body;
+    console.log(Object.keys(new_product_info))
     try{
         await productsService.updateProduct(id, new_product_info);
-        res.status(200).json({message: "producto actualizado"});
+        res.status(200).json({message: "producto actualizado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});
         // res.status(404).json({message:"El usuario no existe"});

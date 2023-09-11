@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { cartsService } from "../services/services";
-
-
+import { cartsService } from "../services/services.js";
 
 const router = Router();
 
@@ -34,4 +32,6 @@ router.post("/:cid/product/:pid", async (req, res)=>{
     }catch(error){
         res.json({status: "error", message: error.message});
     }
-})
+});
+
+export {router as cartsRouter};
