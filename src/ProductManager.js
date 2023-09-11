@@ -42,23 +42,28 @@ export default class ProductManager{
     }
 
     async addProduct(title, description, price, thumbnail, code, stock, category, status = true){
-        if(!this.isValidProductData(title, description, price, code, stock, category)){
-            return console.error("Hay datos obligatorios no informados")
-        }else{
-            if(await this.isInProducts(code)){
-                return console.error("El producto que intenta agregar ya existe")
-            }
-            else{
-                let newId;
-                const products = await this.getProducts();
-                if(!products.length){
-                    newId = 1
-                }else{
-                    newId = products[products.length - 1].id + 1
+        try{
+            if(!this.isValidProductData(title, description, price, code, stock, category)){
+                return console.error("Hay datos obligatorios no informados")
+            }else{
+                if(await this.isInProducts(code)){
+                    return console.error("El producto que intenta agregar ya existe")
                 }
-                const new_product = {id: newId, title, description, price, thumbnail, code, stock, category, status};
-                await this.saveProduct(new_product)    
+                else{
+                    let newId;
+                    const products = await this.getProducts();
+                    if(!products.length){
+                        newId = 1
+                    }else{
+                        newId = products[products.length - 1].id + 1
+                    }
+                    const new_product = {id: newId, title, description, price, thumbnail, code, stock, category, status};
+                    await this.saveProduct(new_product)    
+                }
             }
+        }catch(error){
+            console.log(error.message);
+            throw error;
         }
     }
 
