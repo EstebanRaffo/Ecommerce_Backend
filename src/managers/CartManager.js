@@ -1,6 +1,5 @@
 import fs from "fs";
 
-
 export default class CartManager{
 
     constructor(path){
@@ -34,9 +33,9 @@ export default class CartManager{
                 if(!carts.length){
                     newId = 1
                 }else{
-                    newId = carts[carts.length - 1].id + 1
+                    newId = carts[carts.length - 1].cid + 1
                 }
-                const new_cart = {id: newId, products};
+                const new_cart = {cid: newId, products};
                 await this.saveCart(new_cart);
                 return new_cart;
             } else {
@@ -67,8 +66,7 @@ export default class CartManager{
 
     async getProductsCart(id){
         try{
-            const carts = await this.getCarts();
-            const cart = carts.find(cart => cart.id === id);
+            const cart = await this.getCartById(id);
             return cart.products;
         } catch (error) {
             console.log(error.message);
@@ -76,20 +74,38 @@ export default class CartManager{
         }
     }
 
+    async getCartById(id){
+        try{
+            const carts = await this.getCarts()
+            const cart = carts.find(cart => cart.cid === id)
+            if(!cart){
+                throw {name: 'client error', httpcode: 404, description: 'Cart no encontrado'};
+            }
+            return cart;
+        }catch(error){
+            console.log(error.message);
+            throw error;
+        }
+    }
+
     isInCart(products_cart, prod_id){
-        return products_cart.some(product => product.id === prod_id)
+        if(!products_cart){
+            return false;
+        }else{
+            return products_cart.some(product => product.pid === prod_id)
+        } 
     }
 
     async addProductToCart(cart_id, prod_id){
         try{
-            const carts = await this.getCarts();
-            const cart = carts.find(cart => cart.id === cart_id)
+            const cart = await this.getCartById(cart_id)
             if(this.isInCart(cart.products, prod_id)){
                 const new_carts_list = carts.map(cart => {
-                    if(cart.id === cart_id){
+                    if(cart.cid === cart_id){
                         const new_products_list = cart.products.map(product => {
-                            if(product.id === prod_id){
+                            if(product.pid === prod_id){
                                 product.quantity++;
+                                return product;
                             }else{
                                 return product;
                             }
@@ -103,8 +119,8 @@ export default class CartManager{
                 await fs.promises.writeFile(this.filePath, JSON.stringify(new_carts_list, null, "\t"));
             }else{
                 const new_carts_list = carts.map(cart => {
-                    if(cart.id === cart_id){
-                        cart.products.push({id: prod_id, quantity: 1})
+                    if(cart.cid === cart_id){
+                        cart.products.push({pid: prod_id, quantity: 1})
                         return cart;
                     }else{
                         return cart;

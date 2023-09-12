@@ -85,13 +85,16 @@ export default class ProductManager{
     }
 
     async getProductById(id){
-        const products = await this.getProducts()
-        const product = products.find(product => product.id === id)
-        if(!product){
-            return console.error("Product Not found")
-        }
-        else{
-            return product
+        try{
+            const products = await this.getProducts()
+            const product = products.find(product => product.id === id)
+            if(!product){
+                throw {name: 'client error', httpcode: 404, description: 'Producto no encontrado'}
+            }
+            return product;
+        }catch(error){
+            console.log(error.message);
+            throw error;
         }
     }
 
