@@ -54,7 +54,6 @@ export default class CartManager{
                 const contenidoJson = JSON.parse(contenido);
                 contenidoJson.push(cartInfo);
                 await fs.promises.writeFile(this.filePath,JSON.stringify(contenidoJson,null,"\t"));
-                console.log("carrito agregado");
             } else {
                 throw new Error("no es posible guardar el carrito")
             }
@@ -77,11 +76,12 @@ export default class CartManager{
     async getCartById(id){
         try{
             const carts = await this.getCarts()
-            const cart = carts.find(cart => cart.cid === id)
-            if(!cart){
-                throw {name: 'client error', httpcode: 404, description: 'Cart no encontrado'};
+            if(carts.some(cart => cart.cid === id)){
+                const cart = carts.find(cart => cart.cid === id)
+                return cart;
+            }else{
+                throw new Error("Carrito no encontrado");
             }
-            return cart;
         }catch(error){
             console.log(error.message);
             throw error;

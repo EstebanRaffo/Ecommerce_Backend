@@ -46,5 +46,14 @@
 				"quantity": 3
 			}
 		]
+	},
+	{
+		"cid": 5,
+		"products": [
+			{
+				"pid": 2,
+				"quantity": 2
+			}
+		]
 	}
 ]
