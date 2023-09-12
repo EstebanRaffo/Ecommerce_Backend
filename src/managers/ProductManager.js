@@ -19,7 +19,7 @@ export default class ProductManager{
                 const contenidoJson = JSON.parse(contenido);
                 return contenidoJson;
             } else {
-                throw new Error("no es posible leer el archivo")
+                throw new Error("No es posible leer el archivo")
             }
         } catch (error) {
             console.log(error.message);
@@ -28,26 +28,26 @@ export default class ProductManager{
     }
 
     async isInProducts(code){
-        const products = await this.getProducts()
-        if(products){
+        try{
+            const products = await this.getProducts()
             return products.some(product => product.code === code)
-        }
-        else{
-            return false
+        }catch(error){
+            console.log(error.message);
+            throw error;
         }
     }
 
     isValidProductData(title, description, price, code, stock, category, status){
-        return title && description && typeof(price) === "number" && category && code && typeof(stock) === "number" && status
+        return title && description && Number(price) && category && code && Number(stock) && status
     }
 
     async addProduct(title, description, price, thumbnails, code, stock, category, status){
         try{
             if(!this.isValidProductData(title, description, price, code, stock, category, status)){
-                return console.error("Hay datos obligatorios no informados")
+                throw new Error("Hay datos obligatorios no informados")
             }else{
                 if(await this.isInProducts(code)){
-                    return console.error("El producto que intenta agregar ya existe")
+                    throw new Error("El producto que intenta agregar ya existe")
                 }
                 else{
                     let newId;
@@ -74,7 +74,6 @@ export default class ProductManager{
                 const contenidoJson = JSON.parse(contenido);
                 contenidoJson.push(productInfo);
                 await fs.promises.writeFile(this.filePath,JSON.stringify(contenidoJson,null,"\t"));
-                console.log("producto agregado");
             } else {
                 throw new Error("no es posible guardar el producto")
             }
@@ -89,7 +88,7 @@ export default class ProductManager{
             const products = await this.getProducts()
             const product = products.find(product => product.id === id)
             if(!product){
-                throw {name: 'client error', httpcode: 404, description: 'Producto no encontrado'}
+                throw new Error('Producto no encontrado')
             }
             return product;
         }catch(error){
@@ -98,21 +97,15 @@ export default class ProductManager{
         }
     }
 
-    async getCurrentId(){
-        const products = await this.getProducts();
-        return products[products.length - 1].id
-    }
-
     async updateProduct(id, new_product_info){
         try{
-            if(this.fileExist()){
+            if(this.fileExist() && await this.productExists(id)){
                 const fields = Object.keys(new_product_info);
                 const productsString = await fs.promises.readFile(this.filePath, "utf-8");
                 const productsJSON = JSON.parse(productsString);
                 const productsJsonUpdated = productsJSON.map((product) => {
                     if(product.id === id){
                         fields.forEach(async field => {
-                            console.log("product.hasOwnProperty(field): ", product.hasOwnProperty(field))
                             if(product.hasOwnProperty(field)){
                                 product[field] = new_product_info[field];    
                             }
@@ -127,7 +120,7 @@ export default class ProductManager{
                 })
                 await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
             }else{
-                throw new Error("No es posible actualizar el producto. Archivo inexistente.")
+                throw new Error("No es posible actualizar el producto o no existe.")
             }
         }catch(error){
             console.log(error.message);
@@ -136,30 +129,24 @@ export default class ProductManager{
     }
 
     async productExists(id){
-        const products = await this.getProducts();
-        if(products){
+        try{
+            const products = await this.getProducts();
             return products.some(product => product.id === id);
-        }
-        else{
-            return false
+        }catch(error){
+            console.log(error.message);
+            throw error;
         }
     }
 
     async deleteProduct(id){
         try{
-            if(this.fileExist()){
-                if(await this.productExists(id)){
-                    const productsString = await fs.promises.readFile(this.filePath, "utf-8");
-                    const productsJSON = JSON.parse(productsString);
-                    const productsJsonUpdated = productsJSON.filter(product => product.id !== id);
-                    await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
-                    console.log(`El producto Id: ${id} ha sido eliminado`)
-                }
-                else{
-                    throw new Error("No existe el producto que desea eliminar");
-                }
+            if(this.fileExist() && await this.productExists(id)){
+                const productsString = await fs.promises.readFile(this.filePath, "utf-8");
+                const productsJSON = JSON.parse(productsString);
+                const productsJsonUpdated = productsJSON.filter(product => product.id !== id);
+                await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
             }else{
-                throw new Error("No es posible eliminar el producto");
+                throw new Error("No es posible eliminar el producto o no existe");
             }
         }catch(error){
             console.log(error.message);

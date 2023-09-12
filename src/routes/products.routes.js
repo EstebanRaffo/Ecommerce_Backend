@@ -10,9 +10,9 @@ router.get("/", async (req, res) => {
         if(products.length){
             if(limit){
                 const product_list = products.slice(0, limit);
-                res.send(product_list);
+                res.status(200).json(product_list);
             }else{
-                res.send(products);
+                res.status(200).json(products);
             }
         }else{
             res.send("No se encontraron productos");
@@ -27,7 +27,7 @@ router.get("/:pid", async (req, res) => {
     try{
         const product = await productsService.getProductById(id);
         if(product){
-            res.send(product);
+            res.status(200).json(product);
         }else{
             res.send("<h1 style='color: red'>No se encontró el producto buscado o no existe</h1>");
         }
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
     const {title, description, price, thumbnails, code, stock, category, status} = req.body;
     try{
         await productsService.addProduct(title, description, price, thumbnails, code, stock, category, status);
-        res.status(200).json({message: "nuevo producto agregado exitosamente"});
+        res.status(201).json({message: "Nuevo producto agregado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});
     }
@@ -49,13 +49,11 @@ router.post("/", async (req, res) => {
 router.put("/:pid", async (req, res) => {
     const id = parseInt(req.params.pid);
     const new_product_info = req.body;
-    console.log(Object.keys(new_product_info))
     try{
         await productsService.updateProduct(id, new_product_info);
-        res.status(200).json({message: "producto actualizado exitosamente"});
+        res.status(201).json({message: "Producto actualizado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});
-        // res.status(404).json({message:"El usuario no existe"});
     }
 });
 
@@ -64,7 +62,7 @@ router.delete("/:pid", async (req, res)=>{
     const id = parseInt(req.params.pid);
     try{
         await productsService.deleteProduct(id);
-        res.status(200).json({message: "producto eliminado"});
+        res.status(201).json({message: "Producto eliminado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});
     }
