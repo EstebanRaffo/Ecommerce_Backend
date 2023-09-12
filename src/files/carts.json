@@ -37,5 +37,14 @@
 				"quantity": 1
 			}
 		]
+	},
+	{
+		"cid": 4,
+		"products": [
+			{
+				"pid": 2,
+				"quantity": 3
+			}
+		]
 	}
 ]

@@ -98,6 +98,7 @@ export default class CartManager{
 
     async addProductToCart(cart_id, prod_id){
         try{
+            const carts = await this.getCarts()
             const cart = await this.getCartById(cart_id)
             if(this.isInCart(cart.products, prod_id)){
                 const new_carts_list = carts.map(cart => {

@@ -1,22 +1,5 @@
 [
 	{
-		"id": 1,
-		"title": "Notebook 1 Enova Tigerlake 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
-		"description": "NOTEBOOK 1\" 326 x 226 x 18,4 mm - Peso: 1,65 kg",
-		"price": 450350,
-		"thumbnails": [
-			"https://i.postimg.cc/zB5zdtBS/notebook-1.png",
-			"https://i.postimg.cc/Kc3bPhJS/notebook-2.png",
-			"https://i.postimg.cc/CLjV2C3c/notebook-3.png",
-			"https://i.postimg.cc/K8xyhkFx/notebook-4.png",
-			"https://i.postimg.cc/g2sbzzkR/notebook-5.jpg"
-		],
-		"code": "ABC_1",
-		"stock": 5,
-		"category": "notebooks",
-		"status": true
-	},
-	{
 		"id": 2,
 		"title": "Notebook 2 Enova Tigerlake 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
 		"description": "NOTEBOOK 2\" 326 x 226 x 18,4 mm - Peso: 1,65 kg",
@@ -47,6 +30,23 @@
 		],
 		"code": "ABC_3",
 		"stock": 20,
+		"category": "notebooks",
+		"status": true
+	},
+	{
+		"id": 4,
+		"title": "Notebook 4 Enova Tigerlake 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
+		"description": "NOTEBOOK 4 Modificada",
+		"price": 500350,
+		"thumbnails": [
+			"https://i.postimg.cc/zB5zdtBS/notebook-1.png",
+			"https://i.postimg.cc/Kc3bPhJS/notebook-2.png",
+			"https://i.postimg.cc/CLjV2C3c/notebook-3.png",
+			"https://i.postimg.cc/K8xyhkFx/notebook-4.png",
+			"https://i.postimg.cc/g2sbzzkR/notebook-5.jpg"
+		],
+		"code": "ABC_4 - Modificado",
+		"stock": 100,
 		"category": "notebooks",
 		"status": true
 	}
