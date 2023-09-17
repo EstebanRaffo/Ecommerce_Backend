@@ -6,6 +6,7 @@ import path from "path";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { viewsRouter } from "./routes/views.routes.js";
+import { productsService } from "./services/services.js";
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -26,9 +27,15 @@ app.use(viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
-let products_list = [];
 
-io.on("connection", (socket)=>{
+let products_list = [];
+io.on("connection", async(socket)=>{
+    // try{
+        
+    //     products_list = await productsService.getProducts();
+    // }catch(error){
+    //     throw error;
+    // }
     socket.emit("product_list", products_list);
 
     socket.on("update_list", (data)=>{
