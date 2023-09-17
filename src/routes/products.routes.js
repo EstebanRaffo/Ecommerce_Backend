@@ -37,9 +37,8 @@ router.get("/:pid", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    const {title, description, price, thumbnails, code, stock, category, status} = req.body;
     try{
-        await productsService.addProduct(title, description, price, thumbnails, code, stock, category, status);
+        await productsService.addProduct(req.body);
         res.status(201).json({message: "Nuevo producto agregado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});

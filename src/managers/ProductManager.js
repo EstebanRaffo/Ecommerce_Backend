@@ -41,7 +41,8 @@ export default class ProductManager{
         return title && description && Number(price) && category && code && Number(stock) && status
     }
 
-    async addProduct(title, description, price, thumbnails, code, stock, category, status){
+    async addProduct(data){
+        const {title, description, price, thumbnails, code, stock, category, status} = data
         try{
             if(!this.isValidProductData(title, description, price, code, stock, category, status)){
                 throw new Error("Hay datos obligatorios no informados")

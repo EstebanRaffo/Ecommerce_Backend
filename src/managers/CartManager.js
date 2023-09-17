@@ -1,4 +1,5 @@
 import fs from "fs";
+import { productsService } from "../services/services.js";
 
 export default class CartManager{
 
@@ -100,35 +101,39 @@ export default class CartManager{
         try{
             const carts = await this.getCarts()
             const cart = await this.getCartById(cart_id)
-            if(this.isInCart(cart.products, prod_id)){
-                const new_carts_list = carts.map(cart => {
-                    if(cart.cid === cart_id){
-                        const new_products_list = cart.products.map(product => {
-                            if(product.pid === prod_id){
-                                product.quantity++;
-                                return product;
-                            }else{
-                                return product;
-                            }
-                        });
-                        cart.products = new_products_list;
-                        return cart;
-                    }else{
-                        return cart;
-                    }
-                });
-                await fs.promises.writeFile(this.filePath, JSON.stringify(new_carts_list, null, "\t"));
+            if(await productsService.productExists(prod_id)){
+                if(this.isInCart(cart.products, prod_id)){
+                    const new_carts_list = carts.map(cart => {
+                        if(cart.cid === cart_id){
+                            const new_products_list = cart.products.map(product => {
+                                if(product.pid === prod_id){
+                                    product.quantity++;
+                                    return product;
+                                }else{
+                                    return product;
+                                }
+                            });
+                            cart.products = new_products_list;
+                            return cart;
+                        }else{
+                            return cart;
+                        }
+                    });
+                    await fs.promises.writeFile(this.filePath, JSON.stringify(new_carts_list, null, "\t"));
+                }else{
+                    const new_carts_list = carts.map(cart => {
+                        if(cart.cid === cart_id){
+                            cart.products.push({pid: prod_id, quantity: 1})
+                            return cart;
+                        }else{
+                            return cart;
+                        }
+                    });
+                    await fs.promises.writeFile(this.filePath, JSON.stringify(new_carts_list, null, "\t"));
+                }   
             }else{
-                const new_carts_list = carts.map(cart => {
-                    if(cart.cid === cart_id){
-                        cart.products.push({pid: prod_id, quantity: 1})
-                        return cart;
-                    }else{
-                        return cart;
-                    }
-                });
-                await fs.promises.writeFile(this.filePath, JSON.stringify(new_carts_list, null, "\t"));
-            }   
+                throw new Error("No es posible agregar el producto al carrito o no existe.")
+            }
         }catch (error) {
             console.log(error.message);
             throw error;
