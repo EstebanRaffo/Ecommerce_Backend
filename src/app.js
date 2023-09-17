@@ -1,11 +1,11 @@
 import express from "express";
-import { productsRouter } from "./routes/products.routes.js";
-import { cartsRouter } from "./routes/carts.routes.js";
 import { __dirname } from "./utils.js";
 import path from "path";
+import { productsRouter } from "./routes/products.routes.js";
+import { cartsRouter } from "./routes/carts.routes.js";
+import { viewsRouter } from "./routes/views.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
-import { viewsRouter } from "./routes/views.routes.js";
 import { productsService } from "./services/services.js";
 
 const port = process.env.PORT || 8080;
@@ -30,16 +30,17 @@ app.use("/api/carts", cartsRouter);
 
 let products_list = [];
 io.on("connection", async(socket)=>{
-    // try{
-        
-    //     products_list = await productsService.getProducts();
-    // }catch(error){
-    //     throw error;
-    // }
+    products_list = await productsService.getProducts();
     socket.emit("product_list", products_list);
 
-    socket.on("update_list", (data)=>{
-        products_list = [...data];
-        io.emit("new_list", data)
+    socket.on("new_product", async (data) => {
+        const {title, description, price, thumbnails, code, stock, category, status} = data;
+        await productsService.addProduct(title, description, price, thumbnails, code, stock, category, status);
+        products_list = await productsService.getProducts();
+        io.emit("product_list", products_list); 
+    });
+
+    socket.on("delete_product", async (id) => {
+        productsService.deleteProduct(id);
     });
 });

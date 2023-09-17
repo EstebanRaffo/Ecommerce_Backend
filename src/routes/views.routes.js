@@ -9,8 +9,7 @@ router.get("/", async (req,res)=>{
 });
 
 router.get("/realtimeproducts", (req,res)=>{
-    const product_list = []
-    res.render("realTimeProducts", product_list);
+    res.render("realTimeProducts");
 });
 
 export {router as viewsRouter};

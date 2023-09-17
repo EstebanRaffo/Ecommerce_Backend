@@ -1,20 +1,34 @@
 const socketClient = io()
 
 const productList = document.getElementById("productList");
+const createProductForm = document.getElementById("createProductForm");
+
+createProductForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const formData = new FormData(createProductForm);
+
+    const jsonData = {};
+    for(const [key,value] of formData.entries()){
+        jsonData[key]=value
+    };
+    jsonData.price = parseInt(jsonData.price);
+    console.log(jsonData);
+
+    socketClient.emit("new_product", jsonData);
+    createProductForm.reset();
+});
 
 socketClient.on("product_list", (dataProducts)=>{
     let list = "";
     dataProducts.forEach(product => {
         list += 
         `<li>
-            <p>${product.title}</p>
+            <p>${product.title}</p><button onclick="deleteProduct(${product.id})">Eliminar</button>
         </li>`
     });
     productList.innerHTML = list;
 });
 
-socketClient.emmit("update_list", new_list);
-
-socketClient.on("new_list", (dataProducts)=>{
-
-});
+const deleteProduct = (id) => {
+    socketClient.emit("delete_product", id);
+}
