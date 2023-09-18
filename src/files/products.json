@@ -68,16 +68,6 @@
 		"status": true
 	},
 	{
-		"id": 8,
-		"title": "Notebook 8 Lenovo 8G RAM",
-		"description": "Notebook 8 Enova Tigerlake 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
-		"price": 350350,
-		"code": "ABC_8",
-		"stock": "35",
-		"category": "notebooks",
-		"status": "true"
-	},
-	{
 		"id": 9,
 		"title": "Notebook 9 Lenovo 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
 		"description": "NOTEBOOK 9_Modificada Peso: 1,65 kg",
@@ -93,5 +83,15 @@
 		"stock": 45,
 		"category": "notebooks",
 		"status": true
+	},
+	{
+		"id": 10,
+		"title": "Notebook 10 Dell 15,6” Ryzen 5 8GB 256GB SSD INSP3525 2DJ8R",
+		"description": "Almacenamiento duro HDD",
+		"price": 479999,
+		"code": "ABC_10",
+		"stock": "65",
+		"category": "notebooks",
+		"status": "true"
 	}
 ]

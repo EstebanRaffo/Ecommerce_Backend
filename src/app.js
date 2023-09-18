@@ -30,6 +30,7 @@ app.use("/api/carts", cartsRouter);
 
 let products_list = [];
 io.on("connection", async(socket)=>{
+    console.log("cliente conectado");
     products_list = await productsService.getProducts();
     socket.emit("product_list", products_list);
 

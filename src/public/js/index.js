@@ -12,7 +12,6 @@ createProductForm.addEventListener("submit",(e)=>{
         jsonData[key]=value
     };
     jsonData.price = parseInt(jsonData.price);
-    console.log(jsonData);
 
     socketClient.emit("new_product", jsonData);
     createProductForm.reset();
