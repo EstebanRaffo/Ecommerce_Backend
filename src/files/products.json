@@ -86,12 +86,46 @@
 	},
 	{
 		"id": 10,
-		"title": "Notebook 10 Dell 15,6” Ryzen 5 8GB 256GB SSD INSP3525 2DJ8R",
-		"description": "Almacenamiento duro HDD",
+		"title": "Notebook 11 Lenovo Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
+		"description": "NOTEBOOK 11 Modif.",
 		"price": 479999,
-		"code": "ABC_10",
-		"stock": "65",
+		"code": "ABC_10 - Modificado",
+		"stock": 70,
 		"category": "notebooks",
 		"status": "true"
+	},
+	{
+		"id": 11,
+		"title": "Notebook 11 Lenovo Intel Core i5 8GB de RAM 480GB SSDD Wind10 Home",
+		"description": "NOTEBOOK 11 Modificada",
+		"price": 100000,
+		"thumbnails": [
+			"https://i.postimg.cc/zB5zdtBS/notebook-1.png",
+			"https://i.postimg.cc/Kc3bPhJS/notebook-2.png",
+			"https://i.postimg.cc/CLjV2C3c/notebook-3.png",
+			"https://i.postimg.cc/K8xyhkFx/notebook-4.png",
+			"https://i.postimg.cc/g2sbzzkR/notebook-5.jpg"
+		],
+		"code": "ABC_11",
+		"stock": 65,
+		"category": "notebooks",
+		"status": true
+	},
+	{
+		"id": 12,
+		"title": "Notebook 12 Enova Tigerlake 14 Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
+		"description": "NOTEBOOK 12\" 326 x 226 x 18,4 mm - Peso: 1,65 kg",
+		"price": 410055,
+		"thumbnails": [
+			"https://i.postimg.cc/zB5zdtBS/notebook-1.png",
+			"https://i.postimg.cc/Kc3bPhJS/notebook-2.png",
+			"https://i.postimg.cc/CLjV2C3c/notebook-3.png",
+			"https://i.postimg.cc/K8xyhkFx/notebook-4.png",
+			"https://i.postimg.cc/g2sbzzkR/notebook-5.jpg"
+		],
+		"code": "ABC_12",
+		"stock": 40,
+		"category": "notebooks",
+		"status": true
 	}
 ]

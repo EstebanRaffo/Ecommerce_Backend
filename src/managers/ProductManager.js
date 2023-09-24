@@ -37,14 +37,15 @@ export default class ProductManager{
         }
     }
 
-    isValidProductData(title, description, price, code, stock, category, status){
-        return title && description && Number(price) && category && code && Number(stock) && status
+    isValidProductData(data){
+        const {title, description, price, code, stock, category, status} = data;
+        return title && description && Number(price) && category && code && Number(stock) && status;
     }
 
     async addProduct(data){
         const {title, description, price, thumbnails, code, stock, category, status} = data
         try{
-            if(!this.isValidProductData(title, description, price, code, stock, category, status)){
+            if(!this.isValidProductData(data)){
                 throw new Error("Hay datos obligatorios no informados")
             }else{
                 if(await this.isInProducts(code)){
@@ -76,7 +77,7 @@ export default class ProductManager{
                 contenidoJson.push(productInfo);
                 await fs.promises.writeFile(this.filePath,JSON.stringify(contenidoJson,null,"\t"));
             } else {
-                throw new Error("no es posible guardar el producto")
+                throw new Error("No es posible guardar el producto")
             }
         } catch (error) {
             console.log(error.message);
@@ -98,28 +99,39 @@ export default class ProductManager{
         }
     }
 
+    async isValidProductDataUpdate(id, new_product_info){
+        const product = await this.getProductById(id);
+        const fields = Object.keys(new_product_info);
+        let is_valid = true;
+        fields.forEach(field => {
+            if(!product.hasOwnProperty(field)){
+                is_valid = false;
+            }
+        });
+        const new_data_product = {...product, ...new_product_info};
+        if(!this.isValidProductData(new_data_product)){
+            throw new Error("Hay datos obligatorios para actualizar no informados o inválidos");
+        }
+        return is_valid;
+    }
+
     async updateProduct(id, new_product_info){
         try{
             if(this.fileExist() && await this.productExists(id)){
-                const fields = Object.keys(new_product_info);
-                const productsString = await fs.promises.readFile(this.filePath, "utf-8");
-                const productsJSON = JSON.parse(productsString);
-                const productsJsonUpdated = productsJSON.map((product) => {
-                    if(product.id === id){
-                        fields.forEach(async field => {
-                            if(product.hasOwnProperty(field)){
-                                product[field] = new_product_info[field];    
-                            }
-                            else{
-                                throw new Error("El producto no tiene el dato especificado");
-                            }
-                        });
-                        return product;
-                    }else{ 
-                        return product;
-                    }
-                })
-                await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
+                if(await this.isValidProductDataUpdate(id, new_product_info)){
+                    const productsString = await fs.promises.readFile(this.filePath, "utf-8");
+                    const productsJSON = JSON.parse(productsString);
+                    const productsJsonUpdated = productsJSON.map((product) => {
+                        if(product.id === id){    
+                            return { ...product, ...new_product_info };
+                        }else{ 
+                            return product;
+                        }
+                    })
+                    await fs.promises.writeFile(this.filePath, JSON.stringify(productsJsonUpdated, null, "\t"));
+                }else{
+                    throw new Error("Alguno de los datos especificados no existe en el producto");
+                }
             }else{
                 throw new Error("No es posible actualizar el producto o no existe.")
             }
