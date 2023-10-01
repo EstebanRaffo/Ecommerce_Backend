@@ -7,6 +7,7 @@ import { viewsRouter } from "./routes/views.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { productsService } from "./services/services.js";
+import { connectDB } from "./config/dbConnection.js";
 
 const port = process.env.PORT || 8080;
 const app = express();
@@ -17,6 +18,8 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 const httpServer = app.listen(port, ()=>console.log("Servidor escuchando en el puerto: ", port));
 const io = new Server(httpServer);
+
+connectDB();
 
 //configuración handlebars
 app.engine('.hbs', engine({extname: '.hbs'}));
