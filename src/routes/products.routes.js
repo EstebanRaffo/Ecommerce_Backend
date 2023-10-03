@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { productsService } from "../services/services.js";
+import { productsService } from "../dao/services/services.js";
 
 const router = Router();
 
@@ -38,7 +38,7 @@ router.get("/:pid", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try{
-        await productsService.addProduct(req.body);
+        await productsService.createProduct(req.body);
         res.status(201).json({message: "Nuevo producto agregado exitosamente"});
     }catch(error){
         res.json({status:"error", message:error.message});

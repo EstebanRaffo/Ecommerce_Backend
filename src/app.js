@@ -6,7 +6,7 @@ import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
-import { productsService } from "./services/services.js";
+import { productsService } from "./dao/services/services.js";
 import { connectDB } from "./config/dbConnection.js";
 
 const port = process.env.PORT || 8080;
