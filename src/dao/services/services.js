@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import CartManagerFS from '../files_managers/CartManager.js';
 import { ProductsManagerMongo } from "../mongo/managers/ProductsManagerMongo.js";
 // import { CartsManagerMongo } from "../mongo/managers/CartsManagerMongo.js";
-import { ChatManagerMongo } from "../mongo/managers/ChatManagerMongo.js;" 
+import { ChatManagerMongo } from "../mongo/managers/ChatManagerMongo.js"; 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -13,8 +13,9 @@ router.get("/realtimeproducts", (req,res)=>{
 });
 
 router.get("/chat", async (req, res)=>{
-    const messages = await chatService.getMessages();
-    res.render("chat", {messages: messages});
+    // const messages = await chatService.getMessages();
+    // res.render("chat", {messages: messages});
+    res.render("chat");
 });
 
 export {router as viewsRouter};
