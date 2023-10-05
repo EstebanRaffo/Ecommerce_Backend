@@ -60,4 +60,14 @@ export class ProductsManagerMongo{
             throw new Error("No se pudo eliminar el producto");
         }
     }
+
+    async productExists(id){
+        try{
+            const products = await this.getProducts();
+            return products.some(product => product.id === id);
+        }catch(error){
+            console.log(error.message);
+            throw error;
+        }
+    }
 }

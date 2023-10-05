@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:pid", async (req, res) => {
-    const id = parseInt(req.params.pid);
+    const id = req.params.pid;
     try{
         const product = await productsService.getProductById(id);
         if(product){
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:pid", async (req, res) => {
-    const id = parseInt(req.params.pid);
+    const id = req.params.pid;
     const new_product_info = req.body;
     try{
         await productsService.updateProduct(id, new_product_info);
@@ -58,7 +58,7 @@ router.put("/:pid", async (req, res) => {
 
 
 router.delete("/:pid", async (req, res)=>{
-    const id = parseInt(req.params.pid);
+    const id = req.params.pid;
     try{
         await productsService.deleteProduct(id);
         res.status(201).json({message: "Producto eliminado exitosamente"});

@@ -6,7 +6,7 @@ import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
-import { productsService } from "./dao/services/services.js";
+import { chatService, productsService } from "./dao/services/services.js";
 import { connectDB } from "./config/dbConnection.js";
 
 const port = process.env.PORT || 8080;
@@ -32,6 +32,8 @@ app.use("/api/carts", cartsRouter);
 
 
 let products_list = [];
+let chat=[];
+
 io.on("connection", async(socket)=>{
     console.log("cliente conectado");
     products_list = await productsService.getProducts();
@@ -46,4 +48,23 @@ io.on("connection", async(socket)=>{
     socket.on("delete_product", async (id) => {
         productsService.deleteProduct(id);
     });
+
+    chat = await chatService.getMessages();
+    //cuando se conecta el usuario, le enviamos el historial del chat
+    socket.emit("chatHistory", chat);
+
+    //recibimos el mensaje de cada usuario
+    socket.on("msgChat", async (data)=>{
+        
+        await chatService.createMessage(data);
+        chat = await chatService.getMessages();
+
+        //enviamos el historial del chat a todos los usuarios conectados
+        io.emit("chatHistory", chat)
+    });
+
+    //recibimos mensaje de conection de nuevo cliente
+    socket.on("authenticated", (data)=>{
+        socket.broadcast.emit("newUser",`El usuario ${data} se acaba de conectar`);
+    })
 });
