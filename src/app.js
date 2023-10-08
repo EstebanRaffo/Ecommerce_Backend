@@ -32,7 +32,7 @@ app.use("/api/carts", cartsRouter);
 
 
 let products_list = [];
-let chat=[];
+let chat = [];
 
 io.on("connection", async(socket)=>{
     console.log("cliente conectado");

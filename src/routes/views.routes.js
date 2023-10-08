@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { chatService, productsService } from "../dao/services/services.js";
+import { productsService } from "../dao/services/services.js";
 
 const router = Router();
 
@@ -13,8 +13,6 @@ router.get("/realtimeproducts", (req,res)=>{
 });
 
 router.get("/chat", async (req, res)=>{
-    // const messages = await chatService.getMessages();
-    // res.render("chat", {messages: messages});
     res.render("chat");
 });
 

@@ -1,10 +1,10 @@
 import { Router } from "express";
-// import { cartsService } from "../dao/services/services.js";
+import { cartsService } from "../dao/services/services.js";
 
 const router = Router();
 
 router.post("/", async (req, res)=>{
-    const {products} = req.body;
+    const { products } = req.body;
     try{
         const new_cart = await cartsService.createCart(products);
         res.status(201).json({message: "Nuevo carrito agregado", data: new_cart});
@@ -14,7 +14,7 @@ router.post("/", async (req, res)=>{
 });
 
 router.get("/:cid", async (req, res)=>{
-    const id = parseInt(req.params.cid);
+    const id = req.params.cid;
     try{
         const products_cart = await cartsService.getProductsCart(id);
         res.status(201).json({message: "Productos del carrito", data: products_cart});
@@ -24,11 +24,11 @@ router.get("/:cid", async (req, res)=>{
 });
 
 router.post("/:cid/product/:pid", async (req, res)=>{
-    const cart_id = parseInt(req.params.cid);
-    const prod_id = parseInt(req.params.pid);
+    const cart_id = req.params.cid;
+    const prod_id = req.params.pid;
     try{
-        await cartsService.addProductToCart(cart_id, prod_id);
-        res.status(201).json({message: "Producto agregado en el carrito"});
+        const cart_updated = await cartsService.addProductToCart(cart_id, prod_id);
+        res.status(201).json({message: "Producto agregado en el carrito", data: cart_updated});
     }catch(error){
         res.json({status: "error", message: error.message});
     }

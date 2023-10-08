@@ -1,4 +1,4 @@
-import {cartsModel} from "../models/carts.model.js";
+import { cartsModel } from "../models/carts.model.js";
 import { productsService } from "../../services/services.js";
 
 export class CartsManagerMongo{
@@ -26,9 +26,9 @@ export class CartsManagerMongo{
         }
     }
 
-    async getProductsCart(id){
+    async getProductsCart(cart_id){
         try {
-            const cart = await this.model.findById(id)
+            const cart = await this.model.findById(cart_id).populate("products.productId");
             return cart.products;
         } catch (error) {
             console.log("getProductsCart: ", error.message);
@@ -47,53 +47,52 @@ export class CartsManagerMongo{
     }
 
     isInCart(products_cart, prod_id){
-        if(!products_cart){
+        if(!products_cart.length){
             return false;
         }else{
-            return products_cart.some(product => product.pid === prod_id)
+            return products_cart.some(product => product._id.valueOf() === prod_id )
         } 
     }
 
     async addProductToCart(cart_id, prod_id){
         try {
-            const carts = await this.getCarts()
-            const cart = await this.getCartById(cart_id)
             if(await productsService.productExists(prod_id)){
-                if(this.isInCart(cart.products, prod_id)){
-                    carts.forEach(async cart => {
-                        if(cart.cid === cart_id){
-                            const new_products_list = cart.products.map(product => {
-                                if(product.pid === prod_id){
-                                    product.quantity++;
-                                    return product;
-                                }else{
-                                    return product;
-                                }
-                            });
-                            await this.model.findByIdAndUpdate(cart_id, new_products_list, {new:true});
-                            return cart;
-                        }else{
-                            return cart;
+                const products_in_cart = await this.getProductsCart(cart_id);
+                if(this.isInCart(products_in_cart, prod_id)){      
+                    const new_products_list = products_in_cart.map(product=>{
+                        if(product._id.valueOf() === prod_id){
+                            product.quantity++;
                         }
+                        return product;
                     });
+                    const cart_updated = await this.updateProductInCart(cart_id, new_products_list);
+                    return cart_updated;
                 }else{
-                    const new_carts_list = carts.map(cart => {
-                        if(cart.cid === cart_id){
-                            cart.products.push({pid: prod_id, quantity: 1})
-                            
-                            return cart;
-                        }else{
-                            return cart;
-                        }
-                    });
-                    await this.model.findByIdAndUpdate
+                    products_in_cart.push({_id: prod_id, quantity: 1});
+                    const cart_updated = await this.updateProductInCart(cart_id, products_in_cart);
+                    return cart_updated;
                 }   
             }else{
-                throw new Error("No es posible agregar el producto al carrito o no existe.")
+                throw new Error("No se pudo agregar el producto al carrito o no existe.")
             }
         } catch (error) {
             console.log("addProductToCart: ", error.message);
             throw error;
+        }
+    }
+
+    async updateProductInCart(cart_id, new_products_list){
+        try {
+            const filter = { _id: cart_id };
+            const update = { products: new_products_list };
+            const cart_updated = await this.model.findOneAndUpdate(filter, update, { new:true });
+            if(!cart_updated){
+                throw new Error("No se pudo encontrar el carrito a actualizar");
+            }
+            return cart_updated;
+        } catch (error) {
+            console.log("updateProductInCart: ", error.message);
+            throw new Error("No se pudo actualizar el carrito con la nueva lista de productos");
         }
     }
 }
