@@ -8,8 +8,10 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { chatService, productsService } from "./dao/services/services.js";
 import { connectDB } from "./config/dbConnection.js";
+import { config } from 'dotenv';
 
-const port = process.env.PORT || 8080;
+config()
+const port = process.env.PORT;
 const app = express();
 
 app.use(express.json());
