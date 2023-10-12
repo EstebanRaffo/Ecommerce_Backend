@@ -6,6 +6,15 @@ export class ProductsManagerMongo{
     }
 
     async getProducts(params){
+        if(!params){
+            try {
+                const all_products = this.model.find();
+                return all_products;
+            } catch (error) {
+                console.log("getProducts: ", error.message);
+                throw new Error("No se pudo obtener el listado de productos sin params");
+            }
+        }
         const { limit=10, page=1, sort, category, stock } = params;
         let options = { limit: +limit, page: +page, lean:true };
         if(sort){
@@ -22,10 +31,11 @@ export class ProductsManagerMongo{
         console.log("query: ", query)
         try{
             const products_data = await this.model.paginate(query, options);
+            console.log("products_data: ", products_data)
             return products_data;
         }catch(error){
             console.log("getProducts: ", error.message);
-            throw new Error("No se pudo obtener el listado de productos");
+            throw new Error("No se pudo obtener el listado de productos con params");
         }
     }
 
@@ -78,7 +88,7 @@ export class ProductsManagerMongo{
     async productExists(id){
         try{
             const products = await this.getProducts();
-            return products.some(product => product.id === id);
+            return products.some(product => product._id.valueOf() === id);
         }catch(error){
             console.log(error.message);
             throw error;

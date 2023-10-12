@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
     try{
         const params = req.query;
         const result = await productsService.getProducts(params);
-        console.log("products: ", result, "\nproducts.docs.length: ", result.docs.length)
+
         if(result.docs.length){
             const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
             const data_products = {
