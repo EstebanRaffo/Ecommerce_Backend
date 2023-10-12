@@ -5,10 +5,24 @@ export class ProductsManagerMongo{
         this.model = productsModel;
     }
 
-    async getProducts(){
+    async getProducts(params){
+        const { limit=10, page=1, sort, category, stock } = params;
+        let options = { limit: +limit, page: +page, lean:true };
+        if(sort){
+            const value = sort === "asc" ? 1 : -1;
+            options.sort = {price: value};
+        }   
+        let query = {}
+        if(category){
+            query.category = category;
+        }
+        if(stock){
+            query.stock = +stock;
+        }
+        console.log("query: ", query)
         try{
-            const products = await this.model.find();
-            return products;
+            const products_data = await this.model.paginate(query, options);
+            return products_data;
         }catch(error){
             console.log("getProducts: ", error.message);
             throw new Error("No se pudo obtener el listado de productos");
