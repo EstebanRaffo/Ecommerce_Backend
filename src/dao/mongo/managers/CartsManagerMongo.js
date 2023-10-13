@@ -28,18 +28,18 @@ export class CartsManagerMongo{
 
     async getProductsCart(cart_id){
         try {
-            const cart = await this.model.findById(cart_id).populate("products.productId");
-            console.log("getProductsCart -> cart: ", cart );
+            const cart = await this.model.findById(cart_id);
             return cart.products;
         } catch (error) {
             console.log("getProductsCart: ", error.message);
             throw new Error("No se pudieron obtener los productos del carrito");
         }
     }
-
+    
     async getCartById(id){
         try {
-            const cart = await this.model.findById(id)
+            const cart = await this.model.findOne({_id: id}).populate('products.productId');
+            console.log("getCartById -> cart: ", cart );
             return cart;
         } catch (error) {
             console.log("getCartById: ", error.message);

@@ -14,10 +14,10 @@ router.post("/", async (req, res)=>{
 });
 
 router.get("/:cid", async (req, res)=>{
-    const id = req.params.cid;
     try{
-        const products_cart = await cartsService.getProductsCart(id);
-        res.status(201).json({message: "Productos del carrito", data: products_cart});
+        const id = req.params.cid;
+        const cart = await cartsService.getCartById(id);
+        res.status(200).json({message: "Carrito encontrado", data: cart});
     }catch(error){
         res.json({status: "error", message: error.message});
     }
@@ -34,7 +34,6 @@ router.post("/:cid/product/:pid", async (req, res)=>{
     }
 });
 
-
 router.delete("/:cid/products/:pid", async (req, res)=>{
     const cart_id = req.params.cid;
     const prod_id = req.params.pid;
@@ -50,7 +49,8 @@ router.put("/:cid", async (req, res)=>{
     const cart_id = req.params.cid;
     const { products } = req.body;
     try {
-        const cart_updated = await cartsService.updateProductInCart(cart_id, products);
+        await cartsService.deleteProductsOfCart(cart_id);
+        const cart_updated = await cartsService.updateProductsInCart(cart_id, products);
         res.status(201).json({message: "Los productos del carrito fueron actualizados", data: cart_updated});
     } catch (error) {
         res.json({status: "error", message: error.message});
