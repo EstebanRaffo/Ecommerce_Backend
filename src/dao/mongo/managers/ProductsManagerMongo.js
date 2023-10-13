@@ -28,10 +28,8 @@ export class ProductsManagerMongo{
         if(stock){
             query.stock = +stock;
         }
-        console.log("query: ", query)
         try{
             const products_data = await this.model.paginate(query, options);
-            console.log("products_data: ", products_data)
             return products_data;
         }catch(error){
             console.log("getProducts: ", error.message);
