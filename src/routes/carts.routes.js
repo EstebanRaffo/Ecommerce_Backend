@@ -17,7 +17,6 @@ router.get("/:cid", async (req, res)=>{
     try{
         const cid = req.params.cid;
         const cart = await cartsService.getCartById(cid);
-        console.log("router.get(/:cid) -> cart.products: ", cart)
         // res.render("cart", {products: cart.products, allowProtoPropertiesByDefault: true})
         res.json({status: "success", data: cart})
     }catch(error){

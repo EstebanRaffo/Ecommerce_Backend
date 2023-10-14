@@ -38,7 +38,7 @@ export class CartsManagerMongo{
     
     async getCartById(cid){
         try {
-            const cart = await this.model.findById(cid).populate("products.productId");
+            const cart = await this.model.findById(cid).populate("products._id");
             if(!cart){
                 throw new Error(`El carrito con el ID: '${cid}' no existe.`);
             }
