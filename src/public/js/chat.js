@@ -17,7 +17,6 @@ Swal.fire({
     allowOutsideClick:false,
     allowEscapeKey:false
 }).then((inputValue)=>{
-    console.log(inputValue);
     user = inputValue.value;
     userName.innerHTML = user;
     socketClient.emit("authenticated", user);
@@ -30,7 +29,6 @@ sendMsg.addEventListener("click",()=>{
 });
 
 socketClient.on("chatHistory", (dataServer)=>{
-    console.log(dataServer);
     let msgElements="";
     dataServer.forEach(elm=>{
         msgElements += `<p>Usuario: ${elm.user} >>>> ${elm.message}</p>`
