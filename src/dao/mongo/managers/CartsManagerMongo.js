@@ -1,5 +1,5 @@
-import { cartsModel } from "../models/carts.model.js";
 import { productsService } from "../../services/services.js";
+import { cartsModel } from "../models/carts.model.js";
 
 export class CartsManagerMongo{
     constructor(){
@@ -36,10 +36,13 @@ export class CartsManagerMongo{
         }
     }
     
-    async getCartById(id){
+    async getCartById(cid){
         try {
-            const cart = await this.model.findOne({_id: id}).populate('products.productId');
-            console.log("getCartById -> cart: ", cart );
+            const cart = await this.model.findById(cid).populate("products.productId");
+            if(!cart){
+                throw new Error(`El carrito con el ID: '${cid}' no existe.`);
+            }
+            console.log("getCartById -> cart: ", cart);
             return cart;
         } catch (error) {
             console.log("getCartById: ", error.message);

@@ -8,7 +8,7 @@ export class ProductsManagerMongo{
     async getProducts(params){
         if(!params){
             try {
-                const all_products = this.model.find();
+                const all_products = this.model.find().lean();
                 return all_products;
             } catch (error) {
                 console.log("getProducts: ", error.message);
