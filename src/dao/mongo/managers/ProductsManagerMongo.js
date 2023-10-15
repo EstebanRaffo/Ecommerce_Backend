@@ -5,17 +5,19 @@ export class ProductsManagerMongo{
         this.model = productsModel;
     }
 
-    async getProducts(params){
-        if(!params){
+    async getProducts(query_params){
+        if(!query_params){
+            const options = {limit: 10, page: 1, lean:true}
             try {
-                const all_products = this.model.find().lean();
-                return all_products;
+                // const products = this.model.find().lean();
+                const products = await this.model.paginate({}, options);
+                return products;
             } catch (error) {
                 console.log("getProducts: ", error.message);
                 throw new Error("No se pudo obtener el listado de productos sin params");
             }
         }
-        const { limit=10, page=1, sort, category, stock } = params;
+        const { limit=10, page=1, sort, category, stock } = query_params;
         let options = { limit: +limit, page: +page, lean:true };
         if(sort){
             const value = sort === "asc" ? 1 : -1;
@@ -35,6 +37,24 @@ export class ProductsManagerMongo{
             console.log("getProducts: ", error.message);
             throw new Error("No se pudo obtener el listado de productos con params");
         }
+    }
+
+    getPaginateData(result, req){
+        const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+        const data_products = {
+            status: "success",
+            payload: result.docs,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage ? `${baseUrl.replace(`page=${result.page}`, `page=${result.prevPage}`)}` : null,
+            nextLink: result.hasNextPage ? baseUrl.includes("page") ?
+            baseUrl.replace(`page=${result.page}`, `page=${result.nextPage}`) : baseUrl.concat(`?page=${result.nextPage}`) : null
+        }
+        return data_products;
     }
 
     async createProduct(productInfo){

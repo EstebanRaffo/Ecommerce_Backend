@@ -5,24 +5,11 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try{
-        const params = req.query;
-        const result = await productsService.getProducts(params);
-
+        const query_params = req.query;
+        const result = await productsService.getProducts(query_params);
+        
         if(result.docs.length){
-            const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
-            const data_products = {
-                status: "success",
-                payload: result.docs,
-                totalPages: result.totalPages,
-                prevPage: result.prevPage,
-                nextPage: result.nextPage,
-                page: result.page,
-                hasPrevPage: result.hasPrevPage,
-                hasNextPage: result.hasNextPage,
-                prevLink: result.hasPrevPage ? `${baseUrl.replace(`page=${result.page}`, `page=${result.prevPage}`)}` : null,
-                nextLink: result.hasNextPage ? baseUrl.includes("page") ?
-                baseUrl.replace(`page=${result.page}`, `page=${result.nextPage}`) : baseUrl.concat(`?page=${result.nextPage}`) : null
-            }
+            const data_products = productsService.getPaginateData(result, req);
             res.status(200).json(data_products.payload); 
         }else{
             res.send("No se encontraron productos");
