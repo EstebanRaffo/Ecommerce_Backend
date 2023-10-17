@@ -1,0 +1,17 @@
+<h1>Registro</h1>
+
+<p style="color:red">{{error}}</p>
+
+<form method="post" action="/api/sessions/signup">
+    <input type="text" name="first_name" placeholder="Nombre"/>
+    <br/><br/>
+    <input type="text" name="last_name" placeholder="Apellido"/>
+    <br/><br/>
+    <input type="email" name="email" placeholder="Correo electrónico"/>
+    <br/><br/>
+    <input type="number" name="age" placeholder="Edad"/>
+    <br/><br/>
+    <input type="password" name="password" placeholder="Contraseña"/>
+    <br/><br/>
+    <button>Registrarse</button>
+</form>
