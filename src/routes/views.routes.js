@@ -4,15 +4,27 @@ import { productsService } from "../dao/services/services.js";
 const router = Router();
 
 router.get("/", (req,res)=>{
-    res.render("home");
+    if(req.session.email){
+        res.render("home");
+    }else{
+        res.redirect("/login");
+    }
 });
 
 router.get("/realtimeproducts", (req,res)=>{
-    res.render("realTimeProducts");
+    if(req.session.email){
+        res.render("realTimeProducts");
+    }else{
+        res.redirect("/login");
+    }
 });
 
 router.get("/chat", async (req, res)=>{
-    res.render("chat");
+    if(req.session.email){
+        res.render("chat");
+    }else{
+        res.redirect("/login");
+    }
 });
 
 router.get("/products", async (req, res)=>{
@@ -20,11 +32,11 @@ router.get("/products", async (req, res)=>{
         if(req.session.email){
             const params = req.query;
             const result = await productsService.getProducts(params);
-            const {first_name, last_name, email, age, rol} = req.session;
-
+            const {first_name, last_name, email, age, rol} = req.session; 
+            const isAdmin = rol === process.env.ROL_ADMIN; 
             if(result.docs.length){
                 const data_products = productsService.getPaginateData(result, req);
-                res.render("products", {first_name, last_name, email, age, rol, products: data_products.payload, prevLink: data_products.prevLink, nextLink: data_products.nextLink, hasPrevPage: data_products.hasPrevPage, hasNextPage: data_products.hasNextPage});
+                res.render("products", {first_name, last_name, email, age, rol, isAdmin, products: data_products.payload, prevLink: data_products.prevLink, nextLink: data_products.nextLink, hasPrevPage: data_products.hasPrevPage, hasNextPage: data_products.hasNextPage});
             }else{
                 res.send("No se encontraron productos");
             }
@@ -54,8 +66,9 @@ router.get("/login",(req,res)=>{
 
 router.get("/profile",(req,res)=>{
     if(req.session.email){
-        const {first_name, last_name, email, age} = req.session;
-        res.render("profile",{first_name, last_name, email, age});
+        const {first_name, last_name, email, age, rol} = req.session;
+        const isAdmin = rol === process.env.ROL_ADMIN; 
+        res.render("profile",{first_name, last_name, email, age, rol, isAdmin});
     } else {
         res.redirect("/login");
     }

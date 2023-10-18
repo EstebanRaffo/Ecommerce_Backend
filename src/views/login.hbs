@@ -1,12 +1,20 @@
 <h1>Login</h1>
+<div>
+    <p style="color: green;">{{message}}</p>
+    <p style="color: red;">{{error}}</p>
+</div>
 
-<p style="color: green;">{{message}}</p>
-<p style="color: red;">{{error}}</p>
+<div>
+    <form method="post" action="/api/sessions/login">
+        <input type="email" name="email" placeholder="Tu Correo"/>
+        <br/><br/>
+        <input type="password" name="password" placeholder="Tu Contraseña"/>
+        <br/><br/>
+        <button>Iniciar sesión</button>
+    </form>
+</div>
 
-<form method="post" action="/api/sessions/login">
-    <input type="email" name="email" placeholder="Tu Correo"/>
-    <br/><br/>
-    <input type="password" name="password" placeholder="Tu Contraseña"/>
-    <br/><br/>
-    <button>Iniciar sesión</button>
-</form>
+<div>
+    <hr>
+    <a href="/signup">Registrarse</a>
+</div>

@@ -9,7 +9,6 @@ export class ProductsManagerMongo{
         if(!query_params){
             const options = {limit: 10, page: 1, lean:true}
             try {
-                // const products = this.model.find().lean();
                 const products = await this.model.paginate({}, options);
                 return products;
             } catch (error) {

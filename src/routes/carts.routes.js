@@ -17,7 +17,11 @@ router.get("/:cid", async (req, res)=>{
     try{
         const cid = req.params.cid;
         const cart = await cartsService.getCartById(cid);
-        res.render("cart", { products: cart.products })
+        if(req.session.email){
+            res.render("cart", { products: cart.products })
+        }else{
+            res.redirect("/login");
+        }
     }catch(error){
         res.json({status: "error", message: error.message});
     }

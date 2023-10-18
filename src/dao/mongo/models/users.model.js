@@ -8,11 +8,6 @@ const userSchema = new mongoose.Schema({
     email:String,
     age:String,
     password:String,
-    // rol:{
-    //     type:String,
-    //     default:"admin",
-    //     required:true
-    // }
     rol:{
         type:String,
         default:"usuario",

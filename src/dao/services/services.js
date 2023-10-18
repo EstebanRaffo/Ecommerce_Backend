@@ -5,6 +5,7 @@
 import { ProductsManagerMongo } from "../mongo/managers/ProductsManagerMongo.js";
 import { CartsManagerMongo } from "../mongo/managers/CartsManagerMongo.js";
 import { ChatManagerMongo } from "../mongo/managers/ChatManagerMongo.js"; 
+import { UsersManagerMongo } from "../mongo/managers/UsersManagerMongo.js";
 
 // const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,3 +15,4 @@ import { ChatManagerMongo } from "../mongo/managers/ChatManagerMongo.js";
 export const productsService = new ProductsManagerMongo();
 export const cartsService = new CartsManagerMongo();
 export const chatService = new ChatManagerMongo();
+export const userService = new UsersManagerMongo();

@@ -2,12 +2,18 @@
 
 {{error}}
 
-<h2>Bienvenid@ {{first_name}} {{last_name}}</h2>
-<hr>
-<div>
-    <h3>Mis Datos</h3>
-    <p>Email: {{email}}</p>
-    <p>Edad: {{age}}</p>
-</div>
+{{#if isAdmin}}
+    <h3>Admin: {{email}}</h3>
+    <p>Rol: {{rol}}</p>
+{{else}}
+    <h2>Bienvenid@ {{first_name}} {{last_name}}</h2>
+    <hr>
+    <div>
+        <h3>Mis Datos</h3>
+        <p>Email: {{email}}</p>
+        <p>Edad: {{age}}</p>
+        <p>Rol: {{rol}}</p>
+    </div>
+{{/if}}
 
-<a href="/api/sessions/logout">Cerrar sesion</a>
+<a href="/api/sessions/logout">Cerrar sesión</a>

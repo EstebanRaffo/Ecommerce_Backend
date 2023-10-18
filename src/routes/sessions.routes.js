@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { usersModel } from "../dao/mongo/models/users.model.js";
+import { userService } from "../dao/services/services.js";
 
 const router = Router();
 
 router.post("/signup", async(req,res)=>{
     try {
         const signupForm = req.body;
-        const result = await usersModel.create(signupForm);
-        res.render("login",{message:"Usuario registrado correctamente"});
+        const result = await userService.createUser(signupForm);
+        res.render("login",{message:`Usuario ${result.first_name} ${result.last_name} registrado correctamente`});
     } catch (error) {
         res.render("signup",{error:"No se pudo registrar el usuario"});
     }
@@ -16,17 +16,23 @@ router.post("/signup", async(req,res)=>{
 router.post("/login", async(req,res)=>{
     try {
         const loginForm = req.body;
-        const user = await usersModel.findOne({email:loginForm.email});
-        if(!user){
-            return res.render("login",{error:"Este usuario no esta registrado"});
+        if(userService.isAdmin(loginForm)){ 
+            req.session.email = loginForm.email;
+            req.session.rol = process.env.ROL_ADMIN;
+        }else{
+            const user = await userService.getUser(loginForm.email);
+            if(!user){
+                return res.render("login",{error:"Este usuario no esta registrado"});
+            }
+            if(user.password !== loginForm.password){
+                return res.render("login",{error:"Credenciales inválidas"});
+            }
+            req.session.first_name = user.first_name;
+            req.session.last_name = user.last_name;
+            req.session.email = user.email;
+            req.session.age = user.age;
+            req.session.rol = user.rol;
         }
-        if(user.password !== loginForm.password){
-            return res.render("login",{error:"Credenciales inválidas"});
-        }
-        req.session.first_name = user.first_name;
-        req.session.last_name = user.last_name;
-        req.session.email = user.email;
-        req.session.age = user.age;
         res.redirect("/products");
     } catch (error) {
         res.render("login",{error:"No se pudo iniciar sesion para este usuario"});
@@ -40,7 +46,7 @@ router.get("/logout", async(req,res)=>{
             res.redirect("/login");
         })
     } catch (error) {
-        res.render("signup",{error:"No se pudo registrar el usuario"});
+        res.render("profile",{error:"No se pudo cerrar la sesión"});
     }
 });
 

@@ -13,8 +13,6 @@ import { config } from 'dotenv';
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-import cookieParser from 'cookie-parser';
-
 
 config();
 const port = process.env.PORT;
@@ -23,7 +21,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,"/public")));
-// app.use(cookieParser());
 
 const httpServer = app.listen(port, ()=>console.log("Servidor escuchando en el puerto: ", port));
 const io = new Server(httpServer);
@@ -38,7 +35,7 @@ app.set('views', path.join(__dirname,"/views"));
 app.use(session({
     store: MongoStore.create({
         ttl:3000,
-        mongoUrl:"mongodb+srv://efraffo:uRl0eN3R9Ld1cpNP@clustercoderbackend.k37s4qc.mongodb.net/ecommerce?retryWrites=true&w=majority"
+        mongoUrl:process.env.URL_MONGO
     }),
     secret:"secretSessionBackend",
     resave:true,
