@@ -15,6 +15,16 @@ export class UsersManagerMongo{
         }
     }
 
+    async getUserById(id){
+        try {
+            const user = await usersModel.findById(id);
+            return user;
+        } catch (error) {
+            console.log("getUserById: ", error.message);
+            throw new Error("No se pudo obtener el usuario");
+        }
+    }
+
     isAdmin(loginForm){
         const email = loginForm.email;
         const password = loginForm.password;

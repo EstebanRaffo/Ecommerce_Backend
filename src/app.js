@@ -9,13 +9,12 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { chatService, productsService } from "./dao/services/services.js";
 import { connectDB } from "./config/dbConnection.js";
-import { config } from 'dotenv';
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import { config } from "./config/config.js";
+import passport from "passport";
 
-
-config();
-const port = process.env.PORT;
+const port = config.server.port;
 const app = express();
 
 app.use(express.json());
@@ -35,12 +34,16 @@ app.set('views', path.join(__dirname,"/views"));
 app.use(session({
     store: MongoStore.create({
         ttl:3000,
-        mongoUrl:process.env.URL_MONGO
+        mongoUrl:config.mongo.url
     }),
-    secret:"secretSessionBackend",
+    secret:config.server.secretSession,
     resave:true,
     saveUninitialized:true
 }));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(viewsRouter);
 app.use("/api/products", productsRouter);

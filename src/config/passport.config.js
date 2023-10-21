@@ -1,0 +1,96 @@
+import passport from "passport";
+import localStrategy from "passport-local";
+import { createHash, isValidPassword } from "../utils.js";
+import { userService } from "../dao/services/services.js";
+import { config } from "./config.js";
+import GithubStrategy from "passport-github2";
+
+export const initializePassport = ()=>{
+    passport.use("signupLocalStrategy", new localStrategy(
+        {
+            passReqToCallback:true,
+            usernameField:"email"
+        },
+        async (req, username, password, done)=>{
+            const {first_name, last_name, age} = req.body;
+            try {
+                const user = await userService.getUser(username);
+                if(user){
+                    return done(null,false);
+                }
+                const new_user = {
+                    first_name,
+                    last_name,
+                    email:username,
+                    age,
+                    password:createHash(password)
+                };
+                console.log("initializePassport -> new_user: ",new_user)
+                const user_created = await userService.createUser(new_user);
+                return done(null, user_created);
+            } catch (error) {
+                return done(error);
+            }
+        }
+    ));
+
+    passport.use("loginLocalStrategy", new localStrategy(
+        {
+            usernameField:"email",
+        },
+        async (username, password, done)=>{
+            try {
+                const user = await userService.getUser(username);
+                if(!user){
+                    return done(null, false);
+                }
+                if(!isValidPassword(password, user)){
+                    return done(null, false);
+                }
+                return done(null, user);
+            } catch (error) {
+                return done(error);
+            }
+        }
+    ));
+
+    // loginGithubStrategy
+    
+    passport.use("signupGithubStrategy", new GithubStrategy(
+        {
+            clientId:config.github.clientId,
+            clientSecret:config.github.clientSecret,
+            callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
+        },
+        async(accessToken, refreshToken, profile, done)=>{
+            try {
+                console.log("signupGithubStrategy -> profile", profile)
+                const user = await userService.getUser(profile._json.email);
+                if(user){
+                    return done(null, user);
+                }
+                const new_user = {
+                    first_name:profile._json.name.split('')[0],
+                    last_name:profile._json.name.split('')[1],
+                    email:profile._json.email,
+                    password:createHash(profile.id),
+                    age:''
+                };
+                console.log("signupGithubStrategy -> new_user: ", new_user)
+                const user_created = await userService.createUser(new_user);
+                return done(null, user_created);
+            } catch (error) {
+                return done(error);
+            }
+        }
+    ));
+
+    passport.serializeUser((user, done)=>{
+        done(null, user._id);
+    });
+
+    passport.deserializeUser(async(id, done)=>{
+        const user = await userService.getUserById(id);
+        done(null, user);
+    });
+}
