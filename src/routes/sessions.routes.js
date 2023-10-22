@@ -45,12 +45,35 @@ const router = Router();
 router.post("/signup", passport.authenticate("signupLocalStrategy",{
     failureRedirect:"/api/sessions/fail-signup"
 }) , async(req,res)=>{
-    res.render("loginView",{message:"Usuario registrado correctamente"});
+    res.render("profile",{message:"Usuario registrado correctamente"});
 });
 
 router.get("/fail-signup",(req,res)=>{
-    res.render("signupView",{error:"No se pudo registrar el usuario"});
+    res.render("signup",{error:"No se pudo registrar el usuario"});
 });
+
+//Rutas de login
+router.post("/login", passport.authenticate("loginLocalStrategy",{
+    failureRedirect:"/api/sessions/fail-login"
+}) , async(req,res)=>{
+    res.redirect("/profile");
+});
+
+router.get("/fail-login",(req,res)=>{
+    res.render("login",{error:"No se pudo iniciar sesion para este usuario"});
+});
+
+router.get("/logout", async(req,res)=>{
+    try {
+        req.session.destroy(err=>{
+            if(err) return res.render("profile",{error:"No se pudo cerrar la sesion"});
+            res.redirect("/login");
+        })
+    } catch (error) {
+        res.render("profile",{error:"No se pudo cerrar la sesión"});
+    }
+});
+
 
 //Ruta de solicitud registro con github
 router.get("/signup-github", passport.authenticate("signupGithubStrategy"));
@@ -72,26 +95,5 @@ router.get(config.github.callbackUrl, passport.authenticate("loginGithubStrategy
     res.redirect("/profile");
 });
 
-//Rutas de login
-router.post("/login", passport.authenticate("loginLocalStrategy",{
-    failureRedirect:"/api/sessions/fail-login"
-}) , async(req,res)=>{
-    res.redirect("/profile");
-});
-
-router.get("/fail-login",(req,res)=>{
-    res.render("loginView",{error:"No se pudo iniciar sesion para este usuario"});
-});
-
-router.get("/logout", async(req,res)=>{
-    try {
-        req.session.destroy(err=>{
-            if(err) return res.render("profile",{error:"No se pudo cerrar la sesion"});
-            res.redirect("/login");
-        })
-    } catch (error) {
-        res.render("profile",{error:"No se pudo cerrar la sesión"});
-    }
-});
 
 export {router as sessionsRouter};
