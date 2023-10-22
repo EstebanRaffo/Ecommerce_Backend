@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { productsService } from "../dao/services/services.js";
+import { config } from "../config/config.js";
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.get("/products", async (req, res)=>{
             const params = req.query;
             const result = await productsService.getProducts(params);
             const {first_name, last_name, email, age, rol} = req.session; 
-            const isAdmin = rol === process.env.ROL_ADMIN; 
+            const isAdmin = rol === config.admin.rol; 
             if(result.docs.length){
                 const data_products = productsService.getPaginateData(result, req);
                 res.render("products", {first_name, last_name, email, age, rol, isAdmin, products: data_products.payload, prevLink: data_products.prevLink, nextLink: data_products.nextLink, hasPrevPage: data_products.hasPrevPage, hasNextPage: data_products.hasNextPage});
@@ -67,7 +68,7 @@ router.get("/login",(req,res)=>{
 router.get("/profile",(req,res)=>{
     if(req.session.email){
         const {first_name, last_name, email, age, rol} = req.session;
-        const isAdmin = rol === process.env.ROL_ADMIN; 
+        const isAdmin = rol === config.admin.rol; 
         res.render("profile",{first_name, last_name, email, age, rol, isAdmin});
     } else {
         res.redirect("/login");

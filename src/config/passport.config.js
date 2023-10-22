@@ -54,8 +54,6 @@ export const initializePassport = ()=>{
         }
     ));
 
-    // loginGithubStrategy
-    
     passport.use("signupGithubStrategy", new GithubStrategy(
         {
             clientId:config.github.clientId,
@@ -84,6 +82,27 @@ export const initializePassport = ()=>{
             }
         }
     ));
+
+    // loginGithubStrategy
+    passport.use("loginGithubStrategy", new GithubStrategy({
+        clientId:config.github.clientId,
+        clientSecret:config.github.clientSecret,
+        callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
+    }, async (accessToken, refreshToken, profile, done)=>{
+        try {
+            console.log("loginGithubStrategy -> profile", profile)
+            const user = await userService.getUser(username);
+            if(!user){
+                return done(null, false);
+            }
+            if(!isValidPassword(password, user)){
+                return done(null, false);
+            }
+            return done(null, user);
+        } catch (error) {
+            return done(error)
+        }
+    }));
 
     passport.serializeUser((user, done)=>{
         done(null, user._id);
