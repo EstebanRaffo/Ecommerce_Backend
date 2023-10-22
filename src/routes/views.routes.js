@@ -66,8 +66,8 @@ router.get("/login",(req,res)=>{
 });
 
 router.get("/profile",(req,res)=>{
-    if(req.session.email){
-        const {first_name, last_name, email, age, rol} = req.session;
+    if(req.user?.email){
+        const {first_name, last_name, email, age, rol} = req.user;
         const isAdmin = rol === config.admin.rol; 
         res.render("profile",{first_name, last_name, email, age, rol, isAdmin});
     } else {

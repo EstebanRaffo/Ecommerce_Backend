@@ -40,14 +40,19 @@ export const initializePassport = ()=>{
         },
         async (username, password, done)=>{
             try {
-                const user = await userService.getUser(username);
-                if(!user){
-                    return done(null, false);
+                if(userService.isAdmin(loginForm)){ 
+                    req.session.email = loginForm.email;
+                    req.session.rol = config.admin.rol;
+                }else{
+                    const user = await userService.getUser(username);
+                    if(!user){
+                        return done(null, false);
+                    }
+                    if(!isValidPassword(password, user)){
+                        return done(null, false);
+                    }
+                    return done(null, user);
                 }
-                if(!isValidPassword(password, user)){
-                    return done(null, false);
-                }
-                return done(null, user);
             } catch (error) {
                 return done(error);
             }

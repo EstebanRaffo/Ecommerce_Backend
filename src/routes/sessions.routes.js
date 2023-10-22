@@ -20,7 +20,7 @@ const router = Router();
 //         const loginForm = req.body;
 //         if(userService.isAdmin(loginForm)){ 
 //             req.session.email = loginForm.email;
-//             req.session.rol = process.env.ROL_ADMIN;
+//             req.session.rol = config.admin.rol;
 //         }else{
 //             const user = await userService.getUser(loginForm.email);
 //             if(!user){
@@ -56,7 +56,7 @@ router.get("/fail-signup",(req,res)=>{
 router.post("/login", passport.authenticate("loginLocalStrategy",{
     failureRedirect:"/api/sessions/fail-login"
 }) , async(req,res)=>{
-    res.redirect("/profile");
+    res.redirect("/products");
 });
 
 router.get("/fail-login",(req,res)=>{
