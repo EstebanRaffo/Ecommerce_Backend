@@ -1,4 +1,6 @@
+import { config } from "../../../config/config.js";
 import { usersModel } from "../models/users.model.js";
+
 
 export class UsersManagerMongo{
     constructor(){
@@ -26,9 +28,8 @@ export class UsersManagerMongo{
     }
 
     isAdmin(loginForm){
-        const email = loginForm.email;
-        const password = loginForm.password;
-        return email === process.env.USER_ADMIN && password === process.env.PASS_ADMIN;
+        const {email, password} = loginForm;
+        return email === config.admin.user && password === config.admin.password;
     }
 
     async createUser(signupForm){

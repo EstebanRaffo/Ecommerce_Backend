@@ -45,7 +45,11 @@ const router = Router();
 router.post("/signup", passport.authenticate("signupLocalStrategy",{
     failureRedirect:"/api/sessions/fail-signup"
 }) , async(req,res)=>{
-    res.render("profile",{message:"Usuario registrado correctamente"});
+    console.log("/signup -> req.user: ", req.user)
+    const {first_name, last_name, email, age, rol} = req.user
+    console.log("rol: ", rol)
+    const isAdmin = rol === config.admin.rol; 
+    res.render("profile",{message:"Usuario registrado correctamente", first_name, last_name, email, age, rol, isAdmin});
 });
 
 router.get("/fail-signup",(req,res)=>{

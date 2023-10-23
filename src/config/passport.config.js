@@ -25,8 +25,8 @@ export const initializePassport = ()=>{
                     age,
                     password:createHash(password)
                 };
-                console.log("initializePassport -> new_user: ",new_user)
                 const user_created = await userService.createUser(new_user);
+                console.log("signupLocalStrategy -> user_created: ", user_created)
                 return done(null, user_created);
             } catch (error) {
                 return done(error);
@@ -40,9 +40,9 @@ export const initializePassport = ()=>{
         },
         async (username, password, done)=>{
             try {
-                if(userService.isAdmin(loginForm)){ 
-                    req.session.email = loginForm.email;
-                    req.session.rol = config.admin.rol;
+                if(userService.isAdmin({username, password})){
+                    req.user.email = username;
+                    req.user.rol = config.admin.rol;
                 }else{
                     const user = await userService.getUser(username);
                     if(!user){
@@ -61,25 +61,23 @@ export const initializePassport = ()=>{
 
     passport.use("signupGithubStrategy", new GithubStrategy(
         {
-            clientId:config.github.clientId,
+            clientID:config.github.clientId,
             clientSecret:config.github.clientSecret,
             callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
         },
         async(accessToken, refreshToken, profile, done)=>{
             try {
-                console.log("signupGithubStrategy -> profile", profile)
                 const user = await userService.getUser(profile._json.email);
                 if(user){
                     return done(null, user);
                 }
                 const new_user = {
-                    first_name:profile._json.name.split('')[0],
-                    last_name:profile._json.name.split('')[1],
+                    first_name:profile._json.name.split(' ')[0],
+                    last_name:profile._json.name.split(' ')[1],
                     email:profile._json.email,
                     password:createHash(profile.id),
                     age:''
                 };
-                console.log("signupGithubStrategy -> new_user: ", new_user)
                 const user_created = await userService.createUser(new_user);
                 return done(null, user_created);
             } catch (error) {
@@ -89,7 +87,7 @@ export const initializePassport = ()=>{
     ));
 
     passport.use("loginGithubStrategy", new GithubStrategy({
-        clientId:config.github.clientId,
+        clientID:config.github.clientId,
         clientSecret:config.github.clientSecret,
         callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
     }, async (accessToken, refreshToken, profile, done)=>{

@@ -30,10 +30,10 @@ router.get("/chat", async (req, res)=>{
 
 router.get("/products", async (req, res)=>{
     try{
-        if(req.session.email){
+        if(req.user?.email){
             const params = req.query;
             const result = await productsService.getProducts(params);
-            const {first_name, last_name, email, age, rol} = req.session; 
+            const {first_name, last_name, email, age, rol} = req.user; 
             const isAdmin = rol === config.admin.rol; 
             if(result.docs.length){
                 const data_products = productsService.getPaginateData(result, req);

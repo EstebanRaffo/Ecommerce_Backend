@@ -3,16 +3,17 @@ import { __dirname } from "./utils.js";
 import path from "path";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
-import { viewsRouter } from "./routes/views.routes.js";
-import { sessionsRouter } from "./routes/sessions.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { chatService, productsService } from "./dao/services/services.js";
 import { connectDB } from "./config/dbConnection.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import { config } from "./config/config.js";
 import passport from "passport";
+import { initializePassport } from "./config/passport.config.js";
+import { config } from "./config/config.js";
+import { viewsRouter } from "./routes/views.routes.js";
+import { sessionsRouter } from "./routes/sessions.routes.js";
 
 const port = config.server.port;
 const app = express();
@@ -41,7 +42,7 @@ app.use(session({
     saveUninitialized:true
 }));
 
-
+initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
