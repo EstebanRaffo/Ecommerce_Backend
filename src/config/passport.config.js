@@ -26,7 +26,6 @@ export const initializePassport = ()=>{
                     password:createHash(password)
                 };
                 const user_created = await userService.createUser(new_user);
-                console.log("signupLocalStrategy -> user_created: ", user_created)
                 return done(null, user_created);
             } catch (error) {
                 return done(error);
@@ -40,19 +39,14 @@ export const initializePassport = ()=>{
         },
         async (username, password, done)=>{
             try {
-                if(userService.isAdmin({username, password})){
-                    req.user.email = username;
-                    req.user.rol = config.admin.rol;
-                }else{
-                    const user = await userService.getUser(username);
-                    if(!user){
-                        return done(null, false);
-                    }
-                    if(!isValidPassword(password, user)){
-                        return done(null, false);
-                    }
-                    return done(null, user);
+                const user = await userService.getUser(username);
+                if(!user){
+                    return done(null, false);
                 }
+                if(!isValidPassword(password, user)){
+                    return done(null, false);
+                }
+                return done(null, user);
             } catch (error) {
                 return done(error);
             }
@@ -75,7 +69,7 @@ export const initializePassport = ()=>{
                     first_name:profile._json.name.split(' ')[0],
                     last_name:profile._json.name.split(' ')[1],
                     email:profile._json.email,
-                    password:createHash(profile.id),
+                    password:'',
                     age:''
                 };
                 const user_created = await userService.createUser(new_user);
@@ -92,7 +86,6 @@ export const initializePassport = ()=>{
         callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
     }, async (accessToken, refreshToken, profile, done)=>{
         try {
-            console.log("loginGithubStrategy -> profile: ", profile)
             const user = await userService.getUser(profile._json.email);
             if(!user){
                 return done(null, false);

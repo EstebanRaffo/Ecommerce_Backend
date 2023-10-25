@@ -5,7 +5,7 @@ import { config } from "../config/config.js";
 const router = Router();
 
 router.get("/", (req,res)=>{
-    if(req.session.email){
+    if(req.user?.email){
         res.render("home");
     }else{
         res.redirect("/login");
@@ -13,7 +13,7 @@ router.get("/", (req,res)=>{
 });
 
 router.get("/realtimeproducts", (req,res)=>{
-    if(req.session.email){
+    if(req.user?.email){
         res.render("realTimeProducts");
     }else{
         res.redirect("/login");
@@ -21,7 +21,7 @@ router.get("/realtimeproducts", (req,res)=>{
 });
 
 router.get("/chat", async (req, res)=>{
-    if(req.session.email){
+    if(req.user?.email){
         res.render("chat");
     }else{
         res.redirect("/login");
@@ -50,7 +50,7 @@ router.get("/products", async (req, res)=>{
 });
 
 router.get("/signup",(req,res)=>{
-    if(req.session.email){
+    if(req.user?.email){
         res.redirect("/profile");
     }else{
         res.render("signup");
@@ -58,7 +58,7 @@ router.get("/signup",(req,res)=>{
 });
 
 router.get("/login",(req,res)=>{
-    if(req.session.email){
+    if(req.user?.email){
         res.redirect("/profile");
     }else{
         res.render("login");

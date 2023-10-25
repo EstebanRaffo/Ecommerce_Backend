@@ -17,7 +17,7 @@ router.get("/:cid", async (req, res)=>{
     try{
         const cid = req.params.cid;
         const cart = await cartsService.getCartById(cid);
-        if(req.session.email){
+        if(req.user?.email){
             res.render("cart", { products: cart.products })
         }else{
             res.redirect("/login");
