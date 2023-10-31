@@ -32,9 +32,9 @@ export class UsersManagerMongo{
         return email === config.admin.user && password === config.admin.password;
     }
 
-    async createUser(signupForm){
+    async createUser(new_user){
         try {
-            const result = await usersModel.create(signupForm);
+            const result = await usersModel.create(new_user);
             return result;
         } catch (error) {
             console.log("createUser: ", error.message);

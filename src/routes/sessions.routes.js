@@ -60,5 +60,9 @@ router.get(config.github.callbackUrl, passport.authenticate("loginGithubStrategy
     res.redirect("/products");
 });
 
+// /current
+router.get("/current", authenticate("jwtAuth"), authorize("user"), (req,res)=>{
+    res.json({result:req.user});
+});
 
 export {router as sessionsRouter};
