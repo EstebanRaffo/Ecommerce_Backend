@@ -1,8 +1,6 @@
 import express from "express";
 import { __dirname } from "./utils.js";
 import path from "path";
-import { productsRouter } from "./routes/products.routes.js";
-import { cartsRouter } from "./routes/carts.routes.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { chatService, productsService } from "./dao/services/services.js";
@@ -12,6 +10,8 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { config } from "./config/config.js";
+import { productsRouter } from "./routes/products.routes.js";
+import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 

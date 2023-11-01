@@ -4,7 +4,6 @@ import { config } from "../config/config.js";
 
 const router = Router();
 
-//Rutas de registro
 router.post("/signup", passport.authenticate("signupLocalStrategy",{
     failureRedirect:"/api/sessions/fail-signup"
 }) , async(req,res)=>{
@@ -17,7 +16,6 @@ router.get("/fail-signup",(req,res)=>{
     res.render("signup",{error:"No se pudo registrar el usuario"});
 });
 
-//Rutas de login
 router.post("/login", passport.authenticate("loginLocalStrategy",{
     failureRedirect:"/api/sessions/fail-login"
 }) , async(req,res)=>{
@@ -25,7 +23,7 @@ router.post("/login", passport.authenticate("loginLocalStrategy",{
 });
 
 router.get("/fail-login",(req,res)=>{
-    res.render("login",{error:"No se pudo iniciar sesion para este usuario"});
+    res.render("login",{error:"No se pudo iniciar sesion para el usuario"});
 });
 
 router.get("/logout", async(req,res)=>{
@@ -60,9 +58,12 @@ router.get(config.github.callbackUrl, passport.authenticate("loginGithubStrategy
     res.redirect("/products");
 });
 
-// /current
-router.get("/current", authenticate("jwtAuth"), authorize("user"), (req,res)=>{
-    res.json({result:req.user});
+router.get("/current", (req,res)=>{
+    if(req.user?.email){
+        res.status(200).json({user:req.user});
+    }else{
+        res.redirect("/login");
+    }
 });
 
 export {router as sessionsRouter};

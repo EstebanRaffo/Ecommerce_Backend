@@ -3,20 +3,27 @@ import mongoose from "mongoose";
 const usersCollection = "users";
 
 const userSchema = new mongoose.Schema({
-    first_name:String,
+    first_name:{
+        type:String,
+        required:true
+    },
     last_name:String,
     email:{
         type:String,
-        unique:true
+        unique:true,
+        required:true
     },
     age:Number,
-    password:String,
+    password:{
+        type:String,
+        required:true
+    },
     rol:{
         type:String,
         default:"usuario",
-        required:true
+        enum:["usuario","admin"]
     },
-    _id:{
+    cart:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"carts"
     },

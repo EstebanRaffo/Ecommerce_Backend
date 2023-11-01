@@ -33,7 +33,6 @@ export const initializePassport = ()=>{
         }
     ));
 
-    // Refactor con JWT
     passport.use("loginLocalStrategy", new localStrategy(
         {
             usernameField:"email",
