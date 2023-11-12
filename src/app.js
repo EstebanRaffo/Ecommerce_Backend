@@ -3,7 +3,7 @@ import { __dirname } from "./utils.js";
 import path from "path";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
-import { chatService, productsService } from "./dao/services/services.js";
+import { chatDao, productsDao } from "./dao/index.js";
 import { connectDB } from "./config/dbConnection.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -56,28 +56,28 @@ let chat = [];
 
 io.on("connection", async(socket)=>{
     console.log("cliente conectado");
-    products_list = await productsService.getProducts();
+    products_list = await productsDao.getProducts();
     socket.emit("product_list", products_list);
 
     socket.on("new_product", async (data) => {
-        await productsService.addProduct(data);
-        products_list = await productsService.getProducts();
+        await productsDao.addProduct(data);
+        products_list = await productsDao.getProducts();
         io.emit("product_list", products_list); 
     });
 
     socket.on("delete_product", async (id) => {
-        productsService.deleteProduct(id);
+        productsDao.deleteProduct(id);
     });
 
-    chat = await chatService.getMessages();
+    chat = await chatDao.getMessages();
     //cuando se conecta el usuario, le enviamos el historial del chat
     socket.emit("chatHistory", chat);
 
     //recibimos el mensaje de cada usuario
     socket.on("msgChat", async (data)=>{
         
-        await chatService.createMessage(data);
-        chat = await chatService.getMessages();
+        await chatDao.createMessage(data);
+        chat = await chatDao.getMessages();
 
         //enviamos el historial del chat a todos los usuarios conectados
         io.emit("chatHistory", chat)

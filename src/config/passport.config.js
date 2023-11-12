@@ -1,9 +1,9 @@
 import passport from "passport";
 import localStrategy from "passport-local";
 import { createHash, isValidPassword } from "../utils.js";
-import { userService } from "../dao/services/services.js";
 import { config } from "./config.js";
 import GithubStrategy from "passport-github2";
+import { UsersService } from "../services/users.service.js";
 
 export const initializePassport = ()=>{
     passport.use("signupLocalStrategy", new localStrategy(
@@ -14,7 +14,7 @@ export const initializePassport = ()=>{
         async (req, username, password, done)=>{
             const {first_name, last_name, age} = req.body;
             try {
-                const user = await userService.getUser(username);
+                const user = await UsersService.getUser(username);
                 if(user){
                     return done(null,false);
                 }
@@ -25,7 +25,7 @@ export const initializePassport = ()=>{
                     age,
                     password:createHash(password)
                 };
-                const user_created = await userService.createUser(new_user);
+                const user_created = await UsersService.createUser(new_user);
                 return done(null, user_created);
             } catch (error) {
                 return done(error);
@@ -39,7 +39,7 @@ export const initializePassport = ()=>{
         },
         async (username, password, done)=>{
             try {
-                const user = await userService.getUser(username);
+                const user = await UsersService.getUser(username);
                 if(!user){
                     return done(null, false);
                 }
@@ -61,7 +61,7 @@ export const initializePassport = ()=>{
         },
         async(accessToken, refreshToken, profile, done)=>{
             try {
-                const user = await userService.getUser(profile._json.email);
+                const user = await UsersService.getUser(profile._json.email);
                 if(user){
                     return done(null, user);
                 }
@@ -72,7 +72,7 @@ export const initializePassport = ()=>{
                     password:'',
                     age:''
                 };
-                const user_created = await userService.createUser(new_user);
+                const user_created = await UsersService.createUser(new_user);
                 return done(null, user_created);
             } catch (error) {
                 return done(error);
@@ -86,7 +86,7 @@ export const initializePassport = ()=>{
         callbackURL:`http://localhost:8080/api/sessions${config.github.callbackUrl}`
     }, async (accessToken, refreshToken, profile, done)=>{
         try {
-            const user = await userService.getUser(profile._json.email);
+            const user = await UsersService.getUser(profile._json.email);
             if(!user){
                 return done(null, false);
             }
@@ -104,7 +104,7 @@ export const initializePassport = ()=>{
     });
 
     passport.deserializeUser(async(id, done)=>{
-        const user = await userService.getUserById(id);
+        const user = await UsersService.getUserById(id);
         done(null, user);
     });
 }

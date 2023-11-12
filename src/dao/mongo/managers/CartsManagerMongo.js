@@ -1,5 +1,5 @@
-import { productsService } from "../../services/services.js";
 import { cartsModel } from "../models/carts.model.js";
+import { productsDao } from "../dao/index.js";
 
 export class CartsManagerMongo{
     constructor(){
@@ -59,7 +59,7 @@ export class CartsManagerMongo{
 
     async addProductToCart(cart_id, prod_id){
         try {
-            if(await productsService.productExists(prod_id)){
+            if(await productsDao.productExists(prod_id)){
                 const products_in_cart = await this.getProductsCart(cart_id);
                 if(this.isInCart(products_in_cart, prod_id)){      
                     const new_products_list = products_in_cart.map(product=>{
@@ -101,7 +101,7 @@ export class CartsManagerMongo{
 
     async deleteProduct(cart_id, prod_id){
         try {
-            if(await productsService.productExists(prod_id)){
+            if(await productsDao.productExists(prod_id)){
                 const products_in_cart = await this.getProductsCart(cart_id);
                 if(this.isInCart(products_in_cart, prod_id)){
                     const new_product_list = products_in_cart.filter(product => product._id.valueOf() !== prod_id);
@@ -121,7 +121,7 @@ export class CartsManagerMongo{
 
     async updateProductQuantityInCart(cart_id, prod_id, new_quantity){
         try {
-            if(await productsService.productExists(prod_id)){
+            if(await productsDao.productExists(prod_id)){
                 const products_in_cart = await this.getProductsCart(cart_id);
                 if(this.isInCart(products_in_cart, prod_id)){
                     const new_products_list = products_in_cart.map(product=>{
