@@ -1,7 +1,7 @@
 import { ProductsService } from "../services/products.service.js"
 
 
-export class ProductController{
+export class ProductsController{
 
     static async getProducts(req, res){
         try{

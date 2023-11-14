@@ -1,6 +1,6 @@
 import { UsersService } from "../services/users.service.js";
 
-export class UserController{
+export class UsersController{
 
     static async getUser(email){
         try {
