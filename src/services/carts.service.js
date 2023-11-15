@@ -20,15 +20,6 @@ export class CartsService{
         }
     }
 
-    static async getProductsCart(cart_id){
-        try {
-            const result = await cartsDao.getProductsCart(cart_id);
-            return result;
-        } catch (error) {
-            throw error;
-        }
-    }
-
     static async getCartById(cid){
         try {
             const result = await cartsDao.getCartById(cid);
@@ -36,10 +27,6 @@ export class CartsService{
         } catch (error) {
             throw error;
         }
-    }
-
-    static isInCart(products_in_cart, prod_id){
-        return cartsDao.isInCart(products_in_cart, prod_id);
     }
 
     static async addProductToCart(cart_id, prod_id){
