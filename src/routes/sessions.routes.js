@@ -19,7 +19,6 @@ router.get("/fail-login", SessionsController.renderFailLogin);
 
 router.get("/logout", SessionsController.logout);
 
-
 //Ruta de solicitud registro con github
 router.get("/signup-github", passport.authenticate("signupGithubStrategy"));
 

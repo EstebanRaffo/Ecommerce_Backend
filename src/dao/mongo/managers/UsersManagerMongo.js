@@ -1,4 +1,3 @@
-import { config } from "../../../config/config.js";
 import { usersModel } from "../models/users.model.js";
 
 
@@ -26,11 +25,6 @@ export class UsersManagerMongo{
             throw new Error("No se pudo obtener el usuario");
         }
     }
-
-    // isAdmin(loginForm){
-    //     const {email, password} = loginForm;
-    //     return email === config.admin.user && password === config.admin.password;
-    // }
 
     async createUser(new_user){
         try {

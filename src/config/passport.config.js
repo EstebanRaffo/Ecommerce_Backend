@@ -70,7 +70,7 @@ export const initializePassport = ()=>{
                     first_name:profile._json.name.split(' ')[0],
                     last_name:profile._json.name.split(' ')[1],
                     email:profile._json.email,
-                    password:profile._json.id,
+                    password:'',
                     age:''
                 };
                 const user_created = await UsersService.createUser(new_user);
@@ -105,11 +105,7 @@ export const initializePassport = ()=>{
     });
 
     passport.deserializeUser(async(id, done)=>{
-        try {
-            const user = await UsersService.getUserById(id);
-            done(null, user);
-        } catch (error) {
-            return done(error);
-        }
+        const user = await UsersService.getUserById(id);
+        done(null, user);
     });
 }
