@@ -5,6 +5,7 @@ import { config } from "./config.js";
 import GithubStrategy from "passport-github2";
 import { UsersService } from "../services/users.service.js";
 
+
 export const initializePassport = ()=>{
     passport.use("signupLocalStrategy", new localStrategy(
         {
@@ -69,7 +70,7 @@ export const initializePassport = ()=>{
                     first_name:profile._json.name.split(' ')[0],
                     last_name:profile._json.name.split(' ')[1],
                     email:profile._json.email,
-                    password:'',
+                    password:profile._json.id,
                     age:''
                 };
                 const user_created = await UsersService.createUser(new_user);
@@ -95,7 +96,7 @@ export const initializePassport = ()=>{
             }
             return done(null, user);
         } catch (error) {
-            return done(error)
+            return done(error);
         }
     }));
 
@@ -104,7 +105,11 @@ export const initializePassport = ()=>{
     });
 
     passport.deserializeUser(async(id, done)=>{
-        const user = await UsersService.getUserById(id);
-        done(null, user);
+        try {
+            const user = await UsersService.getUserById(id);
+            done(null, user);
+        } catch (error) {
+            return done(error);
+        }
     });
 }

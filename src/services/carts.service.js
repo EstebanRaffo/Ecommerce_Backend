@@ -1,4 +1,4 @@
-import { cartsDao } from "../dao";
+import { cartsDao } from "../dao/index.js";
 
 export class CartsService{
 

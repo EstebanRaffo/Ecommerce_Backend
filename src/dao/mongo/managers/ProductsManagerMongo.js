@@ -104,10 +104,11 @@ export class ProductsManagerMongo{
 
     async productExists(id){
         try{
-            const products = await this.getProducts();
+            const result = await this.getProducts();
+            const products = result.docs;
             return products.some(product => product._id.valueOf() === id);
         }catch(error){
-            console.log(error.message);
+            console.log("productExists: ", error.message);
             throw error;
         }
     }

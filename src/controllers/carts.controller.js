@@ -61,8 +61,8 @@ export class CartsController{
         const cart_id = req.params.cid;
         const { products } = req.body;
         try {
-            await cartsService.deleteProductsOfCart(cart_id);
-            const cart_updated = await cartsService.updateProductsInCart(cart_id, products);
+            await CartsService.deleteProductsOfCart(cart_id);
+            const cart_updated = await CartsService.updateProductsInCart(cart_id, products);
             res.status(201).json({message: "Los productos del carrito fueron actualizados", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});

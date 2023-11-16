@@ -57,16 +57,16 @@ let chat = [];
 io.on("connection", async(socket)=>{
     console.log("cliente conectado");
     products_list = await productsDao.getProducts();
-    socket.emit("product_list", products_list);
+    socket.emit("product_list", products_list.docs);
 
     socket.on("new_product", async (data) => {
-        await productsDao.addProduct(data);
+        await productsDao.createProduct(data);
         products_list = await productsDao.getProducts();
-        io.emit("product_list", products_list); 
+        io.emit("product_list", products_list.docs); 
     });
 
     socket.on("delete_product", async (id) => {
-        productsDao.deleteProduct(id);
+        await productsDao.deleteProduct(id);
     });
 
     chat = await chatDao.getMessages();
