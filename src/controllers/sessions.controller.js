@@ -1,4 +1,4 @@
-
+import UserDto from "../dao/dto/user.dto";
 
 export class SessionsController{
 
@@ -33,7 +33,8 @@ export class SessionsController{
 
     static currentUser = (req,res)=>{
         if(req.user?.email){
-            res.status(200).json({user:req.user});
+            const user_dto = new UserDto(req.user); 
+            res.status(200).json({user:user_dto});
         }else{
             res.redirect("/login");
         }

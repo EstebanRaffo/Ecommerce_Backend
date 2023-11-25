@@ -1,5 +1,5 @@
 import { cartsModel } from "../models/carts.model.js";
-import { productsDao } from "../../index.js"
+import { productsDao } from "../../index.js";
 
 export class CartsManagerMongo{
     constructor(){

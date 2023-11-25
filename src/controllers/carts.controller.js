@@ -1,4 +1,5 @@
 import { CartsService } from "../services/carts.service.js";
+import { TicketsService } from "../services/tickets.service.js";
 
 export class CartsController{
     
@@ -95,6 +96,16 @@ export class CartsController{
         try {
             const cart_updated = await CartsService.deleteProductsOfCart(cart_id);
             res.status(201).json({message: "Los productos fueron eliminados del carrito", data: cart_updated});
+        } catch (error) {
+            res.json({status: "error", message: error.message});
+        }
+    }
+
+    static async buyCart(req, res){
+        const cart_id = req.params.cid;
+        try {
+            const result = await TicketsService.buyCart(cart_id);
+            res.status(201).json({message: "Compra realizada con éxito", data: result});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
