@@ -1,5 +1,7 @@
 import { CartsService } from "../services/carts.service.js";
 import { TicketsService } from "../services/tickets.service.js";
+import { ProductsService } from "../services/products.service.js"
+import { v4 as uuidv4 } from 'uuid';
 
 export class CartsController{
     
@@ -104,7 +106,17 @@ export class CartsController{
     static async buyCart(req, res){
         const cart_id = req.params.cid;
         try {
-            const result = await TicketsService.buyCart(cart_id);
+            const cart = await CartsService.getCartById(cart_id);
+            const products_cart = cart.products;
+            const availables_products = this.checkStocks(products_cart);
+            const purchase_amount = availables_products.reduce((sum, product)=>sum + (product.quantity * product.price), 0)
+            const ticket = {
+                code: uuidv4(),
+                purchase_datetime: Date(),
+                amount: purchase_amount,
+                purchaser: req.user.email
+            }
+            const result = await TicketsService.buyCart(ticket);
             res.status(201).json({message: "Compra realizada con éxito", data: result});
         } catch (error) {
             res.json({status: "error", message: error.message});
