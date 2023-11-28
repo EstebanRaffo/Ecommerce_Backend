@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { CartsController } from "../controllers/carts.controller.js";
-import { authorize } from "./middlewares/auth.js";
+import { authorize } from "../middlewares/auth.js";
 
 const router = Router();
 
 router.get("/", CartsController.getCarts);
 router.post("/", CartsController.createCart);
 router.get("/:cid", CartsController.getCartById);
-router.post("/:cid/product/:pid", authorize("usuario"), CartsController.addProductToCart);
+// router.post("/:cid/product/:pid", authorize("usuario"), CartsController.addProductToCart);
+router.post("/:cid/product/:pid", CartsController.addProductToCart);
 router.delete("/:cid/products/:pid", CartsController.deleteProduct);
 router.put("/:cid", CartsController.updateCart);
 router.put("/:cid/products/:pid", CartsController.updateProductQuantityInCart);

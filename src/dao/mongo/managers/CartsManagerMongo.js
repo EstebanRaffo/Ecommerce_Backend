@@ -88,7 +88,7 @@ export class CartsManagerMongo{
         try {
             const filter = { _id: cart_id };
             const update = { products: new_products_list };
-            const cart_updated = await this.model.findOneAndUpdate(filter, update, { new:true });
+            const cart_updated = await this.model.findOneAndUpdate(filter, update, { new:true }).populate("products._id").lean();
             if(!cart_updated){
                 throw new Error("No se encontró el carrito a actualizar");
             }

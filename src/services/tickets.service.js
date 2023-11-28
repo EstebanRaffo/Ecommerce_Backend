@@ -1,4 +1,4 @@
-import { ticketsDao } from "../dao";
+import { ticketsDao } from "../dao/index.js";
 
 export class TicketsService{
 

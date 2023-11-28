@@ -29,7 +29,9 @@ export class CartsController{
             const cid = req.params.cid;
             const cart = await CartsService.getCartById(cid);
             if(req.user?.email){
-                res.render("cart", { products: cart.products })
+                // res.render("cart", { products: cart.products })
+                // Para test desde Postman
+                res.status(200).json({cart: cart})
             }else{
                 res.redirect("/login");
             }
@@ -103,13 +105,48 @@ export class CartsController{
         }
     }
 
+    // La compra debe corroborar el stock del producto al momento de finalizarse:
+    // Si el producto tiene suficiente stock para la cantidad indicada en el producto del carrito, entonces restarlo del stock del 
+    // producto y continuar.
+    // Si el producto no tiene suficiente stock para la cantidad indicada en el producto del carrito, entonces no agregar el producto 
+    // al proceso de compra. 
+    // Al final, utilizar el servicio de Tickets para poder generar un ticket con los datos de la compra.
+    // En caso de existir una compra no completada, devolver el arreglo con los ids de los productos que no pudieron procesarse.
+    // Una vez finalizada la compra, el carrito asociado al usuario que compró deberá contener sólo los productos que no pudieron comprarse. 
+    // Es decir, se filtran los que sí se compraron y se quedan aquellos que no tenían disponibilidad.
+
     static async buyCart(req, res){
         const cart_id = req.params.cid;
         try {
             const cart = await CartsService.getCartById(cart_id);
-            const products_cart = cart.products;
-            const availables_products = this.checkStocks(products_cart);
-            const purchase_amount = availables_products.reduce((sum, product)=>sum + (product.quantity * product.price), 0)
+            const availables_products = cart.products.filter(product => product.quantity <= product._id.stock);
+            console.log("buyCart -> availables_products: ", availables_products)
+            const unavailables_products = cart.products.filter(product => product.quantity > product._id.stock);
+            const unavailables_products_list = unavailables_products.map(product => product._id);
+            console.log("buyCart -> unavailables_products_list: ", unavailables_products_list)
+            const purchase_amount = availables_products.reduce((sum, product) => sum + (product.quantity * product._id.price), 0);
+            console.log("buyCart -> purchase_amount: ", purchase_amount)
+            // await this.updateStocks(availables_products);
+
+            const all_products = await ProductsService.getProducts();
+            console.log("updateStocks -> all_products.docs: ", all_products.docs)
+
+            availables_products.forEach(async available_product => {
+                console.log("updateStocks -> available_product: ", available_product)
+                const product_found = all_products.docs.find(product => product.id === available_product._id._id.valueOf());
+                console.log("updateStocks -> product_found: ", product_found)
+                
+                const new_product_info = {
+                    stock: product_found.stock - available_product.quantity
+                } 
+                console.log("updateStocks -> new_product_info: ", new_product_info) 
+                const product = await ProductsService.updateProduct(product_found._id._id, new_product_info);  
+                       
+            });
+
+            const cart_updated = await CartsService.updateProductsInCart(cart_id, unavailables_products_list);
+            console.log("updateStocks -> cart_updated: ", cart_updated)
+
             const ticket = {
                 code: uuidv4(),
                 purchase_datetime: Date(),
@@ -117,9 +154,30 @@ export class CartsController{
                 purchaser: req.user.email
             }
             const result = await TicketsService.buyCart(ticket);
-            res.status(201).json({message: "Compra realizada con éxito", data: result});
+            res.status(201).json({message: "Compra realizada con éxito", ticket: result, excluidos: unavailables_products_list, carrito: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
+        }
+    }
+
+    async updateStocks(availables_products){
+        console.log("Entro en updateStocks")
+        try {
+            console.log("Entro en try updateStocks")
+            console.log("availables_products: ", availables_products)
+            const all_products = await ProductsService.getProducts();
+            console.log("updateStocks -> all_products: ", all_products)
+            availables_products.forEach(async available_product => {
+                console.log("updateStocks -> available_product: ", available_product)
+                const product_found = all_products.find(product => product._id === available_product._id.id);
+                const new_product_info = {
+                    stock: product_found.stock - available_product.quantity
+                }  
+                const product = await ProductsService.updateProduct(product_found.id, new_product_info);  
+                console.log("updateStocks -> product: ", product)        
+            });
+        } catch (error) {
+            throw error;
         }
     }
 }
