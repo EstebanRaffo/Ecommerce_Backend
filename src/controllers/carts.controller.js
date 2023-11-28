@@ -111,7 +111,6 @@ export class CartsController{
             const cart = await CartsService.getCartById(cart_id);
             const availables_products = cart.products.filter(product => product.quantity <= product._id.stock);
             const unavailables_products = cart.products.filter(product => product.quantity > product._id.stock);
-            const unavailables_products_list = unavailables_products.map(product => product._id);
             const purchase_amount = availables_products.reduce((sum, product) => sum + (product.quantity * product._id.price), 0);
             const all_products = await ProductsService.getProducts();
             
@@ -122,7 +121,9 @@ export class CartsController{
                 } 
                 const product = await ProductsService.updateProduct(product_found._id._id, new_product_info);         
             });
-            const cart_updated = await CartsService.updateProductsInCart(cart_id, unavailables_products_list);
+            
+            await CartsService.deleteProductsOfCart(cart_id);
+            const cart_updated = await CartsService.updateProductsInCart(cart_id, unavailables_products);
             const ticket = {
                 code: uuidv4(),
                 purchase_datetime: Date(),
@@ -130,7 +131,7 @@ export class CartsController{
                 purchaser: req.user.email
             }
             const result = await TicketsService.buyCart(ticket);
-            res.status(201).json({message: "Compra realizada con éxito", ticket: result, excluidos: unavailables_products_list, carrito: cart_updated});
+            res.status(201).json({message: "Compra realizada con éxito", ticket: result, excluidos: unavailables_products, carrito: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }

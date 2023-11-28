@@ -1,3 +1,4 @@
+import { config } from "../config/config.js";
 import UserDto from "../dao/dto/user.dto.js";
 
 export class SessionsController{
@@ -14,7 +15,7 @@ export class SessionsController{
 
     static redirectToProducts = async(req,res)=>{
         // res.redirect("/products");
-        
+
         // Para test de login desde Postman
         if(req.user?.email){
             const user_dto = new UserDto(req.user); 
