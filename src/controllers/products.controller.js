@@ -1,5 +1,5 @@
 import { ProductsService } from "../services/products.service.js"
-
+import { generateProduct } from "../helpers/mocks.js";
 
 export class ProductsController{
 
@@ -61,5 +61,14 @@ export class ProductsController{
         }catch(error){
             res.json({status:"error", message:error.message});
         }
+    }
+
+    static generateProducts(req, res){
+        let products = [];
+        for(let i = 0; i < 100; i++){
+            const new_product = generateProduct();
+            products.push(new_product);
+        }
+        res.json({status:"success", data: products});
     }
 }
