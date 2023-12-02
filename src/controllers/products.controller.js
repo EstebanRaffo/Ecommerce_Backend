@@ -1,5 +1,8 @@
 import { ProductsService } from "../services/products.service.js"
 import { generateProduct } from "../helpers/mocks.js";
+import CustomError from "../services/errors/customError.service.js";
+import { EErrors } from "../services/errors/enums.js";
+import { createProductErrorInfo } from "../services/errors/info.js";
 
 export class ProductsController{
 
@@ -35,6 +38,7 @@ export class ProductsController{
 
     static async createProduct(req, res){
         try{
+
             const new_product = await ProductsService.createProduct(req.body);
             res.status(201).json({message: "Nuevo producto agregado exitosamente", data: new_product});
         }catch(error){
