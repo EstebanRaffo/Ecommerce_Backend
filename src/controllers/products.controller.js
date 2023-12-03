@@ -38,12 +38,24 @@ export class ProductsController{
 
     static async createProduct(req, res){
         try{
-
+            if(!this.isValidData(req.body)){
+                CustomError.createError({
+                    name:"Error en Alta de Producto",
+                    cause:createProductErrorInfo(req.body),
+                    message:"Algunos datos son inválidos para el alta del producto",
+                    code:EErrors.REQUIRED_DATA
+                })
+            }
             const new_product = await ProductsService.createProduct(req.body);
             res.status(201).json({message: "Nuevo producto agregado exitosamente", data: new_product});
         }catch(error){
             res.json({status:"error", message: error.message});
         }
+    }
+
+    isValidData(data){
+            const {title, description, price, code, stock, category, status} = data;
+            return title && description && price && code && stock && category && status;
     }
 
     static async updateProduct(req, res){
