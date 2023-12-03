@@ -48,10 +48,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(viewsRouter);
+
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
-
 app.use(errorHandler);
 
 let products_list = [];

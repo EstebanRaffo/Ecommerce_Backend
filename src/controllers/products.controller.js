@@ -1,7 +1,7 @@
 import { ProductsService } from "../services/products.service.js"
 import { generateProduct } from "../helpers/mocks.js";
 import CustomError from "../services/errors/customError.service.js";
-import { EErrors } from "../services/errors/enums.js";
+import { EError } from "../services/errors/enums.js";
 import { createProductErrorInfo } from "../services/errors/info.js";
 
 export class ProductsController{
@@ -37,13 +37,15 @@ export class ProductsController{
     }
 
     static async createProduct(req, res){
+        const {title, description, price, code, stock, category, status} = req.body;
+        const isValidData = title && description && price && code && stock && category && status;
         try{
-            if(!this.isValidData(req.body)){
+            if(!isValidData){
                 CustomError.createError({
                     name:"Error en Alta de Producto",
                     cause:createProductErrorInfo(req.body),
-                    message:"Algunos datos son inválidos para el alta del producto",
-                    code:EErrors.REQUIRED_DATA
+                    message:"Uno o más datos obligatorios no fueron informados",
+                    code:EError.REQUIRED_DATA
                 })
             }
             const new_product = await ProductsService.createProduct(req.body);
@@ -51,11 +53,6 @@ export class ProductsController{
         }catch(error){
             res.json({status:"error", message: error.message});
         }
-    }
-
-    isValidData(data){
-            const {title, description, price, code, stock, category, status} = data;
-            return title && description && price && code && stock && category && status;
     }
 
     static async updateProduct(req, res){
