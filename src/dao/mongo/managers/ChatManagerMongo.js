@@ -1,4 +1,6 @@
 import { messagesModel } from "../models/messages.model.js";
+import { logger } from "../../../helpers/logger.js";
+
 
 export class ChatManagerMongo{
     constructor(){
@@ -10,7 +12,7 @@ export class ChatManagerMongo{
             const messages = await this.model.find();
             return messages;
         } catch (error) {
-            console.log("getMessages: ", error.messages);
+            logger.error(`getMessages: ${error.message}`);
             throw new Error("No se pudieron obtener los mensajes");
         }
     }
@@ -20,7 +22,7 @@ export class ChatManagerMongo{
             const result = await this.model.create(message);
             return result;
         } catch (error) {
-            console.log("createMessage: ", error.message);
+            logger.error(`createMessage: ${error.message}`);
             throw new Error("No se pudo enviar el mensaje");
         }
     }

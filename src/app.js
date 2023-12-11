@@ -15,6 +15,7 @@ import { cartsRouter } from "./routes/carts.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { logger } from "./helpers/logger.js";
 
 const port = config.server.port;
 const app = express();
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,"/public")));
 
-const httpServer = app.listen(port, ()=>console.log("Servidor escuchando en el puerto: ", port));
+const httpServer = app.listen(port, ()=>logger.info(`Servidor escuchando en el puerto: ${port}`));
 const io = new Server(httpServer);
 
 connectDB();
@@ -58,7 +59,7 @@ let products_list = [];
 let chat = [];
 
 io.on("connection", async(socket)=>{
-    console.log("cliente conectado");
+    logger.info("cliente conectado");
     products_list = await productsDao.getProducts();
     socket.emit("product_list", products_list.docs);
 

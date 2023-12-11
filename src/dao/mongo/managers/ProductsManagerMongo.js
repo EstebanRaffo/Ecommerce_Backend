@@ -1,4 +1,6 @@
 import { productsModel } from "../models/products.model.js";
+import { logger } from "../../../helpers/logger.js";
+
 
 export class ProductsManagerMongo{
     constructor(){
@@ -12,7 +14,7 @@ export class ProductsManagerMongo{
                 const products = await this.model.paginate({}, options);
                 return products;
             } catch (error) {
-                console.log("getProducts: ", error.message);
+                logger.error(`getProducts: ${error.message}`);
                 throw new Error("No se pudo obtener el listado de productos sin params");
             }
         }
@@ -33,7 +35,7 @@ export class ProductsManagerMongo{
             const products_data = await this.model.paginate(query, options);
             return products_data;
         }catch(error){
-            console.log("getProducts: ", error.message);
+            logger.error(`getProducts: ${error.message}`);
             throw new Error("No se pudo obtener el listado de productos con params");
         }
     }
@@ -61,7 +63,7 @@ export class ProductsManagerMongo{
             const result = await this.model.create(productInfo);
             return result;
         }catch(error){
-            console.log("createProduct: ", error.message);
+            logger.error(`createProduct: ${error.message}`);
             throw new Error("No se pudo crear el producto");
         }
     }
@@ -71,7 +73,7 @@ export class ProductsManagerMongo{
             const product = await this.model.findById(productId);
             return product;
         } catch (error) {
-            console.log("getProductById: ", error.message);
+            logger.error(`getProductById: ${error.message}`);
             throw new Error("No se pudo encontrar el producto");
         }
     }
@@ -84,7 +86,7 @@ export class ProductsManagerMongo{
             }
             return product_updated;
         } catch (error) {
-            console.log("updateProduct: ", error.message);
+            logger.error(`updateProduct: ${error.message}`);
             throw new Error("No se pudo actualizar el producto");
         }
     }
@@ -97,7 +99,7 @@ export class ProductsManagerMongo{
             }
             return product_deleted;
         } catch (error) {
-            console.log("deleteProduct: ", error.message);
+            logger.error(`deleteProduct: ${error.message}`);
             throw new Error("No se pudo eliminar el producto");
         }
     }
@@ -108,7 +110,7 @@ export class ProductsManagerMongo{
             const products = result.docs;
             return products.some(product => product._id.valueOf() === id);
         }catch(error){
-            console.log("productExists: ", error.message);
+            logger.error(`productExists: ${error.message}`);
             throw error;
         }
     }

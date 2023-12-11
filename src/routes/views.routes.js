@@ -11,5 +11,6 @@ router.get("/products", ViewsController.getProducts);
 router.get("/signup", ViewsController.renderSignup);
 router.get("/login", ViewsController.renderLogin);
 router.get("/profile", ViewsController.renderProfile);
+router.get("/loggerTest", ViewsController.testLogger);
 
 export {router as viewsRouter};

@@ -1,4 +1,5 @@
 import { usersModel } from "../models/users.model.js";
+import { logger } from "../../../helpers/logger.js";
 
 
 export class UsersManagerMongo{
@@ -11,7 +12,7 @@ export class UsersManagerMongo{
             const user = await usersModel.findOne({email:email});
             return user;
         } catch (error) {
-            console.log("getUsers: ", error.message);
+            logger.error(`getUsers: ${error.message}`);
             throw new Error("No se pudo consultar el usuario");
         }
     }
@@ -21,7 +22,7 @@ export class UsersManagerMongo{
             const user = await usersModel.findById(id);
             return user;
         } catch (error) {
-            console.log("getUserById: ", error.message);
+            logger.error(`getUserById: ${error.message}`);
             throw new Error("No se pudo obtener el usuario");
         }
     }
@@ -31,7 +32,7 @@ export class UsersManagerMongo{
             const result = await usersModel.create(new_user);
             return result;
         } catch (error) {
-            console.log("createUser: ", error.message);
+            logger.error(`createUser: ${error.message}`);
             throw new Error("No se pudo registrar el usuario");
         }
     }

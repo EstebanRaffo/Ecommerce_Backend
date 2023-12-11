@@ -9,7 +9,6 @@ router.get("/mockingproducts", ProductsController.generateProducts);
 router.get("/:pid", ProductsController.getProductById);
 router.post("/", authorize(["admin"]), ProductsController.createProduct);
 router.put("/:pid", authorize(["admin"]), ProductsController.updateProduct);
-// router.put("/:pid", ProductsController.updateProduct);
 router.delete("/:pid", authorize(["admin"]), ProductsController.deleteProduct);
 
 export {router as productsRouter};

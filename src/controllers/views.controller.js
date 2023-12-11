@@ -1,6 +1,7 @@
 import { config } from "../config/config.js";
 import { ProductsService } from "../services/products.service.js";
 import UserDto from "../dao/dto/user.dto.js";
+import { logger } from "../helpers/logger.js";
 
 export class ViewsController{
 
@@ -77,5 +78,12 @@ export class ViewsController{
         } else {
             res.redirect("/login");
         }
+    }
+
+    static testLogger(req,res){
+        logger.error("Logger Error");
+        logger.info("Logger Info");
+        logger.debug("Logger Debug");
+        res.send("Testing Logger");
     }
 }
