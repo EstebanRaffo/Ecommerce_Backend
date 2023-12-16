@@ -12,5 +12,7 @@ router.get("/signup", ViewsController.renderSignup);
 router.get("/login", ViewsController.renderLogin);
 router.get("/profile", ViewsController.renderProfile);
 router.get("/loggerTest", ViewsController.testLogger);
+router.get("/restore-password", ViewsController.renderRestorePassword);
+router.post("/send-mail", ViewsController.sendRestorePasswordMail);
 
 export {router as viewsRouter};

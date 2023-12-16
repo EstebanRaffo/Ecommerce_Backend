@@ -20,4 +20,8 @@ export const config = {
         password: process.env.PASS_ADMIN,
         rol: process.env.ROL_ADMIN
     },
+    gmail:{
+        account: process.env.GMAIL_ACCOUNT,
+        password: process.env.GMAIL_PASSWORD
+    }
 };

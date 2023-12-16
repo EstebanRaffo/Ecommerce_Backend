@@ -5,7 +5,7 @@ import { logger } from "../helpers/logger.js";
 
 export class ViewsController{
 
-    static renderHome(req,res){
+    static renderHome(req, res){
         if(req.user?.email){
             res.render("home");
         }else{
@@ -13,7 +13,7 @@ export class ViewsController{
         }
     }
 
-    static renderRealTimeProducts(req,res){
+    static renderRealTimeProducts(req, res){
         if(req.user?.email){
             res.render("realTimeProducts");
         }else{
@@ -54,7 +54,7 @@ export class ViewsController{
         }
     }
 
-    static renderSignup(req,res){
+    static renderSignup(req, res){
         if(req.user?.email){
             res.redirect("/profile");
         }else{
@@ -62,7 +62,7 @@ export class ViewsController{
         }
     }
 
-    static renderLogin(req,res){
+    static renderLogin(req, res){
         if(req.user?.email){
             res.redirect("/profile");
         }else{
@@ -70,7 +70,7 @@ export class ViewsController{
         }
     }
 
-    static renderProfile(req,res){
+    static renderProfile(req, res){
         if(req.user?.email){
             const {first_name, last_name, email, age, rol} = req.user;
             const isAdmin = rol === config.admin.rol; 
@@ -80,10 +80,20 @@ export class ViewsController{
         }
     }
 
-    static testLogger(req,res){
+    static testLogger(req, res){
         logger.error("Logger Error");
         logger.info("Logger Info");
         logger.debug("Logger Debug");
         res.send("Testing Logger");
+    }
+
+    static renderRestorePassword(req, res){
+        res.render("restorePasswordForm")
+    }
+
+    static sendRestorePasswordMail(req, res){
+        const {email} = req.body;
+        console.log("email: ", email);
+        res.render("restorePasswordAdvise", {email});
     }
 }
