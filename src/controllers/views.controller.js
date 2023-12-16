@@ -1,5 +1,6 @@
 import { config } from "../config/config.js";
 import { ProductsService } from "../services/products.service.js";
+import { UsersService } from "../services/users.service.js";
 import UserDto from "../dao/dto/user.dto.js";
 import { logger } from "../helpers/logger.js";
 
@@ -91,9 +92,14 @@ export class ViewsController{
         res.render("restorePasswordForm")
     }
 
-    static sendRestorePasswordMail(req, res){
+    static async sendRestorePasswordMail(req, res){
         const {email} = req.body;
-        console.log("email: ", email);
-        res.render("restorePasswordAdvise", {email});
+        const user = await UsersService.getUser(email)
+        console.log("user: ", user)
+        if(user){
+            res.render("restorePasswordAdvise", {email});
+        }else{
+            res.render("restorePasswordForm", {message: "El Email informado no pertenece a una cuenta registrada"});
+        }
     }
 }
