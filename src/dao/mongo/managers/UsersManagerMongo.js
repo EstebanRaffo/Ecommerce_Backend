@@ -36,5 +36,15 @@ export class UsersManagerMongo{
             throw new Error("No se pudo registrar el usuario");
         }
     }
+
+    async updateUser(id, info){
+        try {
+            const result = await usersModel.findByIdAndUpdate(id, info, {new:true});
+            return result;
+        } catch (error) {
+            logger.error(`updateUser: ${error.message}`);
+            throw new Error("No se pudo actualizar el usuario");
+        }
+    }
 }
 

@@ -28,4 +28,13 @@ export class UsersService{
             throw error;
         }
     }
+
+    static async updateUser(id, info){
+        try {
+            const result = await usersDao.updateUser(id, info);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

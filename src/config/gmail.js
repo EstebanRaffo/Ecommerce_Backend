@@ -6,10 +6,10 @@ export const transporter = nodemailer.createTransport({
     port:587,
     auth:{
         user:config.gmail.account,
-        password:config.gmail.password
+        pass:config.gmail.password
     },
     secure:false,
     tls:{
         rejectUnauthorized:false
     }
-})
+});
