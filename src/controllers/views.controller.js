@@ -96,10 +96,30 @@ export class ViewsController{
         const {email} = req.body;
         const user = await UsersService.getUser(email)
         console.log("user: ", user)
-        if(user){
-            res.render("restorePasswordAdvise", {email});
-        }else{
+        if(!user){
             res.render("restorePasswordForm", {message: "El Email informado no pertenece a una cuenta registrada"});
-        }
+        }else{
+            const {first_name, last_name} = user
+            const emailTemplate = (first_name, last_name)=> `
+                <div>
+                    <h1>${first_name} ${last_name}</h1>
+                    <p>Click en el link para restablecer contraseña</p>
+                    <a href="/update-password">Restablecer contraseña</a>
+                </div>
+            `;
+            try {
+                
+            } catch (error) {
+                
+            }
+            res.render("restorePasswordAdvise", {email});
+        }    
     }
+
+    static async renderUpdatePasswordForm(req, res){
+        const {first_name, last_name} = user;
+        res.render("updatePasswordForm");
+    }
+
+    
 }
