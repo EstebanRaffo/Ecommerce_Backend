@@ -29,9 +29,9 @@ export class CartsService{
         }
     }
 
-    static async addProductToCart(cart_id, prod_id){
+    static async addProductToCart(cart_id, prod_id, user){
         try {
-            const result = await cartsDao.addProductToCart(cart_id, prod_id);
+            const result = await cartsDao.addProductToCart(cart_id, prod_id, user);
             return result;
         } catch (error) {
             throw error;

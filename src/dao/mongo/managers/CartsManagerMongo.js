@@ -58,9 +58,12 @@ export class CartsManagerMongo{
         } 
     }
 
-    async addProductToCart(cart_id, prod_id){
+    async addProductToCart(cart_id, prod_id, user){
         try {
             if(await productsDao.productExists(prod_id)){
+                if(await productsDao.productBelongToUser(prod_id, user)){
+                    throw new Error("El producto pertenece al usuario. No se puede agregar al carrito.");
+                }
                 const products_in_cart = await this.getProductsCart(cart_id);
                 if(this.isInCart(products_in_cart, prod_id)){      
                     const new_products_list = products_in_cart.map(product=>{

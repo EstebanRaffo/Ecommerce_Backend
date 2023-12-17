@@ -43,8 +43,9 @@ export class CartsController{
     static async addProductToCart(req, res){
         const cart_id = req.params.cid;
         const prod_id = req.params.pid;
+        const user = req.user;
         try{
-            const cart_updated = await CartsService.addProductToCart(cart_id, prod_id);
+            const cart_updated = await CartsService.addProductToCart(cart_id, prod_id, user);
             res.status(201).json({message: "Producto agregado en el carrito", data: cart_updated});
         }catch(error){
             res.json({status: "error", message: error.message});

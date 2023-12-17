@@ -95,16 +95,20 @@ export class ProductsManagerMongo{
     async productBelongToUser(prod_id, user){
         try {
             const product = await this.getProductById(prod_id);
-            return product.owner === user.email || user.rol === config.admin.rol;
+            return product.owner === user.email;
         } catch (error) {
             logger.error(`productBelongToUser: ${error.message}`);
             throw error;
         }
     }
 
+    isAdmin(user){
+        return user.rol === config.admin.rol;
+    }
+
     async deleteProduct(prod_id, user){
         try {
-            if(await this.productBelongToUser(prod_id, user)){
+            if(await this.productBelongToUser(prod_id, user) || this.isAdmin(user)){
                 const product_deleted = await this.model.findByIdAndDelete(prod_id);
                 if(!product_deleted){
                     throw new Error("No se pudo encontrar el producto a eliminar");
@@ -121,8 +125,8 @@ export class ProductsManagerMongo{
 
     async productExists(id){
         try{
-            const result = await this.getProducts();
-            const products = result.docs;
+            const products = await this.model.find();
+            // console.log("productExists -> products: ", products)
             return products.some(product => product._id.valueOf() === id);
         }catch(error){
             logger.error(`productExists: ${error.message}`);
