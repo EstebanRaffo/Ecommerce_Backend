@@ -1,5 +1,6 @@
 import { productsModel } from "../models/products.model.js";
 import { logger } from "../../../helpers/logger.js";
+import { config } from "../../../config/config.js";
 
 
 export class ProductsManagerMongo{
@@ -91,13 +92,27 @@ export class ProductsManagerMongo{
         }
     }
 
-    async deleteProduct(productId){
+    async productBelongToUser(prod_id, user){
         try {
-            const product_deleted = await this.model.findByIdAndDelete(productId);
-            if(!product_deleted){
-                throw new Error("No se pudo encontrar el producto a eliminar");
+            const product = await this.getProductById(prod_id);
+            return product.owner === user.email || user.rol === config.admin.rol;
+        } catch (error) {
+            logger.error(`productBelongToUser: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async deleteProduct(prod_id, user){
+        try {
+            if(await this.productBelongToUser(prod_id, user)){
+                const product_deleted = await this.model.findByIdAndDelete(prod_id);
+                if(!product_deleted){
+                    throw new Error("No se pudo encontrar el producto a eliminar");
+                }
+                return product_deleted;
+            }else{
+                throw new Error("El producto no pertenece al usuario");
             }
-            return product_deleted;
         } catch (error) {
             logger.error(`deleteProduct: ${error.message}`);
             throw new Error("No se pudo eliminar el producto");

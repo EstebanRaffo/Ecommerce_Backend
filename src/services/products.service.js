@@ -43,9 +43,9 @@ export class ProductsService{
         }
     }
 
-    static async deleteProduct(id){
+    static async deleteProduct(pid, user){
         try {
-            const result = await productsDao.deleteProduct(id);
+            const result = await productsDao.deleteProduct(pid, user);
             return result;
         } catch (error) {
             throw error;

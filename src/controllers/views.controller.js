@@ -150,12 +150,12 @@ export class ViewsController{
             if(isValidPassword(new_password, user)){
                 return res.render("resetPasswordForm", {error:"La nueva contraseña debe ser distinta de la anterior", token});
             }
-            const result = await UsersService.updateUser(user._id, {password: createHash(new_password)})
-            res.render("login",{message: "Usuario actualizado exitosamente"})
+            const result = await UsersService.updateUser(user._id, {password: createHash(new_password)});
+            res.render("login",{message: "Usuario actualizado exitosamente"});
             // res.status(201).json({message: "Usuario actualizado exitosamente", data: result});
         } catch (error) {
             logger.error(`resetPassword: ${error.message}`);
-            res.json({status:"error", message:error.message})
+            res.json({status:"error", message:error.message});
         }
     }
 }

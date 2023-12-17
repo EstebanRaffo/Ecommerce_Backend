@@ -67,9 +67,10 @@ export class ProductsController{
     }
 
     static async deleteProduct(req, res){
-        const id = req.params.pid;
+        const pid = req.params.pid;
+        const user = req.user;
         try{
-            await ProductsService.deleteProduct(id);
+            await ProductsService.deleteProduct(pid, user);
             res.status(201).json({message: "Producto eliminado exitosamente"});
         }catch(error){
             res.json({status:"error", message:error.message});
