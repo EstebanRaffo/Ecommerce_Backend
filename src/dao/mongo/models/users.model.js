@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
     },
     rol:{
         type:String,
-        default:"usuario",
-        enum:["usuario","admin","premium"]
+        default:"user",
+        enum:["user","admin","premium"]
     },
     cart:{
         type:mongoose.Schema.Types.ObjectId,
