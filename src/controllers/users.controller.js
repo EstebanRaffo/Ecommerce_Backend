@@ -1,18 +1,19 @@
-import { UsersService } from "../services/users.service";
+import { UsersService } from "../services/users.service.js";
 
 
 export class UsersController{
 
-    static async switchRole(req, res){
-        const user = req.user;
-        const {_id, rol} = user;
-        new_role = rol === "user" ? "premium" : "user";
+    static async switchRol(req, res){
+        const {uid} = req.params;
+
         try {
-            const result = await UsersService.updateUser(_id, {rol: new_role});
-            res.status(200).json(result);
+            const user = await UsersService.getUserById(uid);
+            console.log(user)
+            const new_role = user.rol === "user" ? "premium" : "user";
+            const userUpdated = await UsersService.updateUser(uid, {rol: new_role});
+            res.status(200).json({message:"Usuario actualizado exitosamente", data: userUpdated});
         } catch (error) {
             res.json({status: "error", message:error.message});
         }
-
     }
 }
