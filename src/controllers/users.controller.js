@@ -8,8 +8,17 @@ export class UsersController{
 
         try {
             const user = await UsersService.getUserById(uid);
-            console.log(user)
-            const new_role = user.rol === "user" ? "premium" : "user";
+            let new_role;
+            switch(user.rol){
+                case 'user':
+                    new_role = "premium";
+                    break;
+                case 'premium':
+                    new_role = 'user';
+                    break;
+                default:
+                    throw new Error("El Rol del usuario no es válido. No es posible cambiarlo.");
+            }
             const userUpdated = await UsersService.updateUser(uid, {rol: new_role});
             res.status(200).json({message:"Usuario actualizado exitosamente", data: userUpdated});
         } catch (error) {

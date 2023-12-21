@@ -36,5 +36,7 @@ router.get(config.github.callbackUrl, passport.authenticate("loginGithubStrategy
 }), SessionsController.redirectToProducts);
 
 router.get("/current", SessionsController.currentUser);
+router.post("/send-mail", SessionsController.sendResetPasswordMail);
+router.post("/reset-password", SessionsController.resetPassword);
 
 export {router as sessionsRouter};

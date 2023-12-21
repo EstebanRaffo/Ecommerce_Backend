@@ -37,6 +37,7 @@ export class ProductsController{
     }
 
     static async createProduct(req, res){
+        const {email} = req.user;
         const {title, description, price, code, stock, category, status} = req.body;
         const isValidData = title && description && price && code && stock && category && status;
         try{
@@ -48,7 +49,11 @@ export class ProductsController{
                     code:EError.REQUIRED_DATA
                 })
             }
-            const new_product = await ProductsService.createProduct(req.body);
+            const dataProduct = {
+                ...req.body,
+                owner: email
+            }
+            const new_product = await ProductsService.createProduct(dataProduct);
             res.status(201).json({message: "Nuevo producto agregado exitosamente", data: new_product});
         }catch(error){
             res.json({status:"error", message: error.message});
