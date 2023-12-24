@@ -21,7 +21,7 @@ export class SessionsController{
     static redirectToProducts = async(req,res)=>{
         // res.redirect("/products");
 
-        // Para test de login desde Postman
+        // Para test de login desde Postman o Swagger
         if(req.user?.email){
             const user_dto = new UserDto(req.user); 
             res.status(200).json({user:user_dto});

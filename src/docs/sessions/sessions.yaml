@@ -1,0 +1,61 @@
+paths:
+  /api/sessions/login:
+    post:
+      summary: Iniciar sesión
+      tags:
+        - Sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Login"
+      responses: 
+        "200":
+          description: Se inició la sesión exitosamente
+          content: 
+            application/json:
+              schema:
+                $ref: "#components/schemas/User"
+        "500":
+          description: Hubo un problema en el Servidor
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: id generado por la base de datos (requerido*)
+        full_name:
+          type: String
+          description: Nombre y Apellido del usuario
+        email:
+          type: String
+          description: Correo del usuario
+        age: 
+          type: Integer
+          description: Edad del usuario
+        rol:
+          type: String
+          description: Rol del usuario
+      example:
+        _id: ObjectId("$hjsg892778234sd")
+        full_name: Esteban Raffo
+        email: esteban@gmail.com
+        age: 36
+        rol: premium
+  requestBodies:
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Correo del usuario
+        password:
+          type: string
+          description: Contraseña del usuario
+      example:
+        email: juan@gmail.com
+        password: coder

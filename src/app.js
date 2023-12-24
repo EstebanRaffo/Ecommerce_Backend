@@ -17,6 +17,8 @@ import { usersRouter } from "./routes/users.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { logger } from "./helpers/logger.js";
+import { swaggerSpecs } from "./config/swagger.config.js";
+import swaggerUI from "swagger-ui-express";
 
 const port = config.server.port;
 const app = express();
@@ -55,6 +57,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 app.use(errorHandler);
 
 let products_list = [];
