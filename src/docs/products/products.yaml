@@ -1,0 +1,175 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtener todos los productos
+      tags: 
+        - Productos
+      responses: 
+        "200":
+          description: Se obtuvieron los productos exitosamente
+        "500":
+          description: Hubo un problema en el Servidor
+    post:
+      summary: Alta de producto
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Product"
+      responses: 
+        "200":
+          description: El producto fue creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/product'
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/products/mockingproducts:
+    get:
+      summary: Obtener productos falsos
+      tags:
+        - Productos
+      responses: 
+        "200":
+          description: Se obtuvieron productos falsos exitosamente
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/products/{pid}:
+    get:
+      summary: Obtener producto por id
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/product'
+    put:
+      summary: Actualizar producto
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Product"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/product'
+  
+components:
+  schemas:
+    product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: id generado por la base de datos (requerido*)
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Descripción técnica del producto
+        price: 
+          type: Integer
+          description: Precio del producto
+        thumbnails: 
+          type: Array
+          description: Imágenes del producto
+        code:
+          type: String
+          description: Código del producto
+        stock:
+          type: Integer
+          description: Stock del producto
+        category:
+          type: String
+          description: Categoría del producto
+        status:
+          type: Boolean
+          description: Estado del producto
+        owner: 
+          type: String
+          description: Propietario del producto
+      example:
+        _id: ObjectId(658369dbc089b01a2d24e58c)
+        title: Notebook Lenovo Intel Core i5 8GB de RAM 480GB SSD Wind10 Home
+        description: NOTEBOOK 25 326 x 226 x 18,4 mm - Peso 1,65 kg
+        price: 255000
+        thumbnails: [
+          https://i.postimg.cc/zB5zdtBS/notebook-1.png,
+          https://i.postimg.cc/Kc3bPhJS/notebook-2.png,
+          https://i.postimg.cc/CLjV2C3c/notebook-3.png
+        ]
+        code: ABC_1
+        stock: 100
+        category: notebooks
+        status: true
+        owner: juan@gmail.com
+  requestBodies:
+    Product:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Descripción técnica del producto
+        price: 
+          type: Integer
+          description: Precio del producto
+        thumbnails: 
+          type: Array
+          description: Imágenes del producto
+        code:
+          type: String
+          description: Código del producto
+        stock:
+          type: Integer
+          description: Stock del producto
+        category:
+          type: String
+          description: Categoría del producto
+        status:
+          type: Boolean
+          description: Estado del producto
+      example:
+        title: Notebook Lenovo Intel Core i5 8GB de RAM 480GB SSD Wind10 Home
+        description: NOTEBOOK 326 x 226 x 18,4 mm - Peso 1,65 kg
+        price: 255000
+        thumbnails: [
+          https://i.postimg.cc/zB5zdtBS/notebook-1.png,
+          https://i.postimg.cc/Kc3bPhJS/notebook-2.png,
+          https://i.postimg.cc/CLjV2C3c/notebook-3.png
+        ]
+        code: ABC_1
+        stock: 100
+        category: notebooks
+        status: true

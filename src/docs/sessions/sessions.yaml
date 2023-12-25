@@ -3,7 +3,7 @@ paths:
     post:
       summary: Iniciar sesión
       tags:
-        - Sesión
+        - Autenticación
       requestBody:
         required: true
         content:
@@ -17,6 +17,16 @@ paths:
             application/json:
               schema:
                 $ref: "#components/schemas/User"
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/sessions/logout:
+    get:
+      summary: Cerrar sesión
+      tags:
+        - Autenticación
+      responses:
+        "200":
+          description: Se cerró la sesión exitosamente
         "500":
           description: Hubo un problema en el Servidor
 
