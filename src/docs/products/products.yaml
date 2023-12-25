@@ -52,7 +52,7 @@ paths:
             $type: String
       responses:
         "200":
-          description: Producto encontrado
+          description: Producto encontrado 
           content:
             application/json:
               schema:
@@ -76,15 +76,33 @@ paths:
               $ref: "#components/requestBodies/Product"
       responses:
         "200":
-          description: Producto actualizado exitosamente
+          description: El producto fue actualizado exitosamente
           content:
             application/json:
               schema:
                 $ref: '#components/schemas/product'
+    delete:
+      summary: Eliminar producto
+      tags:
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: El producto fue eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Product'    
   
 components:
   schemas:
-    product:
+    Product:
       type: object
       properties:
         _id:
