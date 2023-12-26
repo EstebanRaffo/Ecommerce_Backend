@@ -1,0 +1,237 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtener todos los carritos
+      tags: 
+        - Carrito de Compras
+      responses: 
+        "200":
+          description: Se obtuvieron los carritos exitosamente
+        "500":
+          description: Hubo un problema en el Servidor
+    post:
+      summary: Alta de Carrito de compra
+      tags:
+        - Carrito de Compras
+      responses: 
+        "200":
+          description: El carrito fue creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/carts/{cid}:
+    get:
+      summary: Obtener carrito por id
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: Carrito encontrado 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+    put:
+      summary: Actualizar productos del Carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Cart"
+      responses:
+        "200":
+          description: Carrito encontrado 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+    delete:
+      summary: Eliminar productos del carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+      responses:  
+        "200":
+          description: Carrito actualizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Agregar producto en el carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      responses: 
+        "200":
+          description: El producto fue agregado al carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+    delete:
+      summary: Eliminar producto del Carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: El producto fue eliminado del Carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+    put:
+      summary: Actualizar cantidad del producto en el Carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: id del producto
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Quantity"
+      responses:
+        "200":
+          description: Carrito actualizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Comprar el carrito
+      tags:
+        - Carrito de Compras
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: id del carrito
+          schema:
+            $type: String
+      responses: 
+        "200":
+          description: Compra exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "500":
+          description: Hubo un problema en el Servidor
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: id generado por la base de datos (requerido*)
+        products: 
+          type: Array
+          description: Producto id y Cantidad
+      example:
+        _id: ObjectId(65836db3c089b01a2d24e5ad)
+        products: [
+          _id: ObjectId(6527193571642bf62ec78c9e),
+          quantity: 2
+        ]   
+  requestBodies:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: Array
+          descripcion: Item del carrito
+      example:
+        products: [{
+          _id: 6527193571642bf62ec78c9e,
+          quantity: 2
+        }]
+    Quantity:
+      type: object
+      properties:
+        quantity:
+          type: Integer
+          description: Cantidad en el carrito
+      example:
+        {
+          quantity: 1
+        }

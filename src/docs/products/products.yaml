@@ -10,7 +10,7 @@ paths:
         "500":
           description: Hubo un problema en el Servidor
     post:
-      summary: Alta de producto
+      summary: Alta de Producto
       tags:
         - Productos
       requestBody:
@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/product'
+                $ref: '#components/schemas/Product'
         "500":
           description: Hubo un problema en el Servidor
   /api/products/mockingproducts:
@@ -56,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/product'
+                $ref: '#components/schemas/Product'
     put:
       summary: Actualizar producto
       tags:
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/product'
+                $ref: '#components/schemas/Product'
     delete:
       summary: Eliminar producto
       tags:
