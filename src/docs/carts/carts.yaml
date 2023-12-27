@@ -15,7 +15,7 @@ paths:
         - Carrito de Compras
       responses: 
         "200":
-          description: El carrito fue creado exitosamente
+          description: Carrito creado exitosamente
           content:
             application/json:
               schema:
@@ -62,7 +62,7 @@ paths:
               $ref: "#components/requestBodies/Cart"
       responses:
         "200":
-          description: Carrito encontrado 
+          description: Productos del carrito actualizados 
           content:
             application/json:
               schema:
@@ -82,7 +82,7 @@ paths:
             $type: String
       responses:  
         "200":
-          description: Carrito actualizado 
+          description: Productos eliminados del carrito 
           content:
             application/json:
               schema:
@@ -109,7 +109,7 @@ paths:
             $type: String
       responses: 
         "200":
-          description: El producto fue agregado al carrito exitosamente
+          description: Producto agregado al carrito
           content:
             application/json:
               schema:
@@ -117,7 +117,7 @@ paths:
         "500":
           description: Hubo un problema en el Servidor
     delete:
-      summary: Eliminar producto del Carrito
+      summary: Eliminar un producto del Carrito
       tags:
         - Carrito de Compras
       parameters:
@@ -135,7 +135,7 @@ paths:
             $type: String
       responses:
         "200":
-          description: El producto fue eliminado del Carrito exitosamente
+          description: Producto eliminado del carrito
           content:
             application/json:
               schema:
@@ -167,7 +167,7 @@ paths:
               $ref: "#components/requestBodies/Quantity"
       responses:
         "200":
-          description: Carrito actualizado 
+          description: Cantidad del producto en el carrito actualizada 
           content:
             application/json:
               schema:
@@ -176,7 +176,7 @@ paths:
           description: Hubo un problema en el Servidor
   /api/carts/{cid}/purchase:
     post:
-      summary: Comprar el carrito
+      summary: Comprar carrito
       tags:
         - Carrito de Compras
       parameters:

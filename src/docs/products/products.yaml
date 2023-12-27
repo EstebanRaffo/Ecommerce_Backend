@@ -76,7 +76,7 @@ paths:
               $ref: "#components/requestBodies/Product"
       responses:
         "200":
-          description: El producto fue actualizado exitosamente
+          description: Producto actualizado exitosamente
           content:
             application/json:
               schema:
@@ -94,7 +94,7 @@ paths:
             $type: String
       responses:
         "200":
-          description: El producto fue eliminado exitosamente
+          description: Producto eliminado exitosamente
           content:
             application/json:
               schema:

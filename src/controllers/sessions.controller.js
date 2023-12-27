@@ -24,7 +24,7 @@ export class SessionsController{
         // Para test de login desde Postman o Swagger
         if(req.user?.email){
             const user_dto = new UserDto(req.user); 
-            res.status(200).json({user:user_dto});
+            res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
         }
     }
 

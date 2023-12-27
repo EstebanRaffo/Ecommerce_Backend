@@ -12,7 +12,7 @@ paths:
               $ref: "#components/requestBodies/Login"
       responses: 
         "200":
-          description: Se inició la sesión exitosamente
+          description: Inicio de sesión exitoso
           content: 
             application/json:
               schema:

@@ -54,7 +54,7 @@ export class ProductsController{
                 owner: email
             }
             const new_product = await ProductsService.createProduct(dataProduct);
-            res.status(201).json({message: "Nuevo producto agregado exitosamente", data: new_product});
+            res.status(201).json({message: "El producto fue creado exitosamente", data: new_product});
         }catch(error){
             res.json({status:"error", message: error.message});
         }

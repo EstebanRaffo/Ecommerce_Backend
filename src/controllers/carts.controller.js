@@ -18,7 +18,7 @@ export class CartsController{
         const { products } = req.body;
         try{
             const new_cart = await CartsService.createCart(products);
-            res.status(201).json({message: "Nuevo carrito agregado", data: new_cart});
+            res.status(201).json({message: "Carrito creado exitosamente", data: new_cart});
         }catch(error){
             res.json({status: "error", message: error.message});
         }
@@ -30,7 +30,7 @@ export class CartsController{
             const cart = await CartsService.getCartById(cid);
             if(req.user?.email){
                 // res.render("cart", { products: cart.products })
-                // Para test desde Postman
+                // Para test desde Postman o Swagger
                 res.status(200).json({cart: cart})
             }else{
                 res.redirect("/login");
@@ -46,7 +46,7 @@ export class CartsController{
         const user = req.user;
         try{
             const cart_updated = await CartsService.addProductToCart(cart_id, prod_id, user);
-            res.status(201).json({message: "Producto agregado en el carrito", data: cart_updated});
+            res.status(201).json({message: "Producto agregado al carrito", data: cart_updated});
         }catch(error){
             res.json({status: "error", message: error.message});
         }
@@ -57,7 +57,7 @@ export class CartsController{
         const prod_id = req.params.pid;
         try {
             const cart_updated = await CartsService.deleteProduct(cart_id, prod_id);
-            res.status(201).json({message: "El producto fue eliminado del carrito", data: cart_updated});
+            res.status(201).json({message: "Producto eliminado del carrito", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
@@ -69,7 +69,7 @@ export class CartsController{
         try {
             await CartsService.deleteProductsOfCart(cart_id);
             const cart_updated = await CartsService.updateProductsInCart(cart_id, products);
-            res.status(201).json({message: "Los productos del carrito fueron actualizados", data: cart_updated});
+            res.status(201).json({message: "Productos del carrito actualizados", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
@@ -78,7 +78,7 @@ export class CartsController{
     static async updateProductsInCart(cart_id, products){
         try {
             const cart_updated = CartsService.updateProductsInCart(cart_id, products);
-            res.status(201).json({message: "Los productos del carrito fueron actualizados", data: cart_updated});
+            res.status(201).json({message: "Productos del carrito actualizados", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
@@ -90,7 +90,7 @@ export class CartsController{
         const { quantity } = req.body;
         try {
             const cart_updated = await CartsService.updateProductQuantityInCart(cart_id, prod_id, quantity);
-            res.status(201).json({message: "Se actualizó la cantidad del producto en el carrito", data: cart_updated});
+            res.status(201).json({message: "Cantidad del producto en el carrito actualizada", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
@@ -100,7 +100,7 @@ export class CartsController{
         const cart_id = req.params.cid;
         try {
             const cart_updated = await CartsService.deleteProductsOfCart(cart_id);
-            res.status(201).json({message: "Los productos fueron eliminados del carrito", data: cart_updated});
+            res.status(201).json({message: "Productos eliminados del carrito", data: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
@@ -132,7 +132,7 @@ export class CartsController{
                 purchaser: req.user.email
             }
             const result = await TicketsService.buyCart(ticket);
-            res.status(201).json({message: "Compra realizada con éxito", ticket: result, excluidos: unavailables_products, carrito: cart_updated});
+            res.status(201).json({message: "Compra exitosa", ticket: result, excluidos: unavailables_products, carrito: cart_updated});
         } catch (error) {
             res.json({status: "error", message: error.message});
         }
