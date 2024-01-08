@@ -11,7 +11,7 @@ export class SessionsController{
     static renderProfile = async (req,res)=>{
         const {first_name, last_name, email, age, rol} = req.user
         const isAdmin = rol === config.admin.rol; 
-        res.render("profile",{message:"Usuario registrado correctamente", first_name, last_name, email, age, rol, isAdmin});
+        res.render("profile",{message:"Usuario registrado exitosamente", first_name, last_name, email, age, rol, isAdmin});
     }
 
     static renderFailSignup = (req,res)=>{

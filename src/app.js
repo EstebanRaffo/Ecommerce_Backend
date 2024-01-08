@@ -97,3 +97,5 @@ io.on("connection", async(socket)=>{
         socket.broadcast.emit("newUser",`El usuario ${data} se acaba de conectar`);
     })
 });
+
+export {app};
