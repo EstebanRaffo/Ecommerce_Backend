@@ -3,6 +3,8 @@ import { expect } from "chai";
 import supertest from "supertest";
 import { createHash } from "../src/utils.js";
 import { usersModel } from "../src/dao/mongo/models/users.model.js";
+import { config } from "../src/config/config.js";
+import { productsModel } from "../src/dao/mongo/models/products.model.js";
 
 const requester = supertest(app);
 
@@ -51,25 +53,62 @@ describe("Testing Ecommerce", ()=>{
     });
 
     describe("Testing Productos", ()=>{
-        it("Test POST /api/products/: Alta de Producto", ()=>{
+        const mockProduct = {
+            "title": "Notebook TEST Lenovo Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
+            "description": "NOTEBOOK TEST\" 326 x 226 x 18,4 mm - Peso: 1,65 kg",
+            "code": "TEST",
+            "status": true,
+            "stock": 100,
+            "price": 200000,
+            "category": "notebooks",
+            "thumbnails": ["https://i.postimg.cc/zB5zdtBS/notebook-1.png", 
+                    "https://i.postimg.cc/Kc3bPhJS/notebook-2.png", 
+                    "https://i.postimg.cc/CLjV2C3c/notebook-3.png",
+                    "https://i.postimg.cc/K8xyhkFx/notebook-4.png",
+                    "https://i.postimg.cc/g2sbzzkR/notebook-5.jpg"]
+        }
+        let cookie;
 
+        before(async ()=>{
+            const response = await requester.post("/api/sessions/login").send({
+                email: config.admin.user,
+                password: config.admin.password
+            });
+            const cookieResult = response.header['set-cookie'][0];
+            cookie = {
+                name: cookieResult.split("=")[0],
+                value: cookieResult.split("=")[1]
+            };
         });
-        it("Test PUT /api/products/:pid: Actualizar Producto", ()=>{
 
+        after(async ()=>{
+            await productsModel.findOneAndDelete({code: mockProduct.code});
         });
-        it("Test DELETE /api/products/:pid: Eliminar Producto", ()=>{
+
+        it("Test Alta de Producto -> POST /api/products/", async ()=>{
+            const response = await requester.post("/api/products/").send(mockProduct).set("Cookie",[`${cookie.name}=${cookie.value}`]);
+            expect(response.status).to.be.equal(201);
+            expect(response._body.data).to.have.property("_id");
+        });
+
+        it("Test Actualización de Producto -> PUT /api/products/:pid", async ()=>{
+            const response = await requester.put("/api/products/:pid").send({"title": "Notebook Modificada", "stock": 10}).set("Cookie",[`${cookie.name}=${cookie.value}`]);
+            console.log(response)
+        });
+
+        it("Test Eliminar Producto -> DELETE /api/products/:pid", ()=>{
             
         });
     });
 
     describe("Testing Carrito de Compras", ()=>{
-        it("Test POST /api/carts/: Crear Carrito", ()=>{
+        it("Test Crear Carrito -> POST /api/carts/", ()=>{
 
         });
-        it("Test POST /:cid/products/:pid: Agregar producto en el carrito", ()=>{
+        it("Test Agregar producto en el carrito -> POST /:cid/products/:pid", ()=>{
 
         });
-        it("Test DELETE /:cid/products/:pid: Eliminar Producto del carrito", ()=>{
+        it("Test Eliminar Producto del carrito -> DELETE /:cid/products/:pid", ()=>{
             
         });
     });
