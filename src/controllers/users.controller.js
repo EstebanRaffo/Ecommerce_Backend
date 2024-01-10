@@ -22,7 +22,7 @@ export class UsersController{
             const userUpdated = await UsersService.updateUser(uid, {rol: new_role});
             res.status(200).json({message:"Usuario actualizado exitosamente", data: userUpdated});
         } catch (error) {
-            res.json({status: "error", message:error.message});
+            res.status(400).json({status: "error", message:error.message});
         }
     }
 }

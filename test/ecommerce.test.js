@@ -19,7 +19,6 @@ describe("Testing Ecommerce", ()=>{
             age: "30",
             password:createHash("1234")
         }
-
         let cookie;
 
         after(async()=>{
@@ -32,6 +31,7 @@ describe("Testing Ecommerce", ()=>{
             expect(response.text.includes("Usuario registrado exitosamente")).to.be.equal(true);
             expect(response.request._data.email).to.be.equal(mockUser.email);
         });
+
         it("Test Login del nuevo usuario -> POST /api/sessions/login", async ()=>{
             const response = await requester.post("/api/sessions/login").send({
                 email:mockUser.email,
@@ -46,12 +46,15 @@ describe("Testing Ecommerce", ()=>{
             };
             expect(cookie.name).to.be.equal("connect.sid");
         });
+
         it("Test Obtener la Información del Usuario -> GET /api/sessions/current", async ()=>{
             const response = await requester.get("/api/sessions/current").set("Cookie",[`${cookie.name}=${cookie.value}`]);
             expect(response.status).to.be.equal(200);
             expect(response._body.user.email).to.be.equal(mockUser.email);
         });
     });
+
+    const invalid_id = "111c7281a286bcaebe3f90c6";
 
     describe("Testing Productos", ()=>{
         const mockProduct = {
@@ -75,6 +78,14 @@ describe("Testing Ecommerce", ()=>{
         }
         let cookie;
         let pid;
+        const mockProductWithoutStock = {
+            "title": "Notebook TEST Lenovo Intel Core i5 8GB de RAM 480GB SSD Wind10 Home",
+            "description": "NOTEBOOK TEST\" 326 x 226 x 18,4 mm - Peso: 1,65 kg",
+            "code": "TEST",
+            "status": true,
+            "price": 200000,
+            "category": "notebooks",
+        }
 
         before(async ()=>{
             const response = await requester.post("/api/sessions/login").send({
@@ -119,6 +130,23 @@ describe("Testing Ecommerce", ()=>{
             expect(result.status).to.be.equal(200);
             expect(result.text).to.be.equal("No se encontró el producto buscado o no existe");
         });
+
+        it("Test Alta de Producto sin uno o más datos obligatorios", async ()=>{
+            const response = await requester.post("/api/products/").send(mockProductWithoutStock)
+            .set("Cookie",[`${cookie.name}=${cookie.value}`]);
+            expect(response.status).to.be.equal(400);
+            const { status, message } = response._body;
+            expect(status).to.be.equal("error");
+            expect(message).to.be.equal("Uno o más datos obligatorios no fueron informados");
+        });
+
+        it("Test Actualización de Producto inexistente", async ()=>{
+            const response = await requester.put(`/api/products/${invalid_id}`).set("Cookie",[`${cookie.name}=${cookie.value}`]);
+            expect(response.status).to.be.equal(400);
+            const { status, message } = response._body;
+            expect(status).to.be.equal("error");
+            expect(message).to.be.equal("No se pudo actualizar el producto");
+        });
     });
 
     describe("Testing Carrito de Compras", ()=>{
@@ -149,6 +177,7 @@ describe("Testing Ecommerce", ()=>{
             expect(response._body.data).to.have.property("_id");
             cid = response._body.data._id;
         });
+
         it("Test Agregar producto en el carrito -> POST /:cid/products/:pid", async ()=>{
             const response = await requester.post(`/api/carts/${cid}/products/${pid}`).set("Cookie",[`${cookie.name}=${cookie.value}`]);
             expect(response.status).to.be.equal(201);
@@ -156,14 +185,23 @@ describe("Testing Ecommerce", ()=>{
             expect(_id._id).to.be.equal(pid);
             expect(quantity).to.be.equal(1);
         });
+
         it("Test Actualizar cantidad del producto en el carrito -> PUT /:cid/products/:pid", async ()=>{
             const response = await requester.put(`/api/carts/${cid}/products/${pid}`)
             .send({"quantity": quantity_test}).set("Cookie",[`${cookie.name}=${cookie.value}`]);
             expect(response.status).to.be.equal(201);
             const { _id, quantity } = response._body.data.products[0];
-            console.log(response._body.data.products[0])
             expect(_id._id).to.be.equal(pid);
             expect(quantity).to.be.equal(quantity_test);            
+        });
+
+        it("Test Eliminar del carrito producto inexistente", async ()=>{
+            const response = await requester.delete(`/api/carts/${cid}/products/${invalid_id}`)
+            .send({"quantity": quantity_test}).set("Cookie",[`${cookie.name}=${cookie.value}`]);
+            expect(response.status).to.be.equal(400);
+            const { status, message } = response._body;
+            expect(status).to.be.equal("error");
+            expect(message).to.be.equal("No se pudo eliminar el producto del carrito");
         });
     });
 });

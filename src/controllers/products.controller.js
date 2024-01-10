@@ -18,7 +18,7 @@ export class ProductsController{
                 res.send("No se encontraron productos");
             }
         }catch(error){
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 
@@ -32,7 +32,7 @@ export class ProductsController{
                 res.send("No se encontró el producto buscado o no existe");
             }
         }catch(error){
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 
@@ -56,7 +56,7 @@ export class ProductsController{
             const new_product = await ProductsService.createProduct(dataProduct);
             res.status(201).json({message: "El producto fue creado exitosamente", data: new_product});
         }catch(error){
-            res.json({status:"error", message: error.message});
+            res.status(400).json({status:"error", message: error.message});
         }
     }
 
@@ -67,7 +67,7 @@ export class ProductsController{
             const product_updated = await ProductsService.updateProduct(id, new_product_info);
             res.status(201).json({message: "Producto actualizado exitosamente", data: product_updated});
         }catch(error){
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 
@@ -78,7 +78,7 @@ export class ProductsController{
             await ProductsService.deleteProduct(pid, user);
             res.status(201).json({message: "Producto eliminado exitosamente"});
         }catch(error){
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 

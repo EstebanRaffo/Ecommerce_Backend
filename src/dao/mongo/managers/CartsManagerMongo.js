@@ -41,7 +41,7 @@ export class CartsManagerMongo{
         try {
             const cart = await this.model.findById(cid).populate("products._id").lean();
             if(!cart){
-                throw new Error(`El carrito con el ID: ${cid} no existe.`);
+                throw new Error(`El carrito con el ID: ${cid} no existe`);
             }
             return cart;
         } catch (error) {
@@ -80,7 +80,7 @@ export class CartsManagerMongo{
                     return cart_updated;
                 }   
             }else{
-                throw new Error("No se pudo agregar el producto al carrito o no existe.")
+                throw new Error("No se pudo agregar el producto al carrito o no existe")
             }
         } catch (error) {
             logger.error(`addProductToCart: ${error.message}`);
@@ -115,7 +115,7 @@ export class CartsManagerMongo{
                     throw new Error("El producto que desea eliminar no se encuentra en el carrito");
                 }
             }else{
-                throw new Error("No existe el producto que desea eliminar del carrito.");
+                throw new Error("No existe el producto que desea eliminar del carrito");
             }
         } catch (error) {
             logger.error(`deleteProduct: ${error.message}`);
@@ -140,7 +140,7 @@ export class CartsManagerMongo{
                     throw new Error("El producto que desea actualizar no se encuentra en el carrito");
                 }
             }else{
-                throw new Error("No existe el producto que desea actualizar en el carrito.");
+                throw new Error("No existe el producto que desea actualizar en el carrito");
             }
         } catch (error) {
             logger.error(`updateProductQuantityInCart: ${error.message}`);

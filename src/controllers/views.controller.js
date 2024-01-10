@@ -50,7 +50,7 @@ export class ViewsController{
                 res.redirect("/login");
             }
         }catch(error){
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 

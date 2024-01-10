@@ -83,7 +83,7 @@ export class SessionsController{
                 res.render("restorePasswordAdvise", {email, domain});
             } catch (error) {
                 logger.error(`sendResetPasswordMail: ${error.message}`);
-                res.json({status:"error", message:error.message})
+                res.status(400).json({status:"error", message:error.message})
             }
         }    
     }
@@ -108,7 +108,7 @@ export class SessionsController{
             // res.status(201).json({message: "Usuario actualizado exitosamente", data: result});
         } catch (error) {
             logger.error(`resetPassword: ${error.message}`);
-            res.json({status:"error", message:error.message});
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 }

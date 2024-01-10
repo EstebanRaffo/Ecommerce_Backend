@@ -10,7 +10,7 @@ export class CartsController{
             const result = await CartsService.getCarts();
             res.status(200).json(result);
         } catch (error) {
-            res.json({status: "error", message:error.message});
+            res.status(400).json({status: "error", message:error.message});
         }
     }
 
@@ -20,7 +20,7 @@ export class CartsController{
             const new_cart = await CartsService.createCart(products);
             res.status(201).json({message: "Carrito creado exitosamente", data: new_cart});
         }catch(error){
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -36,7 +36,7 @@ export class CartsController{
                 res.redirect("/login");
             }
         }catch(error){
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -48,7 +48,7 @@ export class CartsController{
             const cart_updated = await CartsService.addProductToCart(cart_id, prod_id, user);
             res.status(201).json({message: "Producto agregado al carrito", data: cart_updated});
         }catch(error){
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -59,7 +59,7 @@ export class CartsController{
             const cart_updated = await CartsService.deleteProduct(cart_id, prod_id);
             res.status(201).json({message: "Producto eliminado del carrito", data: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -71,7 +71,7 @@ export class CartsController{
             const cart_updated = await CartsService.updateProductsInCart(cart_id, products);
             res.status(201).json({message: "Productos del carrito actualizados", data: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -80,7 +80,7 @@ export class CartsController{
             const cart_updated = CartsService.updateProductsInCart(cart_id, products);
             res.status(201).json({message: "Productos del carrito actualizados", data: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -92,7 +92,7 @@ export class CartsController{
             const cart_updated = await CartsService.updateProductQuantityInCart(cart_id, prod_id, quantity);
             res.status(201).json({message: "Cantidad del producto en el carrito actualizada", data: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -102,7 +102,7 @@ export class CartsController{
             const cart_updated = await CartsService.deleteProductsOfCart(cart_id);
             res.status(201).json({message: "Productos eliminados del carrito", data: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 
@@ -134,7 +134,7 @@ export class CartsController{
             const result = await TicketsService.buyCart(ticket);
             res.status(201).json({message: "Compra exitosa", ticket: result, excluidos: unavailables_products, carrito: cart_updated});
         } catch (error) {
-            res.json({status: "error", message: error.message});
+            res.status(400).json({status: "error", message: error.message});
         }
     }
 }
