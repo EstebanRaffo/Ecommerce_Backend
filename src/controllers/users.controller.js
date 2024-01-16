@@ -30,22 +30,22 @@ export class UsersController{
     static async uploadFiles(req, res){
         console.log("Entro en uploadFiles")
         console.log("req.params: ",req.params)
-        console.log("req.file: ",req.file)
-        const {uid} = req.params;
-        const filename = req.file['filename'];
-        const path = req.file['path'];
-        const info = {
-            documents:[{
-                name:filename,
-                reference:path
-            }]
-        }
-        try {
-            await UsersService.updateUser(uid, info)
-            res.send({message: "Se actualizaron los documentos"});
-        } catch (error) {
-            logger.error(`${error.message}`);
-            throw error;
-        }
+        console.log("req.files: ",req.files)
+        // const {uid} = req.params;
+        // const filename = req.file['filename'];
+        // const path = req.file['path'];
+        // const info = {
+        //     documents:[{
+        //         name:filename,
+        //         reference:path
+        //     }]
+        // }
+        // try {
+        //     await UsersService.updateUser(uid, info)
+        //     res.send({message: "Se actualizaron los documentos"});
+        // } catch (error) {
+        //     logger.error(`${error.message}`);
+        //     throw error;
+        // }
     }
 }
