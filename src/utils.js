@@ -37,9 +37,6 @@ export const verifyEmailToken = (token) => {
 const storage = multer.diskStorage({
     //destination:carpeta donde se guardan los archivos
     destination:function(req,file,cb){
-        console.log("req.params: ", req.params)
-        console.log("req.file: ", req.file)
-        console.log("file: ", file)
         cb(null,path.join(__dirname,"/public/profiles"))
     },
 

@@ -1,3 +1,4 @@
+import { logger } from "../helpers/logger.js";
 import { UsersService } from "../services/users.service.js";
 
 
@@ -26,13 +27,25 @@ export class UsersController{
         }
     }
 
-    static uploadFiles(req, res){
+    static async uploadFiles(req, res){
         console.log("Entro en uploadFiles")
         console.log("req.params: ",req.params)
-        console.log("req.body: ",req.body)
         console.log("req.file: ",req.file)
-        console.log("req.files['avatar'][0]: ", req.files['avatar'][0])
-        // console.log("req.files['documents']:", req.files['documents'])
-        res.json({message: "Se actualizaron los documentos"})
+        const {uid} = req.params;
+        const filename = req.file['filename'];
+        const path = req.file['path'];
+        const info = {
+            documents:[{
+                name:filename,
+                reference:path
+            }]
+        }
+        try {
+            await UsersService.updateUser(uid, info)
+            res.send({message: "Se actualizaron los documentos"});
+        } catch (error) {
+            logger.error(`${error.message}`);
+            throw error;
+        }
     }
 }
