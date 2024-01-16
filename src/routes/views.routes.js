@@ -14,5 +14,6 @@ router.get("/profile", ViewsController.renderProfile);
 router.get("/loggerTest", ViewsController.testLogger);
 router.get("/forgot-password", ViewsController.renderForgotPassword);
 router.get("/reset-password-form", ViewsController.renderResetPassword);
+router.get("/documents", ViewsController.renderDocumentsForm);
 
 export {router as viewsRouter};

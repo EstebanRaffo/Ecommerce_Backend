@@ -25,4 +25,14 @@ export class UsersController{
             res.status(400).json({status: "error", message:error.message});
         }
     }
+
+    static uploadFiles(req, res){
+        console.log("Entro en uploadFiles")
+        console.log("req.params: ",req.params)
+        console.log("req.body: ",req.body)
+        console.log("req.file: ",req.file)
+        console.log("req.files['avatar'][0]: ", req.files['avatar'][0])
+        // console.log("req.files['documents']:", req.files['documents'])
+        res.json({message: "Se actualizaron los documentos"})
+    }
 }

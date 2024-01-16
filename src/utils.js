@@ -1,6 +1,7 @@
 import path from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { config } from './config/config.js';
 
@@ -30,3 +31,23 @@ export const verifyEmailToken = (token) => {
         return null;
     }
 }
+
+//indicar donde se guardan los archivos que se suben
+//diskstorage significa almacenamiento en memoria
+const storage = multer.diskStorage({
+    //destination:carpeta donde se guardan los archivos
+    destination:function(req,file,cb){
+        console.log("req.params: ", req.params)
+        console.log("req.file: ", req.file)
+        console.log("file: ", file)
+        cb(null,path.join(__dirname,"/public/profiles"))
+    },
+
+    // filename:con que nombre vamos a guardar el archivo
+    filename:function(req,file,cb){
+        cb(null,`${req.user.first_name}-${file.originalname}`)
+    }
+});
+
+//creamos la funcion middleware para subir las imagenes, que utilizaremos en las diferentes rutas
+export const uploader = multer({storage});

@@ -9,23 +9,57 @@ import { logger } from "../helpers/logger.js";
 export class SessionsController{
 
     static renderProfile = async (req,res)=>{
-        const {first_name, last_name, email, age, rol} = req.user
-        const isAdmin = rol === config.admin.rol; 
-        res.render("profile",{message:"Usuario registrado exitosamente", first_name, last_name, email, age, rol, isAdmin});
+        if(req.user?.email){
+            const {_id, first_name, last_name, email, age, rol} = req.user;
+            const uid = _id.valueOf();
+            const isAdmin = rol === config.admin.rol; 
+            res.render("profile",{message:"Usuario registrado exitosamente", first_name, last_name, email, age, rol, isAdmin, uid});
+        } else {
+            res.redirect("/login");
+        }
     }
 
     static renderFailSignup = (req,res)=>{
         res.render("signup",{error:"No se pudo registrar el usuario"});
     }
 
+    static async updateUserConnection(userData){
+        const { _id } = userData;
+        const uid = _id.valueOf();
+        const info = {
+            last_connection: new Date(Date()).toISOString().toLocaleString('es-AR')
+        }
+        try {
+            const user = await UsersService.updateUser(uid, info);
+            return user;
+        } catch (error) {
+            logger.error(`updateUserConnection: ${error.message}`);
+            throw new Error("No se pudo actualizar la conexión del usuario");
+        }
+    } 
+
     static redirectToProducts = async(req,res)=>{
-        // res.redirect("/products");
+        if(req.user?.email){
+            try {
+                await this.updateUserConnection(req.user);            
+                res.redirect("/products");
+            } catch (error) {
+                logger.error(`${error.message}`);
+                throw error;
+            }
+        }
 
         // Para test de login desde Postman o Swagger
-        if(req.user?.email){
-            const user_dto = new UserDto(req.user); 
-            res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
-        }
+        // if(req.user?.email){
+        //     try {
+        //         const user = await this.updateUserConnection(req.user);            
+        //         const user_dto = new UserDto(user); 
+        //         res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
+        //     } catch (error) {
+        //         logger.error(`${error.message}`);
+        //         res.status(400).json({status:"error", message:error.message});
+        //     }
+        // }
     }
 
     static renderFailLogin = (req,res)=>{
@@ -34,8 +68,9 @@ export class SessionsController{
 
     static logout = async(req,res)=>{
         try {
-            req.session.destroy(err=>{
+            req.session.destroy(async err=>{
                 if(err) return res.render("profile",{error:"No se pudo cerrar la sesion"});
+                await this.updateUserConnection(req.user);
                 res.redirect("/login");
             })
         } catch (error) {

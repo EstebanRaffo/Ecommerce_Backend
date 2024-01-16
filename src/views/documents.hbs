@@ -1,0 +1,12 @@
+<p style="color:green">{{message}}</p>
+
+<h1>Cargá tus documentos</h1>
+<form action="/api/users/{{uid}}/documents" method="post" enctype="multipart/form-data">
+    <label for="avatar">Avatar</label>
+    <input type="file" name="avatar"/>
+    <br/><br/>
+    {{!-- <label for="documents">Documentos</label>
+    <input type="file" name="documents"/>
+    <br/><br/> --}}
+    <button>Cargar Documentos</button>
+</form>

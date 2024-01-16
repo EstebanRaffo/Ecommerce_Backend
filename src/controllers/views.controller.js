@@ -72,9 +72,10 @@ export class ViewsController{
 
     static renderProfile(req, res){
         if(req.user?.email){
-            const {first_name, last_name, email, age, rol} = req.user;
+            const {_id, first_name, last_name, email, age, rol} = req.user;
+            const uid = _id.valueOf();
             const isAdmin = rol === config.admin.rol; 
-            res.render("profile",{first_name, last_name, email, age, rol, isAdmin});
+            res.render("profile",{first_name, last_name, email, age, rol, isAdmin, uid});
         } else {
             res.redirect("/login");
         }
@@ -94,5 +95,16 @@ export class ViewsController{
     static async renderResetPassword(req, res){
         const {token} = req.query;
         res.render("resetPasswordForm", {token});
+    }
+
+    static renderDocumentsForm(req, res){
+        if(req.user?.email){
+            console.log(req.user)
+            const {_id} = req.user;
+            const uid = _id.valueOf();
+            res.render("documents", {uid});
+        } else {
+            res.redirect("/login");
+        }
     }
 }

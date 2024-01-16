@@ -13,7 +13,7 @@ router.get("/fail-signup", SessionsController.renderFailSignup);
 
 router.post("/login", passport.authenticate("loginLocalStrategy",{
     failureRedirect:"/api/sessions/fail-login"
-}) , SessionsController.redirectToProducts);
+}), SessionsController.redirectToProducts);
 
 router.get("/fail-login", SessionsController.renderFailLogin);
 
@@ -38,5 +38,7 @@ router.get(config.github.callbackUrl, passport.authenticate("loginGithubStrategy
 router.get("/current", SessionsController.currentUser);
 router.post("/send-mail", SessionsController.sendResetPasswordMail);
 router.post("/reset-password", SessionsController.resetPassword);
+router.get("/profile", SessionsController.renderProfile);
+
 
 export {router as sessionsRouter};

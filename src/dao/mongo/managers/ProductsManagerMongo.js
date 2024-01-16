@@ -126,7 +126,6 @@ export class ProductsManagerMongo{
     async productExists(id){
         try{
             const products = await this.model.find();
-            // console.log("productExists -> products: ", products)
             return products.some(product => product._id.valueOf() === id);
         }catch(error){
             logger.error(`productExists: ${error.message}`);
