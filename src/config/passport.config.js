@@ -14,6 +14,7 @@ export const initializePassport = ()=>{
         },
         async (req, username, password, done)=>{
             const {first_name, last_name, age} = req.body;
+            console.log("Entró en signupLocalStrategy")
             console.log("req.file: ", req.file)
             try {
                 const user = await UsersService.getUser(username);
