@@ -14,6 +14,7 @@ export const initializePassport = ()=>{
         },
         async (req, username, password, done)=>{
             const {first_name, last_name, age} = req.body;
+            console.log("req.file: ", req.file)
             try {
                 const user = await UsersService.getUser(username);
                 if(user){
@@ -24,7 +25,8 @@ export const initializePassport = ()=>{
                     last_name,
                     email:username,
                     age,
-                    password:createHash(password)
+                    password:createHash(password),
+                    avatar:req.file.filename
                 };
                 const user_created = await UsersService.createUser(new_user);
                 return done(null, user_created);
@@ -47,6 +49,10 @@ export const initializePassport = ()=>{
                 if(!isValidPassword(password, user)){
                     return done(null, false);
                 }
+                const info = {
+                    last_connection: new Date()
+                };
+                await UsersService.updateUser(user._id, info);
                 return done(null, user);
             } catch (error) {
                 return done(error);

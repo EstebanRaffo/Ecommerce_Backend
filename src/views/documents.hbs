@@ -2,11 +2,14 @@
 
 <h1>Cargá tus documentos</h1>
 <form action="/api/users/{{uid}}/documents" method="post" enctype="multipart/form-data">
-    <label for="avatar">Avatar</label>
-    <input type="file" name="avatar"/>
+    <label for="identificacion">Identificación</label>
+    <input type="file" name="identificacion"/>
     <br/><br/>
-    <label for="dni">Documentos</label>
-    <input type="file" name="dni"/>
+    <label for="domicilio">Domicilio</label>
+    <input type="file" name="domicilio"/>
+    <br/><br/>
+    <label for="estadoDeCuenta">Estado de Cuenta</label>
+    <input type="file" name="estadoDeCuenta"/>
     <br/><br/>
     <button>Cargar Documentos</button>
 </form>

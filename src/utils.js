@@ -32,24 +32,56 @@ export const verifyEmailToken = (token) => {
     }
 }
 
-//indicar donde se guardan los archivos que se suben
-//diskstorage significa almacenamiento en memoria
-const storage = multer.diskStorage({
-    //destination:carpeta donde se guardan los archivos
-    destination:function(req,file,cb){
-        console.log("req.files: ", req.files)
-        console.log("file: ", file)
-        console.log("req.files['avatar']: ", req.files['avatar'])
-        console.log("req.files['dni']: ", req.files['dni']) 
-        
-        cb(null,path.join(__dirname,"/public/profiles"))
-    },
 
-    // filename:con que nombre vamos a guardar el archivo
-    filename:function(req,file,cb){
-        cb(null,`${req.user.first_name}-${file.originalname}`)
+const checkValidFields = (user)=>{
+    const {first_name, email, password} = user;
+    if(!first_name || !email || !password){
+        return false;
+    } else {
+        return true;
+    }
+};
+
+const profileMulterFilter = (req,file,cb)=>{
+    if(!checkValidFields(req.body)){
+        cb(null, false);
+    } else {
+        cb(null, true);
+    }
+};
+
+
+const profileStorage = multer.diskStorage({
+    destination: function(req,file,cb){
+        console.log("req.file: ", req.file)
+        cb(null, path.join(__dirname,"/info/users/img") )
+    },
+    filename: function(req,file,cb){
+        cb(null,`${req.body.email}-perfil-${file.originalname}`)
     }
 });
+const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFilter});
 
-//creamos la funcion middleware para subir las imagenes, que utilizaremos en las diferentes rutas
-export const uploader = multer({storage});
+
+const documentsStorage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null, path.join(__dirname,"/info/users/documents") )
+    },
+    filename: function(req,file,cb){
+        cb(null,`${req.user.email}-document-${file.originalname}`)
+    }
+});
+const uploadDocuments = multer({storage:documentsStorage});
+
+
+const imgProductsStorage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null, path.join(__dirname,"/info/products/img"))
+    },
+    filename: function(req,file,cb){
+        cb(null,`${req.body.code}-product-${file.originalname}`)
+    }
+});
+const uploadImgProducts = multer({storage:imgProductsStorage});
+
+export {uploadProfile, uploadDocuments, uploadImgProducts};

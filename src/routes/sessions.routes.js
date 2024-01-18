@@ -2,10 +2,10 @@ import { Router } from "express";
 import passport from "passport";
 import { config } from "../config/config.js";
 import { SessionsController } from "../controllers/sessions.controller.js";
-
+import { uploadProfile } from "../utils.js";
 const router = Router();
 
-router.post("/signup", passport.authenticate("signupLocalStrategy",{
+router.post("/signup", uploadProfile.single("avatar"), passport.authenticate("signupLocalStrategy",{
     failureRedirect:"/api/sessions/fail-signup"
 }), SessionsController.renderProfile);
 

@@ -50,6 +50,7 @@ export class ViewsController{
                 res.redirect("/login");
             }
         }catch(error){
+            logger.error(`getProducts: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
         }
     }
@@ -100,9 +101,9 @@ export class ViewsController{
     static renderDocumentsForm(req, res){
         if(req.user?.email){
             console.log(req.user)
-            const {_id} = req.user;
+            const { _id } = req.user;
             const uid = _id.valueOf();
-            res.render("documents", {uid});
+            res.render("documents", { uid });
         } else {
             res.redirect("/login");
         }

@@ -2,7 +2,7 @@
 
 <p style="color:red">{{error}}</p>
 
-<form method="post" action="/api/sessions/signup">
+<form method="post" action="/api/sessions/signup" enctype="multipart/form-data">
     <input type="text" name="first_name" placeholder="Nombre"/>
     <br/><br/>
     <input type="text" name="last_name" placeholder="Apellido"/>
@@ -12,6 +12,8 @@
     <input type="number" name="age" placeholder="Edad"/>
     <br/><br/>
     <input type="password" name="password" placeholder="Contraseña"/>
+    <br/><br/>
+    <input type="file" name="avatar"/>
     <br/><br/>
     <button>Registrarse</button>
 </form>

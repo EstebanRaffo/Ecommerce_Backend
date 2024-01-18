@@ -10,10 +10,9 @@ export class SessionsController{
 
     static renderProfile = async (req,res)=>{
         if(req.user?.email){
-            const {_id, first_name, last_name, email, age, rol} = req.user;
-            const uid = _id.valueOf();
+            const {first_name, last_name, email, age, rol} = req.user;
             const isAdmin = rol === config.admin.rol; 
-            res.render("profile",{message:"Usuario registrado exitosamente", first_name, last_name, email, age, rol, isAdmin, uid});
+            res.render("profile",{message:"Usuario registrado exitosamente", first_name, last_name, email, age, rol, isAdmin});
         } else {
             res.redirect("/login");
         }
@@ -23,43 +22,26 @@ export class SessionsController{
         res.render("signup",{error:"No se pudo registrar el usuario"});
     }
 
-    static async updateUserConnection(userData){
-        const { _id } = userData;
-        const uid = _id.valueOf();
-        const info = {
-            last_connection: new Date(Date()).toISOString().toLocaleString('es-AR')
-        }
-        try {
-            const user = await UsersService.updateUser(uid, info);
-            return user;
-        } catch (error) {
-            logger.error(`updateUserConnection: ${error.message}`);
-            throw new Error("No se pudo actualizar la conexión del usuario");
-        }
-    } 
 
     static redirectToProducts = async(req,res)=>{
-        if(req.user?.email){
-            try {
-                await this.updateUserConnection(req.user);            
-                res.redirect("/products");
-            } catch (error) {
-                logger.error(`${error.message}`);
-                throw error;
-            }
-        }
-
-        // Para test de login desde Postman o Swagger
         // if(req.user?.email){
-        //     try {
-        //         const user = await this.updateUserConnection(req.user);            
-        //         const user_dto = new UserDto(user); 
-        //         res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
+        //     try {          
+        //         res.redirect("/products");
         //     } catch (error) {
         //         logger.error(`${error.message}`);
-        //         res.status(400).json({status:"error", message:error.message});
+        //         throw error;
         //     }
         // }
+        // Para test de login desde Postman o Swagger
+        if(req.user?.email){
+            try {           
+                const user_dto = new UserDto(req.user); 
+                res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
+            } catch (error) {
+                logger.error(`redirectToProducts: ${error.message}`);
+                res.status(400).json({status:"error", message:error.message});
+            }
+        }
     }
 
     static renderFailLogin = (req,res)=>{
@@ -67,13 +49,19 @@ export class SessionsController{
     }
 
     static logout = async(req,res)=>{
+        console.log("req.user: ", req.user);
+        const { _id } = req.user;
         try {
+            const info = {
+                last_connection: new Date()
+            }
+            await UsersService.updateUser(_id, info);
             req.session.destroy(async err=>{
-                if(err) return res.render("profile",{error:"No se pudo cerrar la sesion"});
-                await this.updateUserConnection(req.user);
+                if(err) return res.render("profile",{ error:"No se pudo cerrar la sesión" });
                 res.redirect("/login");
             })
         } catch (error) {
+            logger.error(`logout: ${error.message}`);
             res.render("profile",{error:"No se pudo cerrar la sesión"});
         }
     }
@@ -138,7 +126,7 @@ export class SessionsController{
             if(isValidPassword(new_password, user)){
                 return res.render("resetPasswordForm", {error:"La nueva contraseña debe ser distinta de la anterior", token});
             }
-            const result = await UsersService.updateUser(user._id, {password: createHash(new_password)});
+            const result = await UsersService.updateUser(user._id, { password: createHash(new_password) });
             res.render("login",{message: "Usuario actualizado exitosamente", data: result});
             // res.status(201).json({message: "Usuario actualizado exitosamente", data: result});
         } catch (error) {

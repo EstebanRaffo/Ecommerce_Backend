@@ -9,6 +9,10 @@ export class UsersController{
 
         try {
             const user = await UsersService.getUserById(uid);
+            if(user.status !== "completo"){
+                return res.json({status:"error", message:"El usuario no ha subido todos los documentos"});
+            }
+
             let new_role;
             switch(user.rol){
                 case 'user':
@@ -23,29 +27,45 @@ export class UsersController{
             const userUpdated = await UsersService.updateUser(uid, {rol: new_role});
             res.status(200).json({message:"Usuario actualizado exitosamente", data: userUpdated});
         } catch (error) {
+            logger.error(`switchRol: ${error.message}`);
             res.status(400).json({status: "error", message:error.message});
         }
     }
 
-    static async uploadFiles(req, res){
-        console.log("Entro en uploadFiles")
-        console.log("req.params: ",req.params)
-        console.log("req.files: ",req.files)
-        // const {uid} = req.params;
-        // const filename = req.file['filename'];
-        // const path = req.file['path'];
-        // const info = {
-        //     documents:[{
-        //         name:filename,
-        //         reference:path
-        //     }]
-        // }
-        // try {
-        //     await UsersService.updateUser(uid, info)
-        //     res.send({message: "Se actualizaron los documentos"});
-        // } catch (error) {
-        //     logger.error(`${error.message}`);
-        //     throw error;
-        // }
+    static async uploadUserFiles(req, res){
+        try {
+            const { uid } = req.params;
+            const user = await UsersService.getUserById(uid);
+            // console.log("documentos", req.files);
+            const identificacion = req.files['identificacion']?.[0] || null;
+            const domicilio = req.files['domicilio']?.[0] || null;
+            const estadoDeCuenta = req.files['estadoDeCuenta']?.[0] || null;
+            const docs = [];
+            if(identificacion){
+                docs.push({name:"identificacion", reference: identificacion.filename});
+            }
+            if(domicilio){
+                docs.push({name:"domicilio", reference: domicilio.filename});
+            }
+            if(estadoDeCuenta){
+                docs.push({name:"estadoDeCuenta", reference: estadoDeCuenta.filename});
+            }
+            // console.log("docs", docs);
+            // user.documents = docs;
+            const info = {
+                documents: docs
+            }
+            if(docs.length < 3){
+                user.status = "incompleto";
+            } else {
+                user.status = "completo";
+            }
+            // console.log("user", user);
+            await UsersService.updateUser(user._id, info);
+            res.json({status:"success", message:"Los documentos fueron cargados"});
+        } catch (error) {
+            logger.error(`uploadUserFiles: ${error.message}`);
+            res.json({status:"error", message:error.message});
+        }
     }
 }
