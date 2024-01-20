@@ -100,7 +100,6 @@ export class ViewsController{
 
     static renderDocumentsForm(req, res){
         if(req.user?.email){
-            console.log(req.user)
             const { _id } = req.user;
             const uid = _id.valueOf();
             res.render("documents", { uid });

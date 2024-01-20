@@ -49,12 +49,11 @@ export class SessionsController{
     }
 
     static logout = async(req,res)=>{
-        console.log("req.user: ", req.user);
         const { _id } = req.user;
+        const info = {
+            last_connection: new Date()
+        }
         try {
-            const info = {
-                last_connection: new Date()
-            }
             await UsersService.updateUser(_id, info);
             req.session.destroy(async err=>{
                 if(err) return res.render("profile",{ error:"No se pudo cerrar la sesión" });

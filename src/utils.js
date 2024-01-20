@@ -53,9 +53,6 @@ const profileMulterFilter = (req,file,cb)=>{
 
 const profileStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        console.log("Entró en uploadProfile")
-        console.log("req.body: ", req.body)
-        console.log("file: ", file)
         cb(null, path.join(__dirname,"/info/users/profiles"))
     },
     filename: function(req,file,cb){
@@ -67,7 +64,7 @@ const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFi
 
 const documentsStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, path.join(__dirname,"/info/users/documents") )
+        cb(null, path.join(__dirname,"/info/users/documents"))
     },
     filename: function(req,file,cb){
         cb(null,`${req.user.email}-document-${file.originalname}`)
