@@ -38,7 +38,7 @@ export class UsersController{
         const { uid } = req.params;
         console.log("id de params: ", uid)
         console.log("req.files: ", req.files);
-        if(uid !== _id.valueOf()) return res.status(401).json({error: "El uid no corresponde al usuario logueado"});
+        if(uid !== _id.valueOf()) return res.status(401).json({error: "El id del usuario no corresponde al autenticado"});
         try {
             const user = await UsersService.getUserById(uid);
             let docs = user.documents;
@@ -49,18 +49,19 @@ export class UsersController{
             if(identificacion){
                 console.log("identificacion: ", identificacion)
                 // docs = this.updateDoc(docs, identificacion);
-                const newDocs = docs.filter(doc=>doc.fieldname !== identificacion.fieldname);
+                const newDocs = docs.filter(doc=>doc.name !== identificacion.fieldname);
                 console.log("docs sin el doc anterior: ", newDocs)
                 docs = [ ...newDocs ]; 
-                docs.push({name:"identificacion", reference: identificacion.path});
+                docs.push({name:"identificacion", reference: identificacion.path});    
             }
+            console.log("docs con el nuevo documento: ", docs)
+           
             if(domicilio){
                 docs.push({name:"domicilio", reference: domicilio.path});
             }
             if(estadoDeCuenta){
                 docs.push({name:"estadoDeCuenta", reference: estadoDeCuenta.path});
             }
-            console.log("docs totales a guardar: ", docs);
             // user.documents = docs;
             // if(docs.length < 3){
             //     user.status = "incompleto";
@@ -70,9 +71,9 @@ export class UsersController{
             // user.status = docs.length < 3 ? "incompleto" : "completo";
             // const status = this.getLevel(docs);
 
-            const existeIdentificacion = docs.find(doc=>doc.fieldname==="identificacion")
-            const existeDomicilio = docs.find(doc=>doc.fieldname==="domicilio")
-            const existeEstadoDeCuenta = docs.find(doc=>doc.fieldname==="estadoDeCuenta")
+            const existeIdentificacion = docs.find(doc=>doc.name==="identificacion")
+            const existeDomicilio = docs.find(doc=>doc.name==="domicilio")
+            const existeEstadoDeCuenta = docs.find(doc=>doc.name==="estadoDeCuenta")
             const status = existeIdentificacion && existeDomicilio && existeEstadoDeCuenta ? 
                         "completo"
                         :
