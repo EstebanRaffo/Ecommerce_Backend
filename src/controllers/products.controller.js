@@ -49,9 +49,20 @@ export class ProductsController{
                     code:EError.REQUIRED_DATA
                 })
             }
+            console.log("req.files: ", req.files)
+            const fieldname = req.files[0]?.['fieldname'] || null;
+            console.log("fieldname: ", fieldname)
+            let thumbnails = [];
+            if(fieldname == 'thumbnails'){
+                const path = req.files[0]['path']
+                console.log("path: ", path)
+                thumbnails.push(path)
+            }
+            console.log("thumbnails: ", thumbnails)
             const dataProduct = {
                 ...req.body,
-                owner: email
+                owner: email,
+                thumbnails
             }
             const new_product = await ProductsService.createProduct(dataProduct);
             res.status(201).json({message: "El producto fue creado exitosamente", data: new_product});

@@ -9,7 +9,7 @@ export class UsersController{
         try {
             const user = await UsersService.getUserById(uid);
             if(user.status !== "completo"){
-                return res.json({status:"error", message:"El usuario no ha subido todos los documentos"});
+                return res.json({status:"error", message:"El usuario no ha terminado de procesar su documentación"});
             }
 
             let new_role;
@@ -32,44 +32,30 @@ export class UsersController{
     }
 
     static async uploadUserFiles(req, res){
-        console.log("Entró en uploadUserFiles")
         const { _id } = req.user;
-        console.log("_id user logueado: ", _id.valueOf())
         const { uid } = req.params;
-        console.log("id de params: ", uid)
-        console.log("req.files: ", req.files);
         if(uid !== _id.valueOf()) return res.status(401).json({error: "El id del usuario no corresponde al autenticado"});
         try {
             const user = await UsersService.getUserById(uid);
             let docs = user.documents;
-            console.log("docs del usuario ya subidos: ", docs)
             const identificacion = req.files['identificacion']?.[0] || null;
             const domicilio = req.files['domicilio']?.[0] || null;
             const estadoDeCuenta = req.files['estadoDeCuenta']?.[0] || null;
             if(identificacion){
-                console.log("identificacion: ", identificacion)
-                // docs = this.updateDoc(docs, identificacion);
                 const newDocs = docs.filter(doc=>doc.name !== identificacion.fieldname);
-                console.log("docs sin el doc anterior: ", newDocs)
                 docs = [ ...newDocs ]; 
-                docs.push({name:"identificacion", reference: identificacion.path});    
+                docs.push({name:"identificacion", reference: identificacion.path});
             }
-            console.log("docs con el nuevo documento: ", docs)
-           
             if(domicilio){
+                const newDocs = docs.filter(doc=>doc.name !== domicilio.fieldname);
+                docs = [ ...newDocs ]; 
                 docs.push({name:"domicilio", reference: domicilio.path});
             }
             if(estadoDeCuenta){
+                const newDocs = docs.filter(doc=>doc.name !== estadoDeCuenta.fieldname);
+                docs = [ ...newDocs ]; 
                 docs.push({name:"estadoDeCuenta", reference: estadoDeCuenta.path});
             }
-            // user.documents = docs;
-            // if(docs.length < 3){
-            //     user.status = "incompleto";
-            // } else {
-            //     user.status = "completo";
-            // }
-            // user.status = docs.length < 3 ? "incompleto" : "completo";
-            // const status = this.getLevel(docs);
 
             const existeIdentificacion = docs.find(doc=>doc.name==="identificacion")
             const existeDomicilio = docs.find(doc=>doc.name==="domicilio")
@@ -88,30 +74,10 @@ export class UsersController{
                 status
             }
             const user_updated = await UsersService.updateUser(user._id, info);
-            console.log("user_updated: ", user_updated);
             res.json({status:"success", message:"Los documentos fueron cargados"});
         } catch (error) {
             logger.error(`uploadUserFiles: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
         }
-    }
-
-    static getLevel = (docs)=>{
-        console.log("Entró en getLevel con docs: ", docs)
-        const identificacion = docs.find(doc=>doc.fieldname==="identificacion")
-        const domicilio = docs.find(doc=>doc.fieldname==="domicilio")
-        const estadoDeCuenta = docs.find(doc=>doc.fieldname==="estadoDeCuenta")
-        const level = identificacion && domicilio && estadoDeCuenta ? 
-                        "completo"
-                        :
-                        identificacion && domicilio || identificacion && estadoDeCuenta || domicilio && estadoDeCuenta ? 
-                        "incompleto"
-                        :
-                        "pendiente"; 
-        return level;
-    }
-
-    static updateDoc(docs, newDoc){
-        return docs.filter(doc=>doc.fieldname !== newDoc.fieldname);
     }
 }
