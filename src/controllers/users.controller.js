@@ -74,7 +74,7 @@ export class UsersController{
                 status
             }
             const user_updated = await UsersService.updateUser(user._id, info);
-            res.json({status:"success", message:"Los documentos fueron cargados"});
+            res.status(200).json({status:"success", message:"Los documentos fueron cargados", data: user_updated});
         } catch (error) {
             logger.error(`uploadUserFiles: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
