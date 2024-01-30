@@ -16,9 +16,9 @@ export class ProductsService{
         return productsDao.getPaginateData(result, req);
     }
 
-    static async getProductById(id){
+    static async getProductById(pid){
         try {
-            const result = await productsDao.getProductById(id);
+            const result = await productsDao.getProductById(pid);
             return result;
         } catch (error) {
             throw error;

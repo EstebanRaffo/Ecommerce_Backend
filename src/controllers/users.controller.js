@@ -107,7 +107,7 @@ export class UsersController{
             await UsersController.sendNotifyMail(inactive_users_emails);
             res.status(200).json({message: "Los usuarios inactivos fueron eliminados", data: result})
         } catch (error) {
-            logger.error(`deleteUsers: ${error.message}`);
+            logger.error(`deleteInactiveUsers: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
         }
     }
@@ -126,7 +126,7 @@ export class UsersController{
             });
         } catch (error) {
             logger.error(`getInactiveUsers: ${error.message}`);
-            res.status(400).json({status:"error", message:error.message});
+            throw error;
         }
     }
 
@@ -147,6 +147,7 @@ export class UsersController{
             logger.info("Notificaciones de eliminación de cuenta: ", result)
         } catch (error) {
             logger.error(`sendNotifyMail: ${error.message}`);
+            throw error;
         }
     }
 }

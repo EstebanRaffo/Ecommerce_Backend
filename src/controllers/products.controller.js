@@ -3,6 +3,11 @@ import { generateProduct } from "../helpers/mocks.js";
 import CustomError from "../services/errors/customError.service.js";
 import { EError } from "../services/errors/enums.js";
 import { createProductErrorInfo } from "../services/errors/info.js";
+import { transporter } from "../config/gmail.js";
+import { config } from "../config/config.js";
+import { UsersService } from "../services/users.service.js";
+import { logger } from "../helpers/logger.js";
+
 
 export class ProductsController{
 
@@ -82,10 +87,56 @@ export class ProductsController{
         const pid = req.params.pid;
         const user = req.user;
         try{
+            await ProductsController.belongsToPremiumAndNotify(pid);
             await ProductsService.deleteProduct(pid, user);
             res.status(201).json({message: "Producto eliminado exitosamente"});
         }catch(error){
             res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static async belongsToPremiumAndNotify(pid){
+        try {
+            const product = await ProductsService.getProductById(pid);
+            if(!product) throw new Error("No existe el producto buscado");
+            if(product.owner !== config.admin.rol){
+                const userOwner = await UsersService.getUser(product.owner);
+                if(!userOwner) throw new Error("No se encontró el owner del producto o fue eliminado por inactividad");
+                if(userOwner.rol === "premium") await ProductsController.sendNotifyMailDeleteProduct(userOwner.email, product);
+            }
+        } catch (error) {
+            logger.error(`belongsToPremiumAndNotify: ${error.message}`);
+            throw error;
+        }
+    }
+
+    static async sendNotifyMailDeleteProduct(emails, product){
+        const {title, description, price, code, category, owner} = product;
+        try {
+            const emailTemplate = () => `
+                    <div>
+                        <h2>Hola estimado usuario de Ecommerce</h2>
+                        <p>El siguiente producto ha sido eliminado de la plataforma</p>
+                        <ul>
+                            <li>Nombre: ${title}</li>
+                            <li>Descripción: ${description}</li>
+                            <li>Precio: $ ${price}</li>
+                            <li>Código: ${code}</li>
+                            <li>Categoría: ${category}</li>
+                            <li>Creador: ${owner}</li>
+                        </ul>
+                    </div>
+            `;
+            const result = await transporter.sendMail({
+                from:config.gmail.account,
+                to:emails,
+                subject:"Producto eliminado del Ecommerce",
+                html:emailTemplate()
+            });
+            logger.info("Notificación de eliminación de producto: ", result);
+        } catch (error) {
+            logger.error(`sendNotifyMailDeleteProduct: ${error.message}`);
+            throw error;
         }
     }
 
