@@ -1,6 +1,8 @@
 import { logger } from "../helpers/logger.js";
 import { UsersService } from "../services/users.service.js";
 import UserDto from "../dao/dto/user.dto.js";
+import { transporter } from "../config/gmail.js";
+import { config } from "../config/config.js";
 
 
 export class UsersController{
@@ -116,13 +118,12 @@ export class UsersController{
             const hoy = new Date(); 
             let diferencia_en_dias;
             let diferencia_en_miliSeg;
-            const inactive_users = all_users.filter(user => {
+            return all_users.filter(user => {
                 const last_connection = new Date(user.last_connection);
                 diferencia_en_miliSeg = hoy.getTime() - last_connection.getTime();
                 diferencia_en_dias = Math.round(diferencia_en_miliSeg / (1000 * 60 * 60 * 24));
                 return diferencia_en_dias > 2;
             });
-            return inactive_users.map(user => new UserDto(user));
         } catch (error) {
             logger.error(`getInactiveUsers: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
@@ -130,13 +131,10 @@ export class UsersController{
     }
 
     static async sendNotifyMail(emails){
-        console.log("emails: ", emails)
         try {
-            const user = await UsersService.getUser(email);
-            const {first_name, last_name} = user;
-            const emailTemplate = (first_name, last_name)=> `
+            const emailTemplate = () => `
                     <div>
-                        <h2>Hola ${first_name} ${last_name}!</h2>
+                        <h2>Hola estimado usuario de Ecommerce</h2>
                         <p>Su cuenta ha sido eliminada por inactividad</p>
                     </div>
             `;
@@ -144,11 +142,11 @@ export class UsersController{
                 from:config.gmail.account,
                 to:emails,
                 subject:"Cuenta eliminada por Inactividad",
-                html:emailTemplate(first_name, last_name)
+                html:emailTemplate()
             });
+            logger.info("Notificaciones de eliminación de cuenta: ", result)
         } catch (error) {
             logger.error(`sendNotifyMail: ${error.message}`);
-            res.status(400).json({status:"error", message:error.message})
         }
     }
 }
