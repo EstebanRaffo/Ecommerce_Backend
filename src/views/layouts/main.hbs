@@ -15,6 +15,10 @@
         <a href="/login">Login</a>
         <a href="/profile">Mi Perfil</a>
         <a href="/documents">Mis Documentos</a>
+        {{!-- <a href="/users" hidden={{req.user?.rol !== "admin"}}></a> --}}
+        {{!-- {{#if req.user?.rol === "admin"}}
+            <a href="/users">Users</a>
+        {{/if}} --}}
     </nav>
     {{{body}}}
 </body>

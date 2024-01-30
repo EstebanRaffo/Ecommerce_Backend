@@ -14,8 +14,6 @@ export const initializePassport = ()=>{
         },
         async (req, username, password, done)=>{
             const {first_name, last_name, age} = req.body;
-            console.log("Entró en signupLocalStrategy")
-            console.log("req.file: ", req.file)
             try {
                 const user = await UsersService.getUser(username);
                 if(user){
@@ -101,6 +99,10 @@ export const initializePassport = ()=>{
             if(!isValidPassword(profile.id, user)){
                 return done(null, false);
             }
+            const info = {
+                last_connection: new Date()
+            };
+            await UsersService.updateUser(user._id, info);
             return done(null, user);
         } catch (error) {
             return done(error);

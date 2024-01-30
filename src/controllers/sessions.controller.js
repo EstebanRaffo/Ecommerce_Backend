@@ -76,26 +76,26 @@ export class SessionsController{
 
     static async sendResetPasswordMail(req, res){
         const {email} = req.body;
-        const user = await UsersService.getUser(email);
-        if(!user){
-            res.render("restorePasswordForm", {message: "El Email informado no pertenece a una cuenta registrada"});
-        }else{
-            const {first_name, last_name} = user;
-            const domain = `${req.protocol}://${req.get('host')}`;
-            const token = generateToken(user);
-            const link = `${domain}/reset-password-form?token=${token}`;
-            const emailTemplate = (first_name, last_name)=> `
-                <div>
-                    <h2>Hola ${first_name} ${last_name}!</h2>
-                    <p>Click en el siguiente botón para restablecer contraseña</p>
-                    <a href="${link}">
-                        <button>
-                            Restablecer contraseña
-                        </button>
-                    </a>
-                </div>
-            `;
-            try {
+        try {
+            const user = await UsersService.getUser(email);
+            if(!user){
+                res.render("restorePasswordForm", {message: "El Email informado no pertenece a una cuenta registrada"});
+            }else{
+                const {first_name, last_name} = user;
+                const domain = `${req.protocol}://${req.get('host')}`;
+                const token = generateToken(user);
+                const link = `${domain}/reset-password-form?token=${token}`;
+                const emailTemplate = (first_name, last_name)=> `
+                    <div>
+                        <h2>Hola ${first_name} ${last_name}!</h2>
+                        <p>Click en el siguiente botón para restablecer contraseña</p>
+                        <a href="${link}">
+                            <button>
+                                Restablecer contraseña
+                            </button>
+                        </a>
+                    </div>
+                `;
                 const result = await transporter.sendMail({
                     from:config.gmail.account,
                     to:email,
@@ -103,11 +103,11 @@ export class SessionsController{
                     html:emailTemplate(first_name, last_name)
                 });
                 res.render("restorePasswordAdvise", {email, domain});
-            } catch (error) {
-                logger.error(`sendResetPasswordMail: ${error.message}`);
-                res.status(400).json({status:"error", message:error.message})
             }
-        }    
+        } catch (error) {
+            logger.error(`sendResetPasswordMail: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message})
+        }
     }
 
     static async resetPassword(req, res){

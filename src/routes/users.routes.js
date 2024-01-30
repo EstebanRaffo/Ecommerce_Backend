@@ -13,4 +13,8 @@ router.post("/:uid/documents", authorize(["user"]), uploadDocuments.fields([
     {name:"estadoDeCuenta", maxCount:1},
 ]), UsersController.uploadUserFiles);
 
+router.get("/", authorize(["admin"]), UsersController.getAllUsers);
+router.delete("/", authorize(["admin"]), UsersController.deleteInactiveUsers);
+router.post("/send-notify-mail", authorize(["admin"]), UsersController.sendNotifyMail);
+
 export {router as usersRouter}

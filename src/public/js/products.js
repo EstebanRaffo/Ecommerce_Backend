@@ -1,4 +1,4 @@
-import { logger } from "../../helpers/logger";
+import { logger } from "../../helpers/logger.js";
 
 const addToCart = (product_id)=>{
     const cart_id = '652aa0e9007357dde63f8c1e';

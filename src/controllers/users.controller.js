@@ -1,5 +1,6 @@
 import { logger } from "../helpers/logger.js";
 import { UsersService } from "../services/users.service.js";
+import UserDto from "../dao/dto/user.dto.js";
 
 
 export class UsersController{
@@ -24,7 +25,7 @@ export class UsersController{
                     throw new Error("El Rol del usuario no es válido. No es posible cambiarlo.");
             }
             const userUpdated = await UsersService.updateUser(uid, {rol: new_role});
-            res.status(200).json({message:"Usuario actualizado exitosamente", data: userUpdated});
+            res.status(201).json({message:"Usuario actualizado exitosamente", data: userUpdated});
         } catch (error) {
             logger.error(`switchRol: ${error.message}`);
             res.status(400).json({status: "error", message:error.message});
@@ -74,10 +75,80 @@ export class UsersController{
                 status
             }
             const user_updated = await UsersService.updateUser(user._id, info);
-            res.status(200).json({status:"success", message:"Los documentos fueron cargados", data: user_updated});
+            res.status(201).json({status:"success", message:"Los documentos fueron cargados", data: user_updated});
         } catch (error) {
             logger.error(`uploadUserFiles: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static async getAllUsers(req, res){
+        try {
+            const users = await UsersService.getAllUsers();
+            let usersDto = []
+            users.forEach(user => {
+                usersDto.push(new UserDto(user));
+            });
+            res.status(200).json({status:"success", data: usersDto});
+        } catch (error) {
+            logger.error(`getAllUsers: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static async deleteInactiveUsers(req, res){
+        try {
+            const inactive_users = await UsersController.getInactiveUsers();
+            const inactive_users_ids = inactive_users.map(user => user._id);
+            const result = await UsersService.deleteUsers(inactive_users_ids);
+            const inactive_users_emails = inactive_users.map(user => user.email);
+            await UsersController.sendNotifyMail(inactive_users_emails);
+            res.status(200).json({message: "Los usuarios inactivos fueron eliminados", data: result})
+        } catch (error) {
+            logger.error(`deleteUsers: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static async getInactiveUsers(){
+        try {
+            const all_users = await UsersService.getAllUsers();
+            const hoy = new Date(); 
+            let diferencia_en_dias;
+            let diferencia_en_miliSeg;
+            const inactive_users = all_users.filter(user => {
+                const last_connection = new Date(user.last_connection);
+                diferencia_en_miliSeg = hoy.getTime() - last_connection.getTime();
+                diferencia_en_dias = Math.round(diferencia_en_miliSeg / (1000 * 60 * 60 * 24));
+                return diferencia_en_dias > 2;
+            });
+            return inactive_users.map(user => new UserDto(user));
+        } catch (error) {
+            logger.error(`getInactiveUsers: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static async sendNotifyMail(emails){
+        console.log("emails: ", emails)
+        try {
+            const user = await UsersService.getUser(email);
+            const {first_name, last_name} = user;
+            const emailTemplate = (first_name, last_name)=> `
+                    <div>
+                        <h2>Hola ${first_name} ${last_name}!</h2>
+                        <p>Su cuenta ha sido eliminada por inactividad</p>
+                    </div>
+            `;
+            const result = await transporter.sendMail({
+                from:config.gmail.account,
+                to:emails,
+                subject:"Cuenta eliminada por Inactividad",
+                html:emailTemplate(first_name, last_name)
+            });
+        } catch (error) {
+            logger.error(`sendNotifyMail: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message})
         }
     }
 }

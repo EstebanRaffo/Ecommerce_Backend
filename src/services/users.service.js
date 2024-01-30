@@ -37,4 +37,22 @@ export class UsersService{
             throw error;
         }
     }
+
+    static async getAllUsers(){
+        try {
+            const result = await usersDao.getAllUsers();
+            return result;    
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async deleteUsers(inactive_users_ids){
+        try {
+            const result = await usersDao.deleteUsers(inactive_users_ids);
+            return result;    
+        } catch (error) {
+            throw error;
+        }
+    }
 }
