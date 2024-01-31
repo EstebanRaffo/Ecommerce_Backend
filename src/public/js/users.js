@@ -1,28 +1,3 @@
-// const usersList = document.getElementById("users");
-
-// window.addEventListener("load", ()=>{
-//     const url = `http://localhost:8080/api/users/`;
-
-//     fetch(url, {
-//         method: "GET", 
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       })
-//       .then(response => {
-//         if (!response.ok) {
-//           throw new Error('Hubo un problema al realizar la solicitud: ' + response.status);
-//         }
-//         return response.json();
-//       })
-//         .then(result => {
-//             const users = result.data;
-//             console.log("users: ", users)
-//             generarListaDeUsuarios(users);
-//         })
-//         .catch((error) => console.error("Error:", error))
-// });    
-
 var {hostname, port, reload} = window.location;
 
 const eliminarInactivos = () => {
