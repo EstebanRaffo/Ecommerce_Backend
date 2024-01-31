@@ -1,0 +1,25 @@
+<h1>Usuarios</h1>
+<div>
+    <button onclick="eliminarInactivos()">Eliminar Inactivos</button>
+</div>
+<br><br>
+{{#each users}}
+    <div>
+        {{!-- {{#if this.isAdmin}}
+            Usuario: {{this.fullname}} | Email: {{this.email}} | 
+            Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
+        {{else}}
+            Usuario: {{this.fullname}} | Email: {{this.email}} | 
+            Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
+            <button onclick="switchRol(`{{this.id}}`)">Cambiar Rol</button>
+        {{/if}} --}}
+        Usuario: {{this.fullname}} | Email: {{this.email}} | 
+        Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
+        {{#unless this.isAdmin}}
+            <button onclick="switchRol(`{{this.id}}`)">Cambiar Rol</button>
+        {{/unless}}
+    </div>
+{{/each}}
+
+<ul id="users"></ul>
+<script src="/js/users.js"></script>

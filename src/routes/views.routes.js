@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { ViewsController } from "../controllers/views.controller.js";
 import { authorize } from "../middlewares/auth.js";
+import { config } from "../config/config.js";
+
 
 const router = Router();
 
@@ -15,5 +17,6 @@ router.get("/loggerTest", ViewsController.testLogger);
 router.get("/forgot-password", ViewsController.renderForgotPassword);
 router.get("/reset-password-form", ViewsController.renderResetPassword);
 router.get("/documents", ViewsController.renderDocumentsForm);
+router.get("/users", authorize([config.admin.rol]), ViewsController.renderUsers);
 
 export {router as viewsRouter};

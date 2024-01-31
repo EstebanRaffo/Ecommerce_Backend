@@ -2,6 +2,7 @@ import { config } from "../config/config.js";
 import { ProductsService } from "../services/products.service.js";
 import UserDto from "../dao/dto/user.dto.js";
 import { logger } from "../helpers/logger.js";
+import { UsersService } from "../services/users.service.js";
 
 export class ViewsController{
 
@@ -105,6 +106,31 @@ export class ViewsController{
             res.render("documents", { uid });
         } else {
             res.redirect("/login");
+        }
+    }
+
+    static async renderUsers(req, res){
+        try {
+            if(req.user?.email){
+                const users = await UsersService.getAllUsers();
+                if(!users.length) return res.send("No se encontraron usuarios");
+                const userList = users.map(user => {
+                    return {
+                        id: user._id,
+                        fullname: `${user.first_name} ${user.last_name}`,
+                        email: user.email,
+                        rol: user.rol,
+                        last_connection: user.last_connection.toLocaleDateString(),
+                        isAdmin: user.rol === config.admin.rol
+                    }
+                })
+                res.render("users", {users: userList});
+            }else{
+                res.redirect("/login");
+            }
+        } catch (error) {
+            logger.error(`renderUsers: ${error.message}`);
+            res.status(400).json({status:"error", message:error.message});
         }
     }
 }
