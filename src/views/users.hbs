@@ -5,14 +5,6 @@
 <br><br>
 {{#each users}}
     <div>
-        {{!-- {{#if this.isAdmin}}
-            Usuario: {{this.fullname}} | Email: {{this.email}} | 
-            Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
-        {{else}}
-            Usuario: {{this.fullname}} | Email: {{this.email}} | 
-            Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
-            <button onclick="switchRol(`{{this.id}}`)">Cambiar Rol</button>
-        {{/if}} --}}
         Usuario: {{this.fullname}} | Email: {{this.email}} | 
         Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
         {{#unless this.isAdmin}}
