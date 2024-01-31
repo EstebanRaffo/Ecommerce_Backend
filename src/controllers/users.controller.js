@@ -11,10 +11,7 @@ export class UsersController{
         const {uid} = req.params;
         try {
             const user = await UsersService.getUserById(uid);
-            if(user.status !== "completo"){
-                return res.json({status:"error", message:"El usuario no ha terminado de procesar su documentación"});
-            }
-
+            if(user.status !== "completo") throw new Error("El usuario no ha terminado de procesar su documentación");
             let new_role;
             switch(user.rol){
                 case 'user':
@@ -101,6 +98,7 @@ export class UsersController{
     static async deleteInactiveUsers(req, res){
         try {
             const inactive_users = await UsersController.getInactiveUsers();
+            if(!inactive_users.length) throw new Error("No se encontraron cuentas inactivas");  
             const inactive_users_ids = inactive_users.map(user => user._id);
             const result = await UsersService.deleteUsers(inactive_users_ids);
             const inactive_users_emails = inactive_users.map(user => user.email);

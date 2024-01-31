@@ -1,4 +1,3 @@
-import { logger } from "../../helpers/logger.js";
 
 const addToCart = (product_id)=>{
     const cart_id = '652aa0e9007357dde63f8c1e';
@@ -11,7 +10,7 @@ const addToCart = (product_id)=>{
         },
       })
         .then((res) => res.json())
-        .catch((error) => logger.error("Error:", error))
+        .catch((error) => console.error("Error:", error))
         // .then((response) => logger.info("Success:", response))
         .then((response) => alert(response.message))
 }

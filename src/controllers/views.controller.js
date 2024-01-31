@@ -121,7 +121,9 @@ export class ViewsController{
                         email: user.email,
                         rol: user.rol,
                         last_connection: user.last_connection.toLocaleDateString(),
-                        isAdmin: user.rol === config.admin.rol
+                        status: user.status,
+                        isAdmin: user.rol === config.admin.rol,
+                        isNotComplete: user.status !== "completo"
                     }
                 })
                 res.render("users", {users: userList});

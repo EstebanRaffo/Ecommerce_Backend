@@ -6,12 +6,14 @@
 {{#each users}}
     <div>
         Usuario: {{this.fullname}} | Email: {{this.email}} | 
-        Rol: {{this.rol}} | Última conexión: {{this.last_connection}}
+        Rol: {{this.rol}} | Status: {{this.status}} | Última conexión: {{this.last_connection}} 
+        {{!-- Si isAdmin = false --}}
         {{#unless this.isAdmin}}
-            <button onclick="switchRol(`{{this.id}}`)">Cambiar Rol</button>
+            {{!-- Si isNotComplete = false --}}
+            {{#unless this.isNotComplete}}
+                <button onclick="switchRol(`{{this.id}}`)">Cambiar Rol</button>
+            {{/unless}}
         {{/unless}}
     </div>
 {{/each}}
-
-<ul id="users"></ul>
 <script src="/js/users.js"></script>

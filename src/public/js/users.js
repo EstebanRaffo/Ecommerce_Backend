@@ -1,5 +1,3 @@
-// import { logger } from "../../helpers/logger.js";
-
 // const usersList = document.getElementById("users");
 
 // window.addEventListener("load", ()=>{
@@ -25,21 +23,44 @@
 //         .catch((error) => console.error("Error:", error))
 // });    
 
-// const generarListaDeUsuarios = (users) => {
-//     let list = "";
-//     users.forEach(user => {
-//         list += 
-//         `<li>
-//             <p>${user.fullname}</p><button onclick="switchRol(${user._id})">Cambiar Rol</button>
-//         </li>`
-//     });
-//     usersList.innerHTML = list;
-// }
+var {hostname, port, reload} = window.location;
 
 const eliminarInactivos = () => {
-    console.log("Click en Eliminar Inactivos")
+    const url = `http://${hostname}:${port}/api/users/`;
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al intentar eliminar cuentas inactivas');
+            }
+            alert('Las cuentas inactivas han sido eliminadas');
+        })
+        .then(reload.bind(window.location))
+        .catch(error => console.error('Error: ', error));
 }
 
 const switchRol = (id) => {
-    console.log("Click en Cambiar Rol id: ", id)
+    const url = `http://${hostname}:${port}/api/users/premium/${id}/`;
+    
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+    fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al intentar modificar rol de usuario');
+            }
+            return response.json();            
+        })
+        .then(reload.bind(window.location))
+        .catch(error => console.error('Error:', error));
 }
