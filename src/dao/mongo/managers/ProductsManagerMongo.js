@@ -95,7 +95,6 @@ export class ProductsManagerMongo{
     async productBelongToUser(prod_id, user){
         try {
             const product = await this.getProductById(prod_id);
-            console.log("product.owner: ", product.owner)
             return product.owner === user.email;
         } catch (error) {
             logger.error(`productBelongToUser: ${error.message}`);

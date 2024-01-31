@@ -29,5 +29,6 @@ socketClient.on("product_list", (dataProducts)=>{
 });
 
 const deleteProduct = (id) => {
+    console.log(id)
     socketClient.emit("delete_product", id);
 }

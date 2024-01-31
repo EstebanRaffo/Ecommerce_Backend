@@ -16,6 +16,9 @@ export class ViewsController{
 
     static renderRealTimeProducts(req, res){
         if(req.user?.email){
+            // const { rol } = req.user; 
+            // const isAdmin = rol === config.admin.rol; 
+            // res.render("realTimeProducts", {isAdmin});
             res.render("realTimeProducts");
         }else{
             res.redirect("/login");
@@ -133,6 +136,14 @@ export class ViewsController{
         } catch (error) {
             logger.error(`renderUsers: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
+        }
+    }
+
+    static renderCart(req, res){
+        if(req.user?.email){
+            res.render("cart");
+        }else{
+            res.redirect("/login");
         }
     }
 }

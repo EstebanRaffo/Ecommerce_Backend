@@ -1,4 +1,4 @@
-<h2>Productos del Carrito</h2>
-{{#each products}}
-    <div>Id: {{this._id._id}}, Producto: {{this._id.title}}, Precio: {{this._id.price}}, Cantidad: {{this.quantity}}</div>
-{{/each}}
+<h2>Mi Carrito</h2>
+<ul id="productList"></ul>
+<button onclick="iniciarCompra()">Comprar</button>
+<script src="/js/cart.js"></script>

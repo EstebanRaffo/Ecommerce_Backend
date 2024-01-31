@@ -18,5 +18,6 @@ router.get("/forgot-password", ViewsController.renderForgotPassword);
 router.get("/reset-password-form", ViewsController.renderResetPassword);
 router.get("/documents", ViewsController.renderDocumentsForm);
 router.get("/users", authorize([config.admin.rol]), ViewsController.renderUsers);
+router.get("/cart", ViewsController.renderCart);
 
 export {router as viewsRouter};

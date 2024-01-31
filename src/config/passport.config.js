@@ -4,6 +4,7 @@ import { createHash, isValidPassword } from "../utils.js";
 import { config } from "./config.js";
 import GithubStrategy from "passport-github2";
 import { UsersService } from "../services/users.service.js";
+import { CartsService } from "../services/carts.service.js";
 
 
 export const initializePassport = ()=>{
@@ -19,13 +20,15 @@ export const initializePassport = ()=>{
                 if(user){
                     return done(null,false);
                 }
+                const userCart = await CartsService.createCart();
                 const new_user = {
                     first_name,
                     last_name,
                     email:username,
                     age,
                     password:createHash(password),
-                    avatar:req.file.filename
+                    avatar:req.file.filename,
+                    cart: userCart
                 };
                 const user_created = await UsersService.createUser(new_user);
                 return done(null, user_created);
@@ -71,12 +74,14 @@ export const initializePassport = ()=>{
                 if(user){
                     return done(null, user);
                 }
+                const userCart = await CartsService.createCart();
                 const new_user = {
                     first_name:profile._json.name.split(' ')[0],
                     last_name:profile._json.name.split(' ')[1],
                     email:profile._json.email,
                     password:'',
-                    age:''
+                    age:'',
+                    cart: userCart
                 };
                 const user_created = await UsersService.createUser(new_user);
                 return done(null, user_created);

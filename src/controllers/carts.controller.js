@@ -29,8 +29,6 @@ export class CartsController{
             const cid = req.params.cid;
             const cart = await CartsService.getCartById(cid);
             if(req.user?.email){
-                // res.render("cart", { products: cart.products })
-                // Para test desde Postman o Swagger
                 res.status(200).json({cart: cart})
             }else{
                 res.redirect("/login");

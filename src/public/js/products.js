@@ -11,6 +11,5 @@ const addToCart = (product_id)=>{
       })
         .then((res) => res.json())
         .catch((error) => console.error("Error:", error))
-        // .then((response) => logger.info("Success:", response))
         .then((response) => alert(response.message))
 }

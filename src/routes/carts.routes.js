@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { CartsController } from "../controllers/carts.controller.js";
 import { authorize } from "../middlewares/auth.js";
+import { config } from "../config/config.js";
 
 const router = Router();
 
-router.get("/", CartsController.getCarts);
+router.get("/", authorize([config.admin.rol]), CartsController.getCarts);
 router.post("/", authorize(["user","premium"]), CartsController.createCart);
 router.get("/:cid", CartsController.getCartById);
 router.post("/:cid/products/:pid", authorize(["user","premium"]), CartsController.addProductToCart);
