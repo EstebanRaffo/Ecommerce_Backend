@@ -23,5 +23,8 @@ export const config = {
     gmail:{
         account: process.env.GMAIL_ACCOUNT,
         password: process.env.GMAIL_PASSWORD
+    },
+    stripe:{
+        secretKey:process.env.STRIPE_SECRET_KEY
     }
 };

@@ -16,13 +16,16 @@ import { viewsRouter } from "./routes/views.routes.js";
 import { usersRouter } from "./routes/users.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { paymentsRouter } from "./routes/payments.routes.js";
 import { logger } from "./helpers/logger.js";
 import { swaggerSpecs } from "./config/swagger.config.js";
 import swaggerUI from "swagger-ui-express";
+import cors from "cors";
 
 const port = config.server.port;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,"/public")));
@@ -57,6 +60,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/payments", paymentsRouter);
 app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 app.use(errorHandler);
 

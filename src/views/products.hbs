@@ -14,7 +14,7 @@
 
 {{#each products}}
     <div>
-        Id: {{this._id}}, Producto: {{this.title}}, Precio: {{this.price}} 
+        Id: {{this._id}} <br> Producto: {{this.title}}, Precio: {{this.price}} 
         <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
     </div>
 {{/each}}

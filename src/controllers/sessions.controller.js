@@ -24,24 +24,24 @@ export class SessionsController{
 
 
     static redirectToProducts = async(req,res)=>{
-        // if(req.user?.email){
-        //     try {          
-        //         res.redirect("/products");
-        //     } catch (error) {
-        //         logger.error(`${error.message}`);
-        //         throw error;
-        //     }
-        // }
-        // Para test de login desde Postman o Swagger
         if(req.user?.email){
-            try {           
-                const user_dto = new UserDto(req.user); 
-                res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
+            try {          
+                res.redirect("/products");
             } catch (error) {
-                logger.error(`redirectToProducts: ${error.message}`);
-                res.status(400).json({status:"error", message:error.message});
+                logger.error(`${error.message}`);
+                throw error;
             }
         }
+        // Para test de login desde Postman o Swagger
+    //     if(req.user?.email){
+    //         try {           
+    //             const user_dto = new UserDto(req.user); 
+    //             res.status(200).json({message:"Inicio de sesión exitoso", user:user_dto});
+    //         } catch (error) {
+    //             logger.error(`redirectToProducts: ${error.message}`);
+    //             res.status(400).json({status:"error", message:error.message});
+    //         }
+    //     }
     }
 
     static renderFailLogin = (req,res)=>{

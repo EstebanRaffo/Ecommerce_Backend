@@ -1,4 +1,4 @@
-var {hostname, port, reload} = window.location;
+var {hostname, port} = window.location;
 const productList = document.getElementById("productList");
 
 window.addEventListener("load", () => {
@@ -13,14 +13,12 @@ window.addEventListener("load", () => {
         })
         .then(data => {
             const {user} = data;
-            console.log(user)
-            getCartInfo(user.cart);
+            if(user.rol !== "admin") getCartInfo(user.cart);
         })
         .catch(error => console.error('Hubo un problema con la solicitud: ', error));
 });
 
 const getCartInfo = (cart_id) => {
-    console.log(cart_id)
     const url = `http://${hostname}:${port}/api/carts/${cart_id}`;
 
     fetch(url)
@@ -53,5 +51,22 @@ const setCart = (products) => {
 }
 
 const iniciarCompra = () => {
-    console.log("Iniciar compra")
+    const url = `http://${hostname}:${port}/api/payments/payment-intents`;
+    console.log(url)
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' 
+        }
+    };
+
+    fetch(url, requestOptions)
+        .then(response => response.json()) 
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+        })
+        .catch(error => {
+            console.error('Error al realizar la solicitud:', error);
+        });
 }
