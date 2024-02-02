@@ -12,12 +12,16 @@
 <hr>
 <h2>Productos</h2>
 
-{{#each products}}
-    <div>
-        Id: {{this._id}} <br> Producto: {{this.title}}, Precio: {{this.price}} 
-        <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
-    </div>
-{{/each}}
+<ol>
+    {{#each products}}
+        <li>
+            Id: {{this._id}} <br> Producto: {{this.title}}, Precio: {{this.price}} <br> 
+            <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
+        </li>
+        <br>
+    {{/each}}
+</ol>
+
 {{#if hasPrevPage}}
     <a href="{{prevLink}}">Anterior</a>
 {{/if}}

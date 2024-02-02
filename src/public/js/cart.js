@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
         })
         .then(data => {
             const {user} = data;
-            if(user.rol !== "admin") getCartInfo(user.cart);
+            getCartInfo(user.cart);
         })
         .catch(error => console.error('Hubo un problema con la solicitud: ', error));
 });
@@ -39,12 +39,12 @@ const getCartInfo = (cart_id) => {
 const setCart = (products) => {
     let list = "";
     products.forEach(item => {
-        const {_id, quantity} = item
-        const {title, price} = _id;
-        console.log(quantity, title, price)
+        const { _id, quantity } = item
+        const { title, price } = _id;
         list +=
             `<li>
-                <p>Producto: ${title} <br> Precio: $ ${price} | Cantidad: ${quantity}</p>
+                <p>Producto: ${title} <br> Precio: $ ${price} | Cantidad: ${quantity}</p><br>
+                <button onclick="deleteProductOfCart(${_id.id})">Eliminar</button>
             </li>`
         productList.innerHTML = list;
     });
@@ -52,6 +52,27 @@ const setCart = (products) => {
 
 const iniciarCompra = () => {
     const url = `http://${hostname}:${port}/api/payments/checkout`;
-    console.log(url)
     window.location.replace(url);
+}
+
+const deleteProductOfCart = (pid) => {
+    const url = ``;
+    fetch('tu_url_aqui', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Hubo un problema al realizar la solicitud: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Hubo un problema con la solicitud fetch:', error);
+      });      
 }

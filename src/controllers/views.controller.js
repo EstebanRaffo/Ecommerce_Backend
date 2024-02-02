@@ -43,7 +43,7 @@ export class ViewsController{
                 const params = req.query;
                 const result = await ProductsService.getProducts(params);
                 const {first_name, last_name, email, age, rol} = req.user; 
-                const isAdmin = rol === config.admin.rol; 
+                const isAdmin = rol === config.admin.rol;
                 if(result.docs.length){
                     const data_products = ProductsService.getPaginateData(result, req);
                     res.render("products", {first_name, last_name, email, age, rol, isAdmin, products: data_products.payload, prevLink: data_products.prevLink, nextLink: data_products.nextLink, hasPrevPage: data_products.hasPrevPage, hasNextPage: data_products.hasNextPage});
@@ -141,7 +141,9 @@ export class ViewsController{
 
     static renderCart(req, res){
         if(req.user?.email){
-            res.render("cart");
+            const { rol } = req.user;
+            const isAdmin = rol === config.admin.rol;
+            res.render("cart", {isAdmin});
         }else{
             res.redirect("/login");
         }

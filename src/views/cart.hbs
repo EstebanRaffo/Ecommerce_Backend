@@ -1,4 +1,8 @@
-<h2>Mi Carrito</h2>
-<ul id="productList"></ul>
-<button onclick="iniciarCompra()">Comprar</button>
-<script src="/js/cart.js"></script>
+{{#unless isAdmin}}
+    <h2>Mi Carrito</h2>
+    <ul id="productList"></ul>
+    <button onclick="iniciarCompra()">Comprar</button>
+    <script src="/js/cart.js"></script>
+{{else}}
+    <h2>Administrador</h2>
+{{/unless}}

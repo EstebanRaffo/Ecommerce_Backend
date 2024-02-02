@@ -35,5 +35,6 @@ const addToCart = (pid)=>{
       })
       .catch(error => {
         console.error('Error al realizar la solicitud:', error);
+        alert(error.message);
       });
 }
