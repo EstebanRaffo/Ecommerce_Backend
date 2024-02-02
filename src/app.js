@@ -22,7 +22,7 @@ import { swaggerSpecs } from "./config/swagger.config.js";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
 
-const port = config.server.port;
+const port = config.server.port || 8080;
 const app = express();
 
 app.use(cors());
