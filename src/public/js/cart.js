@@ -51,22 +51,7 @@ const setCart = (products) => {
 }
 
 const iniciarCompra = () => {
-    const url = `http://${hostname}:${port}/api/payments/payment-intents`;
+    const url = `http://${hostname}:${port}/api/payments/checkout`;
     console.log(url)
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json' 
-        }
-    };
-
-    fetch(url, requestOptions)
-        .then(response => response.json()) 
-        .then(data => {
-            console.log('Respuesta del servidor:', data);
-        })
-        .catch(error => {
-            console.error('Error al realizar la solicitud:', error);
-        });
+    window.location.replace(url);
 }
