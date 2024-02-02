@@ -10,58 +10,21 @@
 </head>
 
 <body>
-    <h1>Checkout</h1>
+    <h1>Datos de Pago</h1>
     <form action="/api/payments/payment" method="post" id="payment-form">
-        <input type="text" name="amount" placeholder="Monto a pagar">
         <div id="card-element">
             <!-- Elemento para la tarjeta de crédito -->
+            {{!-- Datos de ejemplo --}}
+            {{!-- Número de tarjeta: 4000 0003 2000 0021 --}}
+            {{!-- CVV: 123 --}}
+            {{!-- C.P.: 12345 --}}
         </div>
-        <input name="token" id="token" placeholder="CCV">
+        <br><br>
         <button type="submit">Pagar</button>
+        <input type="hidden" name="token" id="token">
     </form>
     <script src="https://js.stripe.com/v3/"></script>
-    <script>
-        var stripe = Stripe({{ stripePublicKey }});
-        var elements = stripe.elements();
-
-        var style = {
-            base: {
-                color: '#32325d',
-                fontFamily: 'Arial, sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '16px',
-                '::placeholder': {
-                    color: '#aab7c4'
-                }
-            }
-        };
-
-        var card = elements.create('card', { style: style });
-        card.mount('#card-element');
-
-        card.on('change', function (event) {
-            var displayError = document.getElementById('card-errors');
-            if (event.error) {
-                displayError.textContent = event.error.message;
-            } else {
-                displayError.textContent = '';
-            }
-        });
-
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            stripe.createToken(card).then(function (result) {
-                if (result.error) {
-                    console.error(result.error);
-                } else {
-                    document.getElementById('token').value = result.token.id;
-                    form.submit();
-                }
-            });
-        });
-    </script>
+    <script src="/js/checkout.js"></script>
 </body>
 
 </html>

@@ -34,15 +34,12 @@ router.get('/checkout', (req, res) => {
 
 router.post('/payment', async (req, res) => {
     try {
-        const { token, amount } = req.body;
-        
-        console.log(req.user)
+        const { token } = req.body; 
         const cid = req.user.cart.valueOf();
-        console.log(cid)
         const cart = await CartsService.getCartById(cid);
-        const {products} = cart;
+        const { products } = cart;
         const purchase_amount = products.reduce((sum, product) => sum + (product.quantity * product._id.price), 0);
-        console.log(token)
+      
         const charge = await stripe.charges.create({
             "amount": purchase_amount.toString(),
             "currency": 'ars',
