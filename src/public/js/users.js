@@ -12,7 +12,7 @@ const eliminarInactivos = () => {
     fetch(url, options)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error al intentar eliminar cuentas inactivas');
+                throw new Error('Error al realizar la solicitud: ');
             }
             alert('Las cuentas inactivas han sido eliminadas');
         })
@@ -32,7 +32,7 @@ const switchRol = (id) => {
     fetch(url, options)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error al intentar modificar rol de usuario');
+                throw new Error('Error al realizar la solicitud:');
             }
             return response.json();            
         })
