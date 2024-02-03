@@ -50,7 +50,7 @@ const setCart = (products) => {
     
         list +=
             `<li>
-                <p>Producto: ${title} <br> Precio: $ ${price} | Cantidad: ${quantity}</p>
+                <p>Producto: ${title} <br> Precio: ${formatterPeso(price)} | Cantidad: ${quantity}</p>
                 <button onclick="deleteProductOfCart('${pid}')">Eliminar</button>
             </li>`
         productList.innerHTML = list;

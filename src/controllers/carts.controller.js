@@ -100,6 +100,7 @@ export class CartsController{
         try {
             const cart = await CartsService.getCartById(cart_id);
             const availables_products = cart.products.filter(product => product.quantity <= product._id.stock);
+            if(!availables_products.length) throw Error("No se encontraron productos disponibles");
             const unavailables_products = cart.products.filter(product => product.quantity > product._id.stock);
             const purchase_amount = availables_products.reduce((sum, product) => sum + (product.quantity * product._id.price), 0);
             const all_products = await ProductsService.getProducts();

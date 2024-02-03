@@ -15,13 +15,9 @@ export class ProductsController{
         try{
             const query_params = req.query;
             const result = await ProductsService.getProducts(query_params);
-            
-            if(result.docs.length){
-                const data_products = ProductsService.getPaginateData(result, req);
-                res.status(200).json(data_products.payload); 
-            }else{
-                res.send("No se encontraron productos");
-            }
+            if(!result.docs.length) res.send("No se encontraron productos");
+            const data_products = ProductsService.getPaginateData(result, req);
+            res.status(200).json(data_products.payload);   
         }catch(error){
             res.status(400).json({status:"error", message:error.message});
         }
@@ -31,11 +27,8 @@ export class ProductsController{
         const id = req.params.pid;
         try{
             const product = await ProductsService.getProductById(id);
-            if(product){
-                res.status(200).json(product);
-            }else{
-                res.send("No se encontró el producto buscado o no existe");
-            }
+            if(!product) res.send("No se encontró el producto buscado o no existe");
+            res.status(200).json(product);            
         }catch(error){
             res.status(400).json({status:"error", message:error.message});
         }

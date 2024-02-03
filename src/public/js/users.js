@@ -14,7 +14,7 @@ const eliminarInactivos = () => {
             if (!response.ok) {
                 throw new Error('Error al realizar la solicitud: ');
             }
-            alert('Las cuentas inactivas han sido eliminadas');
+            console.log('Las cuentas inactivas han sido eliminadas');
         })
         .then(reload.bind(window.location))
         .catch(error => console.error('Error: ', error));

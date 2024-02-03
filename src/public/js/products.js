@@ -30,11 +30,6 @@ const addToCart = (pid)=>{
 
     fetch(url, requestOptions)
       .then(response => response.json())
-      .then(data => {
-        alert(data.message);
-      })
-      .catch(error => {
-        console.error('Error al realizar la solicitud:', error);
-        alert(error.message);
-      });
+      .then(data => Swal.fire('', data.message, 'info'))
+      .catch(error => console.error('Error al realizar la solicitud:', error));
 }

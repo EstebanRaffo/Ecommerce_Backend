@@ -32,7 +32,8 @@ form.addEventListener('submit', function (event) {
 
     stripe.createToken(card).then(function (result) {
         if (result.error) {
-            console.error(result.error);
+            console.error(result.error.message);
+            Swal.fire('Datos incorrectos', result.error.message, 'error');
         } else {
             document.getElementById('token').value = result.token.id;
             form.submit();

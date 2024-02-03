@@ -82,9 +82,7 @@ export class ProductsManagerMongo{
     async updateProduct(productId, newProductInfo){
         try {
             const product_updated = await this.model.findByIdAndUpdate(productId, newProductInfo, {new:true});
-            if(!product_updated){
-                throw new Error("No se pudo encontrar el producto a actualizar");
-            }
+            if(!product_updated) throw new Error("No se pudo encontrar el producto a actualizar");
             return product_updated;
         } catch (error) {
             logger.error(`updateProduct: ${error.message}`);
