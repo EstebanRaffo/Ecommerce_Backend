@@ -1,8 +1,8 @@
-var {hostname, port, reload} = window.location;
+var {hostname, port, protocol, reload} = window.location;
 var cart_id;
 
 window.addEventListener("load", () => {
-    const url = `https://${hostname}:${port}/api/sessions/current`;
+    const url = `${protocol}//${hostname}:${port}/api/sessions/current`;
 
     fetch(url)
         .then(response => {    
@@ -19,7 +19,7 @@ window.addEventListener("load", () => {
 });
 
 const addToCart = (pid)=>{
-    const url = `https://${hostname}:${port}/api/carts/${cart_id}/products/${pid}`;
+    const url = `${protocol}//${hostname}:${port}/api/carts/${cart_id}/products/${pid}`;
 
     const requestOptions = {
       method: 'POST',

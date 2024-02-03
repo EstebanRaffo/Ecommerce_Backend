@@ -1,7 +1,7 @@
 var {hostname, port, reload} = window.location;
 
 const eliminarInactivos = () => {
-    const url = `https://${hostname}:${port}/api/users/`;
+    const url = `${protocol}//${hostname}:${port}/api/users/`;
     const options = {
         method: 'DELETE',
         headers: {
@@ -21,7 +21,7 @@ const eliminarInactivos = () => {
 }
 
 const switchRol = (id) => {
-    const url = `https://${hostname}:${port}/api/users/premium/${id}/`;
+    const url = `${protocol}//${hostname}:${port}/api/users/premium/${id}/`;
     
     const options = {
         method: 'PUT',
