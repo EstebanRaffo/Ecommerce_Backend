@@ -40,8 +40,10 @@ app.engine('.hbs', engine({extname: '.hbs'}));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname,"/views"));
 
+const rootURL = config.server.environment === 'production' ? `https://${config.server.productionDomain}` : '';
+
 app.use((req, res, next) => {
-    res.locals.rootURL = config.server.environment === 'production' ? `https://${req.get('host')}` : '';
+    res.locals.rootURL = rootURL;
     next();
 });
 
