@@ -1,4 +1,4 @@
-var {hostname, port, reload} = window.location;
+var {hostname, port, protocol, reload} = window.location;
 
 const eliminarInactivos = () => {
     const url = `${protocol}//${hostname}:${port}/api/users/`;
