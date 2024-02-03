@@ -69,7 +69,7 @@ export const initializePassport = ()=>{
             callbackURL:config.server.environment === "production" ? 
                 `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
                 :
-                `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
+                `https://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
         },
         async(accessToken, refreshToken, profile, done)=>{
             try {
@@ -100,7 +100,7 @@ export const initializePassport = ()=>{
         callbackURL:config.server.environment === "production" ? 
                 `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
                 :
-                `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
+                `https://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
     }, async (accessToken, refreshToken, profile, done)=>{
         try {
             const user = await UsersService.getUser(profile._json.email);

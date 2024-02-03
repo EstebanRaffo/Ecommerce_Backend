@@ -5,7 +5,7 @@ var cart_id;
 var total;
 
 window.addEventListener("load", () => {
-    const url = `http://${hostname}:${port}/api/sessions/current`;
+    const url = `https://${hostname}:${port}/api/sessions/current`;
 
     fetch(url)
         .then(response => {    
@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
 });
 
 const getCartInfo = () => {
-    const url = `http://${hostname}:${port}/api/carts/${cart_id}`;
+    const url = `https://${hostname}:${port}/api/carts/${cart_id}`;
 
     fetch(url)
         .then(response => {    
@@ -71,7 +71,7 @@ function formatterPeso(value){
 }
 
 const deleteProductOfCart = (pid) => {
-    const url = `http://${hostname}:${port}/api/carts/${cart_id}/products/${pid}`;
+    const url = `https://${hostname}:${port}/api/carts/${cart_id}/products/${pid}`;
 
     fetch(url, {
         method: 'DELETE',
@@ -90,6 +90,6 @@ const deleteProductOfCart = (pid) => {
 }
 
 const iniciarCompra = () => {
-    const url = `http://${hostname}:${port}/api/payments/checkout`;
+    const url = `https://${hostname}:${port}/api/payments/checkout`;
     window.location.replace(url);
 }
