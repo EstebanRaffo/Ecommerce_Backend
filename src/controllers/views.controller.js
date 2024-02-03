@@ -27,11 +27,11 @@ export class ViewsController{
 
     static async renderChat(req, res){
         if(req.user?.email){
-            // res.render("chat");
+            res.render("chat");
 
             // Para test desde Postman
-            const user_dto = new UserDto(req.user); 
-            res.status(200).json({message: "Chat del usuario", user:user_dto});
+            // const user_dto = new UserDto(req.user); 
+            // res.status(200).json({message: "Chat del usuario", user:user_dto});
         }else{
             res.redirect("/login");
         }

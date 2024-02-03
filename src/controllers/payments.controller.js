@@ -1,6 +1,7 @@
 import { CartsService } from "../services/carts.service.js";
 import { config } from "../config/config.js";
 import stripePackage from 'stripe';
+import { logger } from "../helpers/logger.js";
 
 export class PaymentsController{
 
@@ -22,9 +23,11 @@ export class PaymentsController{
                 "currency": 'ars',
                 "source": token
             });
-            res.json({status:"success", payload:charge});
+            const result = await CartsService.deleteProductsOfCart(cid);
+            const { receipt_url } = charge;
+            res.redirect(receipt_url);
         } catch (err) {
-            console.error(err);
+            logger.error("createPayment: ", err);
             res.status(400).send(err);
         }
     }

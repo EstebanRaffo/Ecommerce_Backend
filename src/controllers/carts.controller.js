@@ -73,15 +73,6 @@ export class CartsController{
         }
     }
 
-    static async updateProductsInCart(cart_id, products){
-        try {
-            const cart_updated = CartsService.updateProductsInCart(cart_id, products);
-            res.status(201).json({message: "Productos del carrito actualizados", data: cart_updated});
-        } catch (error) {
-            res.status(400).json({status: "error", message: error.message});
-        }
-    }
-
     static async updateProductQuantityInCart(req, res){
         const cart_id = req.params.cid;
         const prod_id = req.params.pid;

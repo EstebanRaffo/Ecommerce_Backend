@@ -103,7 +103,7 @@ export class UsersController{
             const result = await UsersService.deleteUsers(inactive_users_ids);
             const inactive_users_emails = inactive_users.map(user => user.email);
             await UsersController.sendNotifyMail(inactive_users_emails);
-            res.status(200).json({message: "Los usuarios inactivos fueron eliminados", data: result})
+            res.status(201).json({message: "Los usuarios inactivos fueron eliminados", data: result})
         } catch (error) {
             logger.error(`deleteInactiveUsers: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
