@@ -41,7 +41,7 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname,"/views"));
 
 app.use((req, res, next) => {
-    res.locals.rootURL = `${req.protocol}://${req.get('host')}`;
+    res.locals.rootURL = config.server.environment === 'production' ? `https://${req.get('host')}` : '';
     next();
 });
 
