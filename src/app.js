@@ -40,6 +40,11 @@ app.engine('.hbs', engine({extname: '.hbs'}));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname,"/views"));
 
+app.use((req, res, next) => {
+    res.locals.rootURL = `${req.protocol}://${req.get('host')}`;
+    next();
+});
+
 app.use(session({
     store: MongoStore.create({
         ttl:3000,
