@@ -64,7 +64,7 @@ const profileStorage = multer.diskStorage({
         cb(null, makeDirectory("/info/users/profiles"));
     },
     filename: function(req,file,cb){
-        cb(null,`${req.body.email}-perfil-${file.originalname}`);
+        cb(null,`${req.body.email}-profile-${file.originalname}`);
     }
 });
 const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFilter});
