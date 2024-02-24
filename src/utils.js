@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { config } from './config/config.js';
+import fs from 'fs';
 
 export const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -51,12 +52,19 @@ const profileMulterFilter = (req,file,cb)=>{
 };
 
 
+const makeDirectory = (dir)=>{
+    const directory = path.join(__dirname, dir);
+    if(!fs.existsSync(directory)) fs.mkdirSync(directory,{recursive:true});
+    return directory;
+}
+
+
 const profileStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, path.join(__dirname,"/info/users/profiles"))
+        cb(null, makeDirectory("/info/users/profiles"));
     },
     filename: function(req,file,cb){
-        cb(null,`${req.body.email}-perfil-${file.originalname}`)
+        cb(null,`${req.body.email}-perfil-${file.originalname}`);
     }
 });
 const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFilter});
@@ -64,10 +72,10 @@ const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFi
 
 const documentsStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, path.join(__dirname,"/info/users/documents"))
+        cb(null, makeDirectory("/info/users/documents"));
     },
     filename: function(req,file,cb){
-        cb(null,`${req.user.email}-document-${file.originalname}`)
+        cb(null,`${req.user.email}-document-${file.originalname}`);
     }
 });
 const uploadDocuments = multer({storage:documentsStorage});
@@ -75,10 +83,10 @@ const uploadDocuments = multer({storage:documentsStorage});
 
 const imgProductsStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, path.join(__dirname,"/info/products/img"))
+        cb(null, makeDirectory("/info/products/img"));
     },
     filename: function(req,file,cb){
-        cb(null,`${req.body.code}-product-${file.originalname}`)
+        cb(null,`${req.body.code}-product-${file.originalname}`);
     }
 });
 const uploadImgProducts = multer({storage:imgProductsStorage});
