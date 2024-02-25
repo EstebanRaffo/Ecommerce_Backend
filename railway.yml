@@ -1,2 +1,3 @@
+
 build:
-  command: npm install --omit=dev
+  command: npm install --only=production
