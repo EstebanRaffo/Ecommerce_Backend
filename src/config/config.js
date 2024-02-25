@@ -5,7 +5,7 @@ export const config = {
     server:{
         secretSession: process.env.SECRET_SESSION,
         port: process.env.PORT,
-        environment: process.env.NODE_ENVIRONMENT,
+        environment: process.env.NODE_ENV,
         productionDomain: process.env.DOMAIN_PROD
     },
     mongo:{
