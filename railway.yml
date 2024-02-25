@@ -1,2 +1,2 @@
-install:
-  - command: npm install --omit=dev
+build:
+  command: npm install --omit=dev
