@@ -69,7 +69,7 @@ export const initializePassport = ()=>{
             clientSecret:config.github.clientSecret,
             // callbackURL:`${rootURL}/api/sessions${config.github.callbackUrl}`
             callbackURL:config.server.environment == "production" ? 
-                `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
+                `http://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
                 :
                 `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
         },

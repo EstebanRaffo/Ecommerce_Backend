@@ -50,11 +50,12 @@ app.use(session({
     saveUninitialized:true
 }));
 
-var rootURL;
+let rootURL;
 app.use((req,res,next)=>{
     const domain = `${req.protocol}://${req.get('host')}`;
     rootURL = domain;
-    console.log(rootURL);
+    console.log(rootURL)
+    console.log(config.server.environment)
     next();
 });
 
