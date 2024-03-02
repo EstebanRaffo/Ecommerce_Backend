@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "mocha --timeout 10000 test/ecommerce.test.js",
-    "start": "node src/app.js --omit=dev"
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",

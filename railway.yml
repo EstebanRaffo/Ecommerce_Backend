@@ -3,4 +3,4 @@ services:
     env:
       NODE_ENV: production
     install:
-      command: npm install --only=production
+      command: npm install --omit=dev
