@@ -63,9 +63,9 @@ export const initializePassport = ()=>{
     ));
     
     const callbackURL = config.server.environment === "production" ? 
-    `${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
-    :
-    `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}`
+        `${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
+        :
+        `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}`
 
     passport.use("signupGithubStrategy", new GithubStrategy(
         {

@@ -50,15 +50,6 @@ app.use(session({
     saveUninitialized:true
 }));
 
-// let rootURL;
-// app.use((req,res,next)=>{
-//     const domain = `${req.protocol}://${req.get('host')}`;
-//     rootURL = domain;
-//     console.log(rootURL)
-//     console.log(config.server.environment)
-//     next();
-// });
-
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
