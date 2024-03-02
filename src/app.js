@@ -24,7 +24,7 @@ import cors from "cors";
 
 const port = config.server.port || 8080;
 const app = express();
-console.log(config.server.environment)
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -49,6 +49,14 @@ app.use(session({
     resave:true,
     saveUninitialized:true
 }));
+
+var rootURL;
+app.use((req,res,next)=>{
+    const domain = `${req.protocol}://${req.get('host')}`;
+    rootURL = domain;
+    console.log(rootURL);
+    next();
+});
 
 initializePassport();
 app.use(passport.initialize());
@@ -102,4 +110,4 @@ io.on("connection", async(socket)=>{
     })
 });
 
-export {app};
+export {app, rootURL};

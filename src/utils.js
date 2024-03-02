@@ -52,7 +52,7 @@ const profileMulterFilter = (req,file,cb)=>{
 };
 
 
-const makeDirectory = (dir)=>{
+const createDirectory = (dir)=>{
     const directory = path.join(__dirname, dir);
     if(!fs.existsSync(directory)) fs.mkdirSync(directory,{recursive:true});
     return directory;
@@ -61,7 +61,7 @@ const makeDirectory = (dir)=>{
 
 const profileStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, makeDirectory("/info/users/profiles"));
+        cb(null, createDirectory("/info/users/profiles"));
     },
     filename: function(req,file,cb){
         cb(null,`${req.body.email}-profile-${file.originalname}`);
@@ -72,7 +72,7 @@ const uploadProfile = multer({storage:profileStorage, fileFilter:profileMulterFi
 
 const documentsStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, makeDirectory("/info/users/documents"));
+        cb(null, createDirectory("/info/users/documents"));
     },
     filename: function(req,file,cb){
         cb(null,`${req.user.email}-document-${file.originalname}`);
@@ -83,7 +83,7 @@ const uploadDocuments = multer({storage:documentsStorage});
 
 const imgProductsStorage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, makeDirectory("/info/products/img"));
+        cb(null, createDirectory("/info/products/img"));
     },
     filename: function(req,file,cb){
         cb(null,`${req.body.code}-product-${file.originalname}`);

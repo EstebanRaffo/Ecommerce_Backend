@@ -5,6 +5,7 @@ import { config } from "./config.js";
 import GithubStrategy from "passport-github2";
 import { UsersService } from "../services/users.service.js";
 import { CartsService } from "../services/carts.service.js";
+import { rootURL } from "../app.js";
 
 
 export const initializePassport = ()=>{
@@ -61,17 +62,19 @@ export const initializePassport = ()=>{
             }
         }
     ));
-
+    
     passport.use("signupGithubStrategy", new GithubStrategy(
         {
             clientID:config.github.clientId,
             clientSecret:config.github.clientSecret,
-            callbackURL:config.server.environment === "production" ? 
+            // callbackURL:`${rootURL}/api/sessions${config.github.callbackUrl}`
+            callbackURL:config.server.environment == "production" ? 
                 `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
                 :
                 `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
         },
         async(accessToken, refreshToken, profile, done)=>{
+            console.log(rootURL)
             try {
                 const user = await UsersService.getUser(profile._json.email);
                 if(user){
