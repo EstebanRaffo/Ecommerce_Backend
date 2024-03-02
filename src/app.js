@@ -24,7 +24,7 @@ import cors from "cors";
 
 const port = config.server.port || 8080;
 const app = express();
-
+console.log(config.server.environment)
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
