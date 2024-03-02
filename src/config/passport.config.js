@@ -67,8 +67,7 @@ export const initializePassport = ()=>{
         {
             clientID:config.github.clientId,
             clientSecret:config.github.clientSecret,
-            callbackURL:rootURL
-            // callbackURL:`${rootURL}/api/sessions${config.github.callbackUrl}`
+            callbackURL:`${rootURL}/api/sessions${config.github.callbackUrl}`
             // callbackURL:config.server.environment == "production" ? 
             //     `http://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
             //     :
@@ -101,11 +100,13 @@ export const initializePassport = ()=>{
     passport.use("loginGithubStrategy", new GithubStrategy({
         clientID:config.github.clientId,
         clientSecret:config.github.clientSecret,
-        callbackURL:config.server.environment === "production" ? 
-                `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
-                :
-                `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
+        callbackURL:`${rootURL}/api/sessions${config.github.callbackUrl}`
+        // callbackURL:config.server.environment === "production" ? 
+        //         `https://${config.server.productionDomain}/api/sessions${config.github.callbackUrl}`
+        //         :
+        //         `http://localhost:${config.server.port}/api/sessions${config.github.callbackUrl}` 
     }, async (accessToken, refreshToken, profile, done)=>{
+        console.log(rootURL)
         try {
             const user = await UsersService.getUser(profile._json.email);
             if(!user){

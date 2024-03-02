@@ -53,7 +53,7 @@ app.use(session({
 let rootURL;
 app.use((req,res,next)=>{
     const domain = `${req.protocol}://${req.get('host')}`;
-    rootURL = `${domain}/api/sessions${config.github.callbackUrl}`;
+    rootURL = domain;
     console.log(rootURL)
     console.log(config.server.environment)
     next();
