@@ -192,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Cart'
+                $ref: '#components/schemas/Purchase'
         "500":
           description: Hubo un problema en el Servidor
 
@@ -212,7 +212,37 @@ components:
         products: [
           _id: ObjectId(6527193571642bf62ec78c9e),
           quantity: 2
-        ]   
+        ]  
+    Purchase:
+      type: object
+      properties:
+        message:
+          type: String
+          description: Resultado de la compra
+        ticket: 
+          type: object
+          description: Datos del Ticket
+        excluidos:
+          type: Array
+          description: Productos excluidos por falta de stock
+        carrito: 
+          type: object
+          description: Carrito luego de la compra
+      example:
+        message: "Compra exitosa"
+        ticket: {
+          code: "c114a643-a3de-41f4-a6c8-47d98aeed635",
+          purchase_datetime: "2024-03-03T17:45:02.000Z",
+          amount: 725080,
+          purchaser: "rodol@coder.com",
+          _id: "65e4b71e59f7eb97b8a49872",
+          __v: 0
+        }
+        excluidos: []
+        carrito: {
+          _id: "65da4dbec3ae4145d8d7bb07",
+          products: [],
+        }
   requestBodies:
     Cart:
       type: object

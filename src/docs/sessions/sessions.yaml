@@ -29,6 +29,20 @@ paths:
           description: Se cerró la sesión exitosamente
         "500":
           description: Hubo un problema en el Servidor
+  /api/sessions/current:
+    get:
+      summary: Obtener usuario actual
+      tags:
+        - Autenticación
+      responses:
+        "200":
+          description: Usuario actual obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/User"
+        "500":
+          description: Hubo un problema en el Servidor
 
 components:
   schemas:
