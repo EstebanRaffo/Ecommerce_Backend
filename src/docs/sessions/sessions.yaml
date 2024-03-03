@@ -43,6 +43,57 @@ paths:
                 $ref: "#components/schemas/User"
         "500":
           description: Hubo un problema en el Servidor
+  /api/sessions/signup:
+    post:
+      summary: Registrarse
+      tags:
+        - Autenticación
+      parameters:
+        - name: first_name
+          in: formData
+          required: true
+          description: Nombre
+          schema:
+            $type: String
+        - name: last_name
+          in: formData
+          required: true
+          description: Apellido
+          schema:
+            $type: String
+        - name: email
+          in: formData
+          required: true
+          description: Correo
+          schema:
+            $type: String
+        - name: age
+          in: formData
+          required: true
+          description: Edad
+          schema:
+            $type: Integer
+        - name: password
+          in: formData
+          required: true
+          description: Contraseña
+          schema:
+            $type: String
+        - name: avatar
+          in: formData
+          required: false
+          description: Avatar
+          schema:
+            type: file
+      responses: 
+        "200":
+          description: Registro exitoso
+          content: 
+            application/json:
+              schema:
+                $ref: "#components/schemas/User"
+        "500":
+          description: Hubo un problema en el Servidor
 
 components:
   schemas:

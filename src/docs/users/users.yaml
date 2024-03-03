@@ -1,0 +1,40 @@
+paths:
+  /api/users/{uid}/documents:
+    post:
+      summary: Subir documento
+      tags:
+        - Usuarios
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: id del usuario
+          schema:
+            $type: String
+        - name: domicilio
+          in: formData
+          required: false
+          description: Archivo a subir
+          schema:
+            type: file
+        - name: identificacion
+          in: formData
+          required: false
+          description: Archivo a subir
+          schema:
+            type: file
+        - name: estadoDeCuenta
+          in: formData
+          required: false
+          description: Archivo a subir
+          schema:
+            type: file
+      responses: 
+        "200":
+          description: Documento subido exitosamente
+          content: 
+            application/json:
+              schema:
+                $ref: "#components/schemas/Document"
+        "500":
+          description: Hubo un problema en el Servidor
