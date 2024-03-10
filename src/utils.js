@@ -34,6 +34,32 @@ export const verifyEmailToken = (token) => {
 }
 
 
+export const checkRequiredData = (req, res, next)=>{
+    console.log("req.body en checkRequiredData: ", req.body)
+    if(!checkValidFields(req.body)) return res.status(400).json({status:"error", message:"Uno o más datos obligatorios no fueron informados"});
+    next();
+}
+
+
+// const profileMulterFilter = (req,file,cb)=>{
+    //     console.log("req.body en profileMulterFilter: ", req.body)
+    //     console.log(file)
+    
+    //     // Si no se proporcionó ningún archivo, acepta la solicitud
+    //     if (!file) {
+    //         cb(null, true);
+    //     } else {
+        //         // Si se proporcionó un archivo, verifica si es válido
+        //         // Aquí puedes agregar tu lógica para verificar si el archivo es válido
+        //         // Por ejemplo, puedes verificar el tipo de archivo
+        //         if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        //             cb(null, true);
+        //         } else {
+        //             cb(null, false);
+        //         }
+        //     }
+// }
+
 const checkValidFields = (user)=>{
     const {first_name, email, password} = user;
     if(!first_name || !email || !password){
@@ -42,15 +68,16 @@ const checkValidFields = (user)=>{
         return true;
     }
 };
-
+                    
 const profileMulterFilter = (req,file,cb)=>{
+    console.log("req.body en profileMulterFilter: ", req.body)
+    console.log(file)
     if(!checkValidFields(req.body)){
         cb(null, false);
     } else {
         cb(null, true);
     }
 };
-
 
 const createDirectory = (dir)=>{
     const directory = path.join(__dirname, dir);

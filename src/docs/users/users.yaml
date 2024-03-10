@@ -1,7 +1,7 @@
 paths:
   /api/users/{uid}/documents:
     post:
-      summary: Subir documento
+      summary: Subir documentos
       tags:
         - Usuarios
       parameters:
@@ -31,10 +31,6 @@ paths:
             type: file
       responses: 
         "200":
-          description: Documento subido exitosamente
-          content: 
-            application/json:
-              schema:
-                $ref: "#components/schemas/Document"
+          description: Los documentos fueron actualizados
         "500":
           description: Hubo un problema en el Servidor

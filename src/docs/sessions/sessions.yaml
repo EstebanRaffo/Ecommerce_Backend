@@ -1,9 +1,62 @@
 paths:
+  /api/sessions/signup:
+    post:
+      summary: Registrarse
+      tags:
+        - Registración y Login
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: first_name
+          required: true
+          description: Nombre
+          schema: 
+            $type: String
+        - in: formData
+          name: last_name
+          required: false
+          description: Apellido
+          schema:
+            $type: String
+        - in: formData
+          name: email
+          required: true
+          description: Correo
+          schema: 
+            $type: String
+        - in: formData
+          name: age
+          required: false
+          description: Edad
+          schema:
+            $type: Integer
+        - in: formData
+          name: password
+          required: true
+          description: Contraseña
+          schema:
+            $type: String 
+        - in: formData
+          name: avatar
+          required: false
+          description: Avatar
+          schema:
+            type: file
+      responses: 
+        "200":
+          description: Registro exitoso
+          content:
+            multipart/form-data:
+              schema:
+                $ref: "#components/schemas/User" 
+        "500":
+          description: Hubo un problema en el Servidor
   /api/sessions/login:
     post:
       summary: Iniciar sesión
       tags:
-        - Autenticación
+        - Registración y Login
       requestBody:
         required: true
         content:
@@ -23,7 +76,7 @@ paths:
     get:
       summary: Cerrar sesión
       tags:
-        - Autenticación
+        - Registración y Login
       responses:
         "200":
           description: Se cerró la sesión exitosamente
@@ -33,62 +86,11 @@ paths:
     get:
       summary: Obtener usuario actual
       tags:
-        - Autenticación
+        - Registración y Login
       responses:
         "200":
           description: Usuario actual obtenido exitosamente
           content:
-            application/json:
-              schema:
-                $ref: "#components/schemas/User"
-        "500":
-          description: Hubo un problema en el Servidor
-  /api/sessions/signup:
-    post:
-      summary: Registrarse
-      tags:
-        - Autenticación
-      parameters:
-        - name: first_name
-          in: formData
-          required: true
-          description: Nombre
-          schema:
-            $type: String
-        - name: last_name
-          in: formData
-          required: true
-          description: Apellido
-          schema:
-            $type: String
-        - name: email
-          in: formData
-          required: true
-          description: Correo
-          schema:
-            $type: String
-        - name: age
-          in: formData
-          required: true
-          description: Edad
-          schema:
-            $type: Integer
-        - name: password
-          in: formData
-          required: true
-          description: Contraseña
-          schema:
-            $type: String
-        - name: avatar
-          in: formData
-          required: false
-          description: Avatar
-          schema:
-            type: file
-      responses: 
-        "200":
-          description: Registro exitoso
-          content: 
             application/json:
               schema:
                 $ref: "#components/schemas/User"
