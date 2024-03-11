@@ -73,4 +73,13 @@ export class CartsService{
             throw error;
         }
     }
+
+    static async deleteCarts(inactive_carts_ids){
+        try {
+            const result = await cartsDao.deleteCarts(inactive_carts_ids);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

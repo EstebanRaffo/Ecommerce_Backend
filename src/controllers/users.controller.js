@@ -1,5 +1,6 @@
 import { logger } from "../helpers/logger.js";
 import { UsersService } from "../services/users.service.js";
+import { CartsService } from "../services/carts.service.js";
 import UserDto from "../dao/dto/user.dto.js";
 import { transporter } from "../config/gmail.js";
 import { config } from "../config/config.js";
@@ -98,7 +99,9 @@ export class UsersController{
     static async deleteInactiveUsers(req, res){
         try {
             const inactive_users = await UsersController.getInactiveUsers();
-            if(!inactive_users.length) throw new Error("No se encontraron cuentas inactivas");  
+            if(!inactive_users.length) throw new Error("No se encontraron cuentas inactivas");
+            const inactive_users_cartIds = inactive_users.map(user => user.cart);
+            await CartsService.deleteCarts(inactive_users_cartIds);
             const inactive_users_ids = inactive_users.map(user => user._id);
             const result = await UsersService.deleteUsers(inactive_users_ids);
             const inactive_users_emails = inactive_users.map(user => user.email);

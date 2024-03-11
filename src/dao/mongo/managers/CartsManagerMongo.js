@@ -158,4 +158,14 @@ export class CartsManagerMongo{
             throw new Error("No se pudieron eliminar los productos del carrito");
         }
     }
+
+    async deleteCarts(inactive_carts_ids){
+        try {
+            const result = await this.model.deleteMany({ _id: {$in: inactive_carts_ids} });
+            return result;
+        } catch (error) {
+            logger.error(`deleteCarts: ${error.message}`);
+            throw new Error("No se pudieron eliminar los carritos de usuarios inactivos");
+        }
+    }
 }
