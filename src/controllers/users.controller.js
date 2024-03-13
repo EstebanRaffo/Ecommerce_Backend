@@ -1,3 +1,4 @@
+import fs from "fs";
 import { logger } from "../helpers/logger.js";
 import { UsersService } from "../services/users.service.js";
 import { CartsService } from "../services/carts.service.js";
@@ -43,9 +44,18 @@ export class UsersController{
             const domicilio = req.files['domicilio']?.[0] || null;
             const estadoDeCuenta = req.files['estadoDeCuenta']?.[0] || null;
             if(identificacion){
+                console.log("Path nuevo documento: ", identificacion.path)
+                const identificacionObj = docs.find(doc=>doc.name === "identificacion");
+                const old_path = identificacionObj?.reference;
+                console.log("Path viejo documento: ", old_path)
+                if(old_path){
+                    if(fs.existsSync(old_path)) fs.unlinkSync(old_path);
+                } 
+
                 const newDocs = docs.filter(doc=>doc.name !== identificacion.fieldname);
                 docs = [ ...newDocs ]; 
                 docs.push({name:"identificacion", reference: identificacion.path});
+
             }
             if(domicilio){
                 const newDocs = docs.filter(doc=>doc.name !== domicilio.fieldname);
