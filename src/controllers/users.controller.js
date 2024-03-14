@@ -33,6 +33,20 @@ export class UsersController{
         }
     }
 
+    static updateFile(docs, documentInfo, tipo){
+        console.log("Path nuevo documento: ", documentInfo.path)
+        const documentObj = docs.find(doc=>doc.name === tipo);
+        const old_path = documentObj?.reference;
+        console.log("Path viejo documento: ", old_path)
+        if(old_path){
+            if(fs.existsSync(old_path)) fs.unlinkSync(old_path);
+        } 
+        const newDocs = docs.filter(doc=>doc.name !== documentInfo.fieldname);
+        docs = [ ...newDocs ]; 
+        docs.push({name:tipo, reference: documentInfo.path});
+        return docs;
+    }
+
     static async uploadUserFiles(req, res){
         const { _id } = req.user;
         const { uid } = req.params;
@@ -44,30 +58,16 @@ export class UsersController{
             const domicilio = req.files['domicilio']?.[0] || null;
             const estadoDeCuenta = req.files['estadoDeCuenta']?.[0] || null;
             if(identificacion){
-                console.log("Path nuevo documento: ", identificacion.path)
-                const identificacionObj = docs.find(doc=>doc.name === "identificacion");
-                const old_path = identificacionObj?.reference;
-                console.log("Path viejo documento: ", old_path)
-                if(old_path){
-                    if(fs.existsSync(old_path)) fs.unlinkSync(old_path);
-                } 
-
-                const newDocs = docs.filter(doc=>doc.name !== identificacion.fieldname);
-                docs = [ ...newDocs ]; 
-                docs.push({name:"identificacion", reference: identificacion.path});
-
+                docs = UsersController.updateFile(docs, identificacion, "identificacion");
             }
             if(domicilio){
-                const newDocs = docs.filter(doc=>doc.name !== domicilio.fieldname);
-                docs = [ ...newDocs ]; 
-                docs.push({name:"domicilio", reference: domicilio.path});
+                docs = UsersController.updateFile(docs, domicilio, "domicilio");
             }
             if(estadoDeCuenta){
-                const newDocs = docs.filter(doc=>doc.name !== estadoDeCuenta.fieldname);
-                docs = [ ...newDocs ]; 
-                docs.push({name:"estadoDeCuenta", reference: estadoDeCuenta.path});
+                docs = UsersController.updateFile(docs, estadoDeCuenta, "estadoDeCuenta");
             }
-
+            console.log("Documentos actualizados: ", docs);
+            
             const existeIdentificacion = docs.find(doc=>doc.name==="identificacion")
             const existeDomicilio = docs.find(doc=>doc.name==="domicilio")
             const existeEstadoDeCuenta = docs.find(doc=>doc.name==="estadoDeCuenta")
