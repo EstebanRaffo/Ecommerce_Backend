@@ -34,10 +34,8 @@ export class UsersController{
     }
 
     static updateFile(docs, documentInfo, tipo){
-        console.log("Path nuevo documento: ", documentInfo.path)
         const documentObj = docs.find(doc=>doc.name === tipo);
         const old_path = documentObj?.reference;
-        console.log("Path viejo documento: ", old_path)
         if(old_path){
             if(fs.existsSync(old_path)) fs.unlinkSync(old_path);
         } 
@@ -66,8 +64,6 @@ export class UsersController{
             if(estadoDeCuenta){
                 docs = UsersController.updateFile(docs, estadoDeCuenta, "estadoDeCuenta");
             }
-            console.log("Documentos actualizados: ", docs);
-            
             const existeIdentificacion = docs.find(doc=>doc.name==="identificacion")
             const existeDomicilio = docs.find(doc=>doc.name==="domicilio")
             const existeEstadoDeCuenta = docs.find(doc=>doc.name==="estadoDeCuenta")
@@ -84,8 +80,8 @@ export class UsersController{
                 documents: docs,
                 status
             }
-            const user_updated = await UsersService.updateUser(user._id, info);
-            res.status(201).json({status:"success", message:"Los documentos fueron cargados", data: user_updated});
+            const userUpdated = await UsersService.updateUser(user._id, info);
+            res.status(201).json({status:"success", message:"Los documentos fueron cargados", data: userUpdated});
         } catch (error) {
             logger.error(`uploadUserFiles: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
