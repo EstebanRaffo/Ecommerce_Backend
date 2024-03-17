@@ -9,7 +9,7 @@ const router = Router();
 router.get("/", ViewsController.renderHome);
 router.get("/realtimeproducts", ViewsController.renderRealTimeProducts);
 router.get("/chat", authorize(["user"]), ViewsController.renderChat);
-router.get("/products", ViewsController.getProducts);
+router.get("/products", ViewsController.getPaginatedProducts);
 router.get("/signup", ViewsController.renderSignup);
 router.get("/login", ViewsController.renderLogin);
 router.get("/profile", ViewsController.renderProfile);

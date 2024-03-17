@@ -33,27 +33,30 @@ const getCartInfo = () => {
             return response.json();
         })
         .then(data => {
-            const {cart} = data;
-            const {products} = cart;
-            setCart(products);
-            setTotalAmount(products);
+            const { cart } = data;
+            const { products } = cart;
+            const valid_items = products.filter(item => item._id);
+            setCart(valid_items);
+            setTotalAmount(valid_items);
         })
         .catch(error => console.error('Error: ', error));
 }
 
 const setCart = (products) => {
     let list = "";
+
     products.forEach(item => {
         const { _id, quantity } = item;
-        const { title, price } = _id;
-        const pid = _id._id;
-    
-        list +=
+        if(_id){
+            const { title, price } = _id;
+            const pid = _id._id;
+            list +=
             `<li>
                 <p>Producto: ${title} <br> Precio: ${formatterPeso(price)} | Cantidad: ${quantity}</p>
                 <button onclick="deleteProductOfCart('${pid}')">Eliminar</button>
             </li>`
-        productList.innerHTML = list;
+            productList.innerHTML = list;
+        }
     });
 }
 

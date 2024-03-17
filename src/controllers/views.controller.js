@@ -37,11 +37,11 @@ export class ViewsController{
         }
     }
 
-    static async getProducts(req, res){
+    static async getPaginatedProducts(req, res){
         try{
             if(req.user?.email){
                 const params = req.query;
-                const result = await ProductsService.getProducts(params);
+                const result = await ProductsService.getPaginatedProducts(params);
                 const {first_name, last_name, email, age, rol} = req.user; 
                 const isAdmin = rol === config.admin.rol;
                 if(result.docs.length){
@@ -54,7 +54,7 @@ export class ViewsController{
                 res.redirect("/login");
             }
         }catch(error){
-            logger.error(`getProducts: ${error.message}`);
+            logger.error(`getPaginatedProducts: ${error.message}`);
             res.status(400).json({status:"error", message:error.message});
         }
     }

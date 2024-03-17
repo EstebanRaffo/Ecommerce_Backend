@@ -15,7 +15,8 @@
 <ol>
     {{#each products}}
         <li>
-            Id: {{this._id}} <br> Producto: {{this.title}}, Precio: {{this.price}} <br> 
+            Producto: {{this.title}}, Precio: {{this.price}} <br>
+            Código: {{this.code}} <br> 
             <button onclick="addToCart(`{{this._id}}`)">Agregar al carrito</button>
         </li>
         <br>

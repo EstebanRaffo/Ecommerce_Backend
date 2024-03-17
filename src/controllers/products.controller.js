@@ -11,10 +11,10 @@ import { logger } from "../helpers/logger.js";
 
 export class ProductsController{
 
-    static async getProducts(req, res){
+    static async getPaginatedProducts(req, res){
         try{
             const query_params = req.query;
-            const result = await ProductsService.getProducts(query_params);
+            const result = await ProductsService.getPaginatedProducts(query_params);
             if(!result.docs.length) res.send("No se encontraron productos");
             const data_products = ProductsService.getPaginateData(result, req);
             res.status(200).json(data_products.payload);   

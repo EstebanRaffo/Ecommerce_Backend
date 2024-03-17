@@ -3,9 +3,9 @@ import { productsDao } from "../dao/index.js";
 
 export class ProductsService{
   
-    static async getProducts(query_params){
+    static async getPaginatedProducts(query_params){
         try {
-            const result = await productsDao.getProducts(query_params);
+            const result = await productsDao.getPaginatedProducts(query_params);
             return result;
         } catch (error) {
             throw error;
@@ -46,6 +46,33 @@ export class ProductsService{
     static async deleteProduct(pid, user){
         try {
             const result = await productsDao.deleteProduct(pid, user);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async deleteProducts(prod_ids){
+        try {
+            const result = await productsDao.deleteProducts(prod_ids);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async createProducts(new_products_stocks){
+        try {
+            const result = await productsDao.createProducts(new_products_stocks);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getAllProducts(){
+        try {
+            const result = await productsDao.getAllProducts();
             return result;
         } catch (error) {
             throw error;

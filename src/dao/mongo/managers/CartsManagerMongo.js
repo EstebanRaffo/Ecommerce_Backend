@@ -30,7 +30,8 @@ export class CartsManagerMongo{
     async getProductsCart(cart_id){
         try {
             const cart = await this.model.findById(cart_id);
-            return cart.products;
+            const items = cart.products.filter(item => item._id);
+            return items;
         } catch (error) {
             logger.error(`getProductsCart: ${error.message}`);
             throw new Error("No se pudieron obtener los productos del carrito");

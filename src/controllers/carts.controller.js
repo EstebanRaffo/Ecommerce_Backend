@@ -99,19 +99,31 @@ export class CartsController{
         const cart_id = req.params.cid;
         try {
             const cart = await CartsService.getCartById(cart_id);
-            const availables_products = cart.products.filter(product => product.quantity <= product._id.stock);
-            if(!availables_products.length) throw Error("No se encontraron productos disponibles");
-            const unavailables_products = cart.products.filter(product => product.quantity > product._id.stock);
+            const valid_items = cart.products.filter(item => item._id);
+            const availables_products = valid_items.filter(item => item.quantity <= item._id.stock);
+            if(!availables_products.length) throw Error("No se encontraron productos disponibles por stock insuficiente");
+            const unavailables_products = valid_items.filter(product => product.quantity > product._id.stock);
             const purchase_amount = availables_products.reduce((sum, product) => sum + (product.quantity * product._id.price), 0);
-            const all_products = await ProductsService.getProducts();
+            const all_products = await ProductsService.getAllProducts();
             
-            availables_products.forEach(async available_product => {
-                const product_found = all_products.docs.find(product => product.id === available_product._id._id.valueOf());
-                const new_product_info = {
-                    stock: product_found.stock - available_product.quantity
-                } 
-                const product = await ProductsService.updateProduct(product_found._id._id, new_product_info);         
+            const new_products_stocks = availables_products.map(available_product => {
+                const product_found = all_products.find(product => product.code === available_product._id.code);
+                return {
+                    stock: product_found.stock - available_product.quantity,
+                    title: product_found.title,
+                    description: product_found.description,
+                    price: product_found.price,
+                    thumbnails: product_found.thumbnails,
+                    code: product_found.code,
+                    category: product_found.category,
+                    status: product_found.status,
+                    owner: product_found.owner
+                }
             });
+            
+            const new_products_stocks_ids = availables_products.map(product => product._id._id.valueOf());
+            await ProductsService.deleteProducts(new_products_stocks_ids);
+            const products_stocks_updated = await ProductsService.createProducts(new_products_stocks);
             
             await CartsService.deleteProductsOfCart(cart_id);
             const cart_updated = await CartsService.updateProductsInCart(cart_id, unavailables_products);

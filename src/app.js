@@ -69,12 +69,12 @@ let chat = [];
 
 io.on("connection", async(socket)=>{
     logger.info("cliente conectado");
-    products_list = await productsDao.getProducts();
+    products_list = await productsDao.getPaginatedProducts();
     socket.emit("product_list", products_list.docs);
 
     socket.on("new_product", async (data) => {
         await productsDao.createProduct(data);
-        products_list = await productsDao.getProducts();
+        products_list = await productsDao.getPaginatedProducts();
         io.emit("product_list", products_list.docs); 
     });
 

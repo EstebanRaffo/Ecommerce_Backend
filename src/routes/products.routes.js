@@ -5,7 +5,7 @@ import { uploadImgProducts } from "../utils.js";
 
 const router = Router();
 
-router.get("/", ProductsController.getProducts);
+router.get("/", ProductsController.getPaginatedProducts);
 router.get("/mockingproducts", ProductsController.generateProducts);
 router.post("/", authorize(["admin","premium"]), uploadImgProducts.array('thumbnails', 4), ProductsController.createProduct);
 router.get("/:pid", ProductsController.getProductById);

@@ -8,14 +8,14 @@ export class ProductsManagerMongo{
         this.model = productsModel;
     }
 
-    async getProducts(query_params){
+    async getPaginatedProducts(query_params){
         if(!query_params){
             const options = {limit: 10, page: 1, lean:true}
             try {
                 const products = await this.model.paginate({}, options);
                 return products;
             } catch (error) {
-                logger.error(`getProducts: ${error.message}`);
+                logger.error(`getPaginatedProducts: ${error.message}`);
                 throw new Error("No se pudo obtener el listado de productos sin params");
             }
         }
@@ -36,7 +36,7 @@ export class ProductsManagerMongo{
             const products_data = await this.model.paginate(query, options);
             return products_data;
         }catch(error){
-            logger.error(`getProducts: ${error.message}`);
+            logger.error(`getPaginatedProducts: ${error.message}`);
             throw new Error("No se pudo obtener el listado de productos con params");
         }
     }
@@ -128,6 +128,36 @@ export class ProductsManagerMongo{
         }catch(error){
             logger.error(`productExists: ${error.message}`);
             throw error;
+        }
+    }
+
+    async deleteProducts(prod_ids){
+        try {
+            const result = await this.model.deleteMany({ _id: {$in: prod_ids} });
+            return result;
+        } catch (error) {
+            logger.error(`deleteProducts: ${error.message}`);
+            throw new Error("No se pudieron eliminar los productos con stock desactualizado");
+        }
+    }
+
+    async createProducts(new_products_stocks){
+        try {
+            const result = await this.model.insertMany(new_products_stocks);
+            return result;
+        } catch (error) {
+            logger.error(`createProducts: ${error.message}`);
+            throw new Error("No se pudieron crear los productos con stock actualizado");
+        }
+    }
+
+    async getAllProducts(){
+        try {
+            const result = await this.model.find();
+            return result;
+        } catch (error) {
+            logger.error(`getAllProducts: ${error.message}`);
+            throw new Error("No se pudieron obtener los productos");
         }
     }
 }
