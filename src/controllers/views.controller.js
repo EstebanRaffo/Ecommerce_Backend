@@ -16,9 +16,9 @@ export class ViewsController{
 
     static renderRealTimeProducts(req, res){
         if(req.user?.email){
-            // const { rol } = req.user; 
-            // const isAdmin = rol === config.admin.rol; 
-            // res.render("realTimeProducts", {isAdmin});
+            const { rol } = req.user; 
+            const isAdmin = rol === config.admin.rol; 
+            if(!isAdmin) return res.status(401).json({status:"error", message:"Usuario no autorizado para acceder a esta ruta"});
             res.render("realTimeProducts");
         }else{
             res.redirect("/login");

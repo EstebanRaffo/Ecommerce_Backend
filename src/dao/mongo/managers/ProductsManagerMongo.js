@@ -113,11 +113,11 @@ export class ProductsManagerMongo{
                 }
                 return product_deleted;
             }else{
-                throw new Error("El producto no pertenece al usuario");
+                throw new Error("Usuario no autorizado para eliminar el producto");
             }
         } catch (error) {
             logger.error(`deleteProduct: ${error.message}`);
-            throw new Error("No se pudo eliminar el producto");
+            throw error;
         }
     }
 

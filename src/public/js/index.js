@@ -22,7 +22,10 @@ socketClient.on("product_list", (dataProducts)=>{
     dataProducts.forEach(product => {
         list += 
         `<li>
-            <p>${product.title}</p><button onclick="deleteProduct(${product.id})">Eliminar</button>
+            <p>${product.title}</p>
+            <p>Código: ${product.code}</p>
+            <p>Precio: ${product.price}</p>
+            <button onclick="deleteProduct(${product.id})">Eliminar</button>
         </li>`
     });
     productList.innerHTML = list;

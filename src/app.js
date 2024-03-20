@@ -69,17 +69,21 @@ let chat = [];
 
 io.on("connection", async(socket)=>{
     logger.info("cliente conectado");
-    products_list = await productsDao.getPaginatedProducts();
-    socket.emit("product_list", products_list.docs);
+    products_list = await productsDao.getAllProducts();
+    console.log(products_list[0])
+    socket.emit("product_list", products_list);
 
     socket.on("new_product", async (data) => {
         await productsDao.createProduct(data);
-        products_list = await productsDao.getPaginatedProducts();
-        io.emit("product_list", products_list.docs); 
+        products_list = await productsDao.getAllProducts();
+        // Usar procuct.dto.js para enviar solo los datos necesarios
+        io.emit("product_list", products_list); 
     });
 
     socket.on("delete_product", async (id) => {
-        await productsDao.deleteProduct(id);
+        const user = {}
+        user.rol = config.admin.rol; 
+        await productsDao.deleteProduct(id, user);
     });
 
     chat = await chatDao.getMessages();
