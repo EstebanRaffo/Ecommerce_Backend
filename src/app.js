@@ -21,6 +21,7 @@ import { logger } from "./helpers/logger.js";
 import { swaggerSpecs } from "./config/swagger.config.js";
 import swaggerUI from "swagger-ui-express";
 import cors from "cors";
+import ProductDto from "./dao/dto/product.dto.js";
 
 const port = config.server.port || 8080;
 const app = express();
@@ -70,14 +71,16 @@ let chat = [];
 io.on("connection", async(socket)=>{
     logger.info("cliente conectado");
     products_list = await productsDao.getAllProducts();
-    console.log(products_list[0])
-    socket.emit("product_list", products_list);
+    const products_dto = products_list.map(product => new ProductDto(product));
+    console.log("products_dto: ", products_dto[0])
+    socket.emit("product_list", products_dto);
 
     socket.on("new_product", async (data) => {
         await productsDao.createProduct(data);
         products_list = await productsDao.getAllProducts();
-        // Usar procuct.dto.js para enviar solo los datos necesarios
-        io.emit("product_list", products_list); 
+        const products_dto = products_list.map(product => new ProductDto(product));
+        console.log("products_dto: ", products_dto[0])
+        io.emit("product_list", products_dto); 
     });
 
     socket.on("delete_product", async (id) => {
