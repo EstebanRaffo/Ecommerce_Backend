@@ -25,13 +25,14 @@ socketClient.on("product_list", (dataProducts)=>{
             <p>${product.title}</p>
             <p>Código: ${product.code}</p>
             <p>Precio: ${product.price}</p>
-            <button onclick="deleteProduct(${product.id})">Eliminar</button>
+            <p>Stock: ${product.stock}</p>
+            <button onclick="deleteProduct('${product.id}')">Eliminar</button>
         </li>`
     });
     productList.innerHTML = list;
 });
 
+
 const deleteProduct = (id) => {
-    console.log(id)
     socketClient.emit("delete_product", id);
 }

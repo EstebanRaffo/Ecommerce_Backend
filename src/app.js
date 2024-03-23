@@ -68,25 +68,33 @@ app.use(errorHandler);
 let products_list = [];
 let chat = [];
 
+const getUpdatedProductsList = async () => {
+    try {
+        const products = await productsDao.getAllProducts();
+        return products.map(product => new ProductDto(product));
+    } catch (error) {
+        logger.error(`getUpdatedProductsList: ${error.message}`);
+        throw new Error("Error al buscar lista de productos actualizada");
+    }
+}
+
 io.on("connection", async(socket)=>{
     logger.info("cliente conectado");
-    products_list = await productsDao.getAllProducts();
-    const products_dto = products_list.map(product => new ProductDto(product));
-    console.log("products_dto: ", products_dto[0])
-    socket.emit("product_list", products_dto);
+    products_list = await getUpdatedProductsList();
+    socket.emit("product_list", products_list);
 
     socket.on("new_product", async (data) => {
         await productsDao.createProduct(data);
-        products_list = await productsDao.getAllProducts();
-        const products_dto = products_list.map(product => new ProductDto(product));
-        console.log("products_dto: ", products_dto[0])
-        io.emit("product_list", products_dto); 
+        products_list = await getUpdatedProductsList();
+        io.emit("product_list", products_list); 
     });
 
     socket.on("delete_product", async (id) => {
         const user = {}
         user.rol = config.admin.rol; 
         await productsDao.deleteProduct(id, user);
+        products_list = await getUpdatedProductsList();
+        io.emit("product_list", products_list);
     });
 
     chat = await chatDao.getMessages();

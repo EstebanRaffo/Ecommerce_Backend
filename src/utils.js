@@ -35,16 +35,12 @@ export const verifyEmailToken = (token) => {
 
 
 export const checkRequiredData = (req, res, next)=>{
-    console.log("req.body en checkRequiredData: ", req.body)
     if(!checkValidFields(req.body)) return res.status(400).json({status:"error", message:"Uno o más datos obligatorios no fueron informados"});
     next();
 }
 
 
 // const profileMulterFilter = (req,file,cb)=>{
-    //     console.log("req.body en profileMulterFilter: ", req.body)
-    //     console.log(file)
-    
     //     // Si no se proporcionó ningún archivo, acepta la solicitud
     //     if (!file) {
     //         cb(null, true);
@@ -70,8 +66,6 @@ const checkValidFields = (user)=>{
 };
                     
 const profileMulterFilter = (req,file,cb)=>{
-    console.log("req.body en profileMulterFilter: ", req.body)
-    console.log(file)
     if(!checkValidFields(req.body)){
         cb(null, false);
     } else {
